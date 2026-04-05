@@ -20,16 +20,34 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      await signIn("credentials", { email, password, redirect: false });
-      setLoading(false);
+    // try {
+    //   await signIn("credentials", { email, password, redirect: false });
+    //   setLoading(false);
+    //   toast.success("Login successful!");
+    //   router.push("/");
+
+    // } catch (error) {
+    //   console.log(error);
+    //   setLoading(false);
+    //   toast.error("Login failed. Please check your credentials.");
+    // }
+
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false
+    });
+
+    setLoading(false);
+
+    if (result?.error) {
+      toast.error("Login failed. Please check your credentials.");
+      return;
+    }
+
+    if (result?.ok) {
       toast.success("Login successful!");
       router.push("/");
-
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-      toast.error("Login failed. Please check your credentials.");
     }
   };
 
@@ -136,7 +154,7 @@ const Login = () => {
             {/* Google */}
             <button
               type='button'
-              onClick={() => signIn("google", {callbackUrl:"/"})}
+              onClick={() => signIn("google", { callbackUrl: "/" })}
               className='w-full flex items-center justify-center gap-3 border border-gray-300 hover:bg-gray-50 py-3 rounded-xl text-gray-700 font-medium transition-all duration-200'
             >
               <Image src={googleLogo} width={20} height={20} alt='Google Logo' />

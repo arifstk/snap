@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import EditRoleMobile from "@/components/EditRoleMobile";
+import Navbar from "@/components/Navbar";
 import connectDb from "@/lib/db";
 import User from "@/models/user.model";
 import { redirect } from "next/navigation";
@@ -8,6 +9,12 @@ const Home = async () => {
   await connectDb();
   const session = await auth();
   // console.log(session);
+
+  // // !session → login
+  // if (!session?.user?.id) {
+  //   redirect("/login");
+  // }
+
   const user = await User.findById(session?.user?.id);
   if(!user) {
     redirect("/login");
@@ -17,11 +24,11 @@ const Home = async () => {
   if(inComplete) {
     return <EditRoleMobile />
   }
-
+  const plainUser=JSON.parse(JSON.stringify(user));
   return (
-    <div>
-      Home Page
-    </div>
+    <>
+      <Navbar user={plainUser} />
+    </>
   )
 }
 
