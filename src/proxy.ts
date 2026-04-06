@@ -14,8 +14,8 @@ export async function proxy(req: NextRequest) {
   const token = await getToken({
     req,
     secret: process.env.AUTH_SECRET,
-    secureCookie: process.env.NODE_ENV === "production",
-    salt:
+    secureCookie: process.env.NODE_ENV === "production", //vercel
+    salt:         //vercel
       process.env.NODE_ENV === "production"
         ? "__Secure-authjs.session-token"
         : "authjs.session-token",

@@ -2,12 +2,12 @@
 // import React from 'react'
 'use client';
 
-import { LogOut, Package, SearchIcon, ShoppingCartIcon, User } from "lucide-react";
+import { Cross, LogOut, Package, Search, SearchIcon, ShoppingCartIcon, User, X } from "lucide-react";
 import mongoose from "mongoose";
 import { AnimatePresence } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react"
 import { signOut } from "next-auth/react";
 
@@ -24,6 +24,19 @@ interface IUser {
 
 const Navbar = ({ user }: { user: IUser }) => {
   const [open, setOpen] = useState(false);
+  const profileDropdown = useRef<HTMLDivElement>(null);
+  const [searchBarOpen, setSearchBarOpen] = useState(false);
+
+  // profile dropdown false on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileDropdown.current && !profileDropdown.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, []);
 
   // console.log(user)
   return (
@@ -33,6 +46,7 @@ const Navbar = ({ user }: { user: IUser }) => {
         Snap
       </Link>
 
+      {/* search bar*/}
       <form className="hidden md:flex items-center bg-white rounded-full px-4 py-2 w-1/2 max-w-lg shadow-md">
         <SearchIcon className="text-gray-500 w-5 h-5 mr-2" />
         <input type="text" placeholder="Search groceries..."
@@ -41,12 +55,19 @@ const Navbar = ({ user }: { user: IUser }) => {
       </form>
 
       <div className="flex items-center gap-3 md:gap-6">
+        {/* search icon */}
+        <div className="bg-white rounded-full w-11 h-11 flex items-center justify-center shadow-md hover:scale-105 transition md:hidden" onClick={() => setSearchBarOpen((prev) => !prev)}>
+          <Search className="text-green-600 w-6 h-6" />
+        </div>
+
+        {/* Cart */}
         <Link href={"/cart"} className="flex items-center justify-center rounded-full bg-white w-11 h-11 hover:scale-105 shadow-md  transition relative">
           <ShoppingCartIcon className="text-green-600 w-6 h-6" />
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-semibold shadow">0</span>
         </Link>
 
-        <div className="relative">
+        <div className="relative" ref={profileDropdown}>
+          {/* Profile Avatar */}
           <div className="bg-white rounded-full w-11 h-11 flex items-center justify-center overflow-hidden shadow-md hover:scale-105 transition-transform cursor-pointer"
             onClick={() => setOpen(prev => !prev)}
           >
@@ -71,7 +92,7 @@ const Navbar = ({ user }: { user: IUser }) => {
               <motion.div
                 initial={{ opacity: 0, y: -10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.4 }}
                 exit={{ opacity: 0, y: -10, scale: 0.95 }}
                 className="absolute right-0 mt-3 bg-white rounded-lg shadow-xl border border-gray-200 p-2 w-48 z-999"
               >
@@ -111,6 +132,28 @@ const Navbar = ({ user }: { user: IUser }) => {
                   <LogOut className="w-5 h-5 text-red-600" />
                   Log Out
                 </button>
+              </motion.div>
+            }
+          </AnimatePresence>
+
+          {/* Search icon's bar small device */}
+          <AnimatePresence>
+            {searchBarOpen &&
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.4 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                className="fixed top-17 left-1/2 -translate-x-1/2 w-[90%] bg-white rounded-full shadow-lg z-40 flex items-center px-4 py-2"
+              >
+                <Search className="text-gray-500 w-5 h-5 mr-2"/>
+                <form className="grow">
+                  <input type="text" className="w-full outline-none text-gray-700" placeholder="Search groceries..."/>
+                </form>
+                <button onClick={()=>setSearchBarOpen(false)}>
+                  <X className="text-gray-500" />
+                </button>
+
               </motion.div>
             }
           </AnimatePresence>
