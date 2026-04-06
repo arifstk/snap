@@ -1,6 +1,9 @@
 import { auth } from "@/auth";
+import AdminDashboard from "@/components/AdminDashboard";
+import DeliveryBoyDashboard from "@/components/DeliveryBoyDashboard";
 import EditRoleMobile from "@/components/EditRoleMobile";
 import Navbar from "@/components/Navbar";
+import UserDashboard from "@/components/UserDashboard";
 import connectDb from "@/lib/db";
 import User from "@/models/user.model";
 import { redirect } from "next/navigation";
@@ -16,18 +19,25 @@ const Home = async () => {
   // }
 
   const user = await User.findById(session?.user?.id);
-  if(!user) {
+  if (!user) {
     redirect("/login");
   }
 
-  const inComplete = !user.mobile || !user.role || (!user.mobile && user.role== "user");
-  if(inComplete) {
+  const inComplete = !user.mobile || !user.role || (!user.mobile && user.role == "user");
+  if (inComplete) {
     return <EditRoleMobile />
   }
-  const plainUser=JSON.parse(JSON.stringify(user));
+  const plainUser = JSON.parse(JSON.stringify(user));
   return (
     <>
       <Navbar user={plainUser} />
+      {user.role == "user" ? (
+        <UserDashboard />
+      ) : user.role == "admin" ? (
+        <AdminDashboard />
+      ) :
+        <DeliveryBoyDashboard />
+      }
     </>
   )
 }
