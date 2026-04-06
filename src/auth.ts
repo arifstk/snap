@@ -74,6 +74,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     session({ session, token }) {
+      console.log("SESSION CALLBACK - token:", token); //test
       if (session.user) {
         session.user.id = token.id as string;
         session.user.name = token.name as string;

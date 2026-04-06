@@ -8,8 +8,8 @@ import { redirect } from "next/navigation";
 const Home = async () => {
   await connectDb();
   const session = await auth();
-  // console.log(session);
-
+  console.log("HOME SESSION:", session); // text
+  console.log("USER ID:", session?.user?.id); // test
   // // !session → login
   // if (!session?.user?.id) {
   //   redirect("/login");
