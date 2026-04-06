@@ -1,6 +1,7 @@
 //HeroSection.tsx
+'use client';
 import { Leaf, Truck, Smartphone } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 const HeroSection = () => {
   const slides = [
@@ -30,6 +31,11 @@ const HeroSection = () => {
     }
   ];
 
+  const [current, setCurrent] =useState(0);
+  useEffect(()=> {
+
+  }, []);
+
   return (
     <div>
     HeroSection
@@ -38,6 +44,4 @@ const HeroSection = () => {
 }
 
 export default HeroSection;
-
-
 
