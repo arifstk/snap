@@ -57,7 +57,7 @@ const HeroSection = () => {
         >
           <Image src={slides[current]?.bg} fill alt='slide image' priority
             className='object-cover' />
-          <div className='absolute inset-0 bg-black/40 backdrop-blur-[1px]' />
+          <div className='absolute inset-0 bg-black/40 backdrop-blur-[1px] rounded-3xl' />
         </motion.div>
       </AnimatePresence>
 
