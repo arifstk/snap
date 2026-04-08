@@ -12,23 +12,30 @@ export async function POST(req: NextRequest) {
     const user = await User.findOneAndUpdate(
       { email: session?.user?.email },
       { role, mobile },
-      {new: true}
+      { new: true },
     );
 
+    // if (!user) {
+    //   return NextResponse.json({ message: "User not found" }, { status: 400 });
+    // }
+
+    // if (user) {
+    //   return NextResponse.json(
+    //     user,
+    //     { status: 200 },
+    //   );
+    // }
+
+    // ✅ Clean
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 400 });
     }
-
-    if (user) {
-      return NextResponse.json(
-        user,
-        { status: 200 },
-      );
-    }
+    return NextResponse.json(user, { status: 200 });
+    
   } catch (error) {
     return NextResponse.json(
-      {message: "Edit role & mobile error"},
-      {status: 500},
-    )
+      { message: "Edit role & mobile error" },
+      { status: 500 },
+    );
   }
 }

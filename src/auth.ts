@@ -63,13 +63,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true;
     },
     // token generation
-    jwt({ token, user }) {
+    jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
         token.role = user.role;
         console.log("JWT TOKEN GENERATED:", token);
+      }
+      
+      // session update
+      if(trigger=="update" && session?.role){
+        token.role= session.role;
       }
       return token;
     },
