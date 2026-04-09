@@ -1,11 +1,12 @@
 // add-grocery
 'use client';
-import { ArrowLeft, PlusCircle, Upload } from 'lucide-react';
+import { ArrowLeft, Loader2, PlusCircle, Upload } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'motion/react';
-import { option } from 'motion/react-client';
-import { ChangeEvent, useState } from 'react';
+// import { option } from 'motion/react-client';
+import { ChangeEvent, useState, FormEvent } from 'react';
 import Image from 'next/image';
+import axios from 'axios';
 
 const categories = [
   "Fruits & Vegetables",
@@ -23,7 +24,6 @@ const units = [
   "Kg", "g", "ml", "Ltr", "Pcs", "pack",
 ]
 
-
 const AddGrocery = () => {
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
@@ -31,6 +31,17 @@ const AddGrocery = () => {
   const [price, setPrice] = useState('');
   const [preview, setPreview] = useState<string | null>();
   const [backendImage, setBackendImage] = useState<File | null>(null);
+  const [loading, setLoading]= useState(false);
+
+  //reset form
+  const resetForm = () => {
+    setName('');
+    setCategory('');
+    setUnit('');
+    setPrice('');
+    setPreview(null);
+    setBackendImage(null);
+  }
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -40,7 +51,32 @@ const AddGrocery = () => {
     setPreview(URL.createObjectURL(file));
   }
 
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!name || !category || !unit || !price) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("category", category);
+      formData.append("price", price);
+      formData.append("unit", unit);
+      if (backendImage) {
+        formData.append("image", backendImage);
+      }
 
+      const result = await axios.post("/api/admin/add-grocery", formData);
+      console.log(result.data);
+      resetForm();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className='min-h-screen flex items-center justify-center bg-linear-to-br from-green-50 to-white py-16 px-4 relative'>
@@ -62,7 +98,7 @@ const AddGrocery = () => {
           <p className='text-gray-500 text-sm mt-2 text-center'>Fill out the details below to add a new grocery item</p>
         </div>
 
-        <form className='flex flex-col gap-6 w-full animate-pulse'>
+        <form className='flex flex-col gap-6 w-full animate-pulse' onSubmit={handleSubmit}>
           {/* name */}
           <div>
             <label htmlFor='name' className='block text-gray-700 font-medium mb-1'>Grocery Name <span className='text-red-500'>*</span> </label>
@@ -121,11 +157,29 @@ const AddGrocery = () => {
             }
           </div>
           {/* submit */}
-          <motion.button
+          {/* <motion.button
+            type='submit'
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.9 }}
-            className=' mt-4 w-full bg-linear-to-r from-teal-400 via-green-600 to-teal-400 font-semibold py-3 rounded-x1 shadow-lg hover:shadow-x1 transition-all flex items-center justify-center gap-2 text-white disabled:opacity-60'>
+            className=' mt-4 w-full bg-linear-to-r from-teal-400 via-green-600 to-teal-400 font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 text-white disabled:opacity-60'>
             Add Grocery
+          </motion.button> */}
+
+          <motion.button
+            type='submit'
+            disabled={loading} // ✅ disable while loading
+            whileHover={{ scale: loading ? 1 : 1.02 }}
+            whileTap={{ scale: loading ? 1 : 0.9 }}
+            className='mt-4 w-full bg-linear-to-r from-teal-400 via-green-600 to-teal-400 font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 text-white cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed'
+          >
+            {loading ? (
+              <>
+                <Loader2 className='w-5 h-5 animate-spin' /> {/* ✅ spinner */}
+                Uploading...
+              </>
+            ) : (
+              'Add Grocery'
+            )}
           </motion.button>
         </form>
       </motion.div>

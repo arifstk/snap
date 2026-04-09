@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 // route.ts (grocery add)
 export async function POST(req: NextRequest) {
   try {
-    await connectDb;
+    await connectDb();
     const session = await auth();
     if (session?.user?.role !== "admin") {
       return NextResponse.json(
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     const category = formData.get("category") as string;
     const unit = formData.get("unit") as string;
     const price = formData.get("price") as string;
-    const file = formData.get("image") as Blob | null;
+    const file = formData.get("image") as File | null;
     let imageUrl;
     if (file) {
       imageUrl = await uploadOnCloudinary(file);
