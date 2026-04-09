@@ -2,7 +2,7 @@
 // import React from 'react'
 'use client';
 
-import { Boxes, ClipboardCheck, Cross, LogOut, Menu, Package, Plus, PlusCircle, Search, SearchIcon, ShoppingCartIcon, User, X } from "lucide-react";
+import { Boxes, ClipboardCheck, Cross, LogOut, LogOutIcon, Menu, Package, Plus, PlusCircle, Search, SearchIcon, ShoppingCartIcon, User, X } from "lucide-react";
 import mongoose from "mongoose";
 import { AnimatePresence } from "motion/react";
 import Image from "next/image";
@@ -89,9 +89,18 @@ const Navbar = ({ user }: { user: IUser }) => {
           <Link href={""} className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
             <ClipboardCheck className="w-5 h-5" /> Manage Orders</Link>
         </div>
+
+        <div className="my-5 border-t border-white/20"></div>
+        <div className="flex items-center gap-3 text-red-300 font-semibold mt-auto hover:bg-red-500/20 p-3 rounded-lg transition-all cursor-pointer"
+          onClick={() => {
+            setOpen(false)
+            signOut({ callbackUrl: "/login" })
+          }}>
+          <LogOutIcon className="pl-2 w-6 h-6 text-red-300" /> Logout
+        </div>
       </motion.div>
     </AnimatePresence>, document.body,
-  ) : null
+  ) : null;
 
   return (
     <div className="w-[95%] fixed top-4 left-1/2 -translate-x-1/2 bg-linear-to-r from-green-500 to-green-700 rounded-2xl shadow-lg shadow-black/30 flex justify-between items-center h-15 px-4 md:px-8 z-50">
