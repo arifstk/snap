@@ -1,10 +1,11 @@
 // add-grocery
 'use client';
-import { ArrowLeft, PlusCircle } from 'lucide-react';
+import { ArrowLeft, PlusCircle, Upload } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'motion/react';
 import { option } from 'motion/react-client';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
+import Image from 'next/image';
 
 const categories = [
   "Fruits & Vegetables",
@@ -30,6 +31,14 @@ const AddGrocery = () => {
   const [price, setPrice] = useState('');
   const [preview, setPreview] = useState<string | null>();
   const [backendImage, setBackendImage] = useState<File | null>(null);
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length == 0) return;
+    const file = files[0];
+    setBackendImage(file);
+    setPreview(URL.createObjectURL(file));
+  }
 
 
 
@@ -68,12 +77,12 @@ const AddGrocery = () => {
               <label className='block text-gray-700 font-medium mb-1'>Category
                 <span className='text-red-500'>*</span> </label>
               <select name="category"
-                className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all'
+                className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all cursor-pointer'
                 onChange={(e) => setCategory(e.target.value)} value={category}
               >
                 <option key={category} value="category">Select Category</option>
                 {categories.map(cat => (
-                  <option key={cat} value={cat}>{(cat)}</option>
+                  <option key={cat} value={cat} style={{ fontSize: '12px' }}>{(cat)}</option>
                 ))}
               </select>
             </div>
@@ -82,7 +91,7 @@ const AddGrocery = () => {
               <label className='block text-gray-700 font-medium mb-1'>Unit
                 <span className='text-red-500'>*</span> </label>
               <select name="unit"
-                className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all'
+                className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all cursor-pointer'
                 onChange={(e) => setUnit(e.target.value)} value={unit}>
                 <option value="unit">Select Unit</option>
                 {units.map(unit => (
@@ -94,11 +103,30 @@ const AddGrocery = () => {
           {/* Price */}
           <div>
             <label htmlFor='price' className='block text-gray-700 font-medium mb-1'>Price <span className='text-red-500'>*</span></label>
-            <input type='number' id='price' placeholder='eg: 120' className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all'
+            <input type='number' id='price' placeholder='eg: 120' className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all cursor-pointer'
               onChange={(e) => setPrice(e.target.value)}
               value={price}
             />
           </div>
+          {/* image */}
+          <div className='flex flex-col md:flex-row items-center gap-3'>
+            <label htmlFor='image' className='cursor-pointer flex items-center justify-center gap-2 bg-green-50 text-green-700 font-semibold border border-green-200 rounded-xl px-6 py-3 hover:bg-green-100 transition-all w-full sm:w-auto' >
+
+              <Upload className='w-5 h-5' />  Upload Image</label>
+            <input type='file' id='image' accept='image/*' hidden
+              onChange={handleImageChange}
+            />
+            {preview &&
+              <Image src={preview} width={100} height={100} alt='preview' className='rounded-xl shadow-md border border-gray-200 object-cover' />
+            }
+          </div>
+          {/* submit */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.9 }}
+            className=' mt-4 w-full bg-linear-to-r from-teal-400 via-green-600 to-teal-400 font-semibold py-3 rounded-x1 shadow-lg hover:shadow-x1 transition-all flex items-center justify-center gap-2 text-white disabled:opacity-60'>
+            Add Grocery
+          </motion.button>
         </form>
       </motion.div>
     </div>
