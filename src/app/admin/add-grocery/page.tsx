@@ -7,6 +7,7 @@ import { motion } from 'motion/react';
 import { ChangeEvent, useState, FormEvent } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const categories = [
   "Fruits & Vegetables",
@@ -54,7 +55,7 @@ const AddGrocery = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!name || !category || !unit || !price) {
-      alert('Please fill in all required fields');
+      toast.error('Please fill in all required fields');
       return;
     }
     try {
@@ -70,16 +71,18 @@ const AddGrocery = () => {
 
       const result = await axios.post("/api/admin/add-grocery", formData);
       console.log(result.data);
+      toast.success('Grocery added successfully! 🎉');
       resetForm();
     } catch (error) {
       console.log(error);
+      toast.error('Failed to add grocery. Please try again.');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-linear-to-br from-green-50 to-white py-16 px-4 relative'>
+    <div className='min-h-screen flex items-center justify-center bg-linear-to-br from-green-50 to-white py-16 sm:px-2 md:px-4 relative'>
       <Link href={"/"} className='absolute top-6 left-6 flex items-center gap-2 text-green-700 font-semibold bg-white px-4 py-2 rounded-full shadow-md hover:bg-green-100 hover:shadow-lg transition-all'>
         <ArrowLeft className='w-5 h-5' />
         <span className='hidden md:flex'>Back to home</span>
@@ -93,7 +96,7 @@ const AddGrocery = () => {
         <div className='flex flex-col items-center mb-8'>
           <div className='flex items-center gap-3'>
             <PlusCircle className='text-green-600 h-8 w-8' />
-            <h1>Add Your Grocery</h1>
+            <h1 className='text-3xl text-green-600 font-bold tracking-wide'>Add Your Grocery</h1>
           </div>
           <p className='text-gray-500 text-sm mt-2 text-center'>Fill out the details below to add a new grocery item</p>
         </div>
