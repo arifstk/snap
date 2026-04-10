@@ -7,8 +7,19 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "lh3.googleusercontent.com"
       },
-      {hostname: "plus.unsplash.com"},
-      {hostname: "images.unsplash.com"}
+      {
+        protocol: "https",
+        hostname: "plus.unsplash.com"
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com"
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/dsruz1g5f/**",
+      },
     ]
   }
 };
