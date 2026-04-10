@@ -1,6 +1,6 @@
 // add-grocery
 'use client';
-import { ArrowLeft, Loader2, PlusCircle, Upload } from 'lucide-react';
+import { ArrowLeft, Loader, Loader2, PlusCircle, Upload } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'motion/react';
 // import { option } from 'motion/react-client';
@@ -160,14 +160,6 @@ const AddGrocery = () => {
             }
           </div>
           {/* submit */}
-          {/* <motion.button
-            type='submit'
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.9 }}
-            className=' mt-4 w-full bg-linear-to-r from-teal-400 via-green-600 to-teal-400 font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 text-white disabled:opacity-60'>
-            Add Grocery
-          </motion.button> */}
-
           <motion.button
             type='submit'
             disabled={loading} // ✅ disable while loading
@@ -177,7 +169,7 @@ const AddGrocery = () => {
           >
             {loading ? (
               <>
-                <Loader2 className='w-5 h-5 animate-spin' /> {/* ✅ spinner */}
+                <Loader className='w-5 h-5 animate-spin' /> {/* ✅ spinner */}
                 Uploading...
               </>
             ) : (

@@ -44,7 +44,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <div className='relative w-[98%] mx-auto h-[80vh] rounded-3xl overflow-hidden shadow-2xl'>
+    <div className='relative w-[98%] mx-auto h-[80vh] rounded-3xl overflow-hidden shadow-2xl mt-23'>
       <AnimatePresence>
         <motion.div
           key={current}
