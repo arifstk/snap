@@ -10,6 +10,8 @@ interface IUser {
   role: "user" | "deliveryBoy" | "admin";
   image?: string;
   token?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const userSchema = new mongoose.Schema<IUser>(
@@ -20,16 +22,22 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     email: {
       type: String,
-      required: true,
+      required: [true, "Email is required"],
       unique: true,
+      lowercase: true,
+      trim: true,
+      match: [/^\S+@\S+\.\S+$/, "Please enter a valid email"],
     },
     password: {
       type: String,
       required: false,
+      minlength: [6, "Password must be at least 6 characters"],
+      select: false,
     },
     mobile: {
       type: String,
       required: false,
+       match: [/^[0-9]{10,15}$/, "Please enter a valid mobile number"],
     },
     role: {
       type: String,
@@ -45,7 +53,7 @@ const userSchema = new mongoose.Schema<IUser>(
       default: null,
     },
   },
-  { timestamps: true },
+  {timestamps: true },
 );
 
 const User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);

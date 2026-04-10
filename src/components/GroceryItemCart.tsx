@@ -34,7 +34,7 @@ const GroceryItemCart = ({ item }: { item: IGrocery }) => {
       {/* detail */}
       <div className='p-3 flex flex-col flex-1'>
         <p className='text-xs text-gray-500 font-medium mb-1'>{item.category}</p>
-        <h2 className='text-lg font-semibold'>{item.name}</h2>
+        <h2 className='text-sm md:text-lg font-semibold'>{item.name}</h2>
         <div className='flex items-center justify-between mt-2'>
           <span className='text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-full'>Unit: {item.unit}</span>
           <span className='text-green-700 font-bold text-md'>$ {item.price}</span>
