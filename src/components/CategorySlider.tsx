@@ -6,7 +6,7 @@ import React, { useRef } from 'react'
 
 const CategorySlider = () => {
   const categories = [
-    { id:1, name: "Fruits & Vegetables", icon: Apple, color: "bg-green-100" },
+    { id: 1, name: "Fruits & Vegetables", icon: Apple, color: "bg-green-100" },
     { id: 2, name: "Dairy & Eggs", icon: Milk, color: "bg-yellow-100" },
     { id: 3, name: "Rice, Atta & Grains", icon: Wheat, color: "bg-orange-100" },
     { id: 4, name: "Snacks & Biscuits", icon: Cookie, color: "bg-pink-100" },
@@ -18,28 +18,107 @@ const CategorySlider = () => {
     { id: 10, name: "Baby & Pet Care", icon: Baby, color: "bg-rose-100" },
   ];
 
-  const scrollRef=useRef<HTMLDivElement>(null);
-  const scroll=(direction: "left" | "right")=>{
-    if(!scrollRef.current) return;
-    const scrollAmount=direction =="left"?-300:300;
-    scrollRef.current.scrollBy({left:scrollAmount, behavior:"smooth"})
-  }
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [showLeft, setShowLeft] = React.useState(false);
+  const [showRight, setShowRight] = React.useState(true);
+  const autoScrollRef = useRef<NodeJS.Timeout | null>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const amount = el.clientWidth * 0.8;
+    const scrollAmount = direction === "left" ? -amount : amount;
+
+    el.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  };
+
+  const checkScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const isScrollable = el.scrollWidth > el.clientWidth;
+
+    const isAtStart = el.scrollLeft <= 1;
+    const isAtEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
+
+    setShowLeft(isScrollable && !isAtStart);
+    setShowRight(isScrollable && !isAtEnd);
+  };
+
+  // Auto Scroll
+  const startAutoScroll = () => {
+    if (autoScrollRef.current) return;
+
+    const el = scrollRef.current;
+    if (!el) return;
+
+    autoScrollRef.current = setInterval(() => {
+      const isAtEnd =
+        el.scrollLeft + el.clientWidth >= el.scrollWidth - 5;
+
+      if (isAtEnd) {
+        // 🔁 go back to start
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        // ➡️ scroll right
+        el.scrollBy({
+          left: el.clientWidth * 0.6,
+          behavior: "smooth",
+        });
+      }
+    }, 2500);
+  };
+
+  const stopAutoScroll = () => {
+    if (autoScrollRef.current) {
+      clearInterval(autoScrollRef.current);
+      autoScrollRef.current = null;
+    }
+  };
+
+  React.useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const handle = () => checkScroll(); // initial check
+    // Run after layout paint
+    requestAnimationFrame(handle);
+
+    el.addEventListener("scroll", handle);
+    window.addEventListener("resize", handle);
+
+    // ✅ start auto scroll
+    startAutoScroll();
+    // Stop auto scroll
+    stopAutoScroll();
+
+    return () => {
+      el.removeEventListener("scroll", handle);
+      window.removeEventListener("resize", handle);
+      stopAutoScroll(); // cleanup
+    };
+  }, []);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 2, y: 0 }}
+      whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       viewport={{ once: false, amount: 0.5 }}
       className='w-[90%] mx-auto mt-10 relative'
     >
       <h2 className='text-2xl md:text-3xl font-bold text-green-700 mb-6 text-center'>🛒 Shop by category</h2>
-      <button className='absolute left-0 top-1/2  z-10 text-green-700 bg-white shadow-lg hover:bg-green-300 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer'
-      onClick={()=>scroll("left")}>
-        <ChevronLeft />
-      </button>
+      {showLeft &&
+        <button className='absolute left-0 top-1/2  z-10 text-green-700 bg-white shadow-lg hover:bg-green-300 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer'
+          onClick={() => scroll("left")}>
+          <ChevronLeft />
+        </button>
+      }
       <div className='flex gap-6 overflow-x-auto px-10 pb-4 scrollbar-hide scroll-smooth'
-      ref={scrollRef}>
+        ref={scrollRef}
+        onMouseEnter={stopAutoScroll}
+        onMouseLeave={startAutoScroll}>
         {categories.map((cat) => {
           const Icon = cat.icon;
           return <motion.div
@@ -52,20 +131,16 @@ const CategorySlider = () => {
           </motion.div>
         })}
       </div>
-      <button className='absolute right-0 top-1/2 z-10 text-green-700 bg-white shadow-lg hover:bg-green-300 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer'
-      onClick={()=>scroll("right")}>
-        <ChevronRight />
-      </button>
+      {showRight &&
+        <button className='absolute right-0 top-1/2 z-10 text-green-700 bg-white shadow-lg hover:bg-green-300 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer'
+          onClick={() => scroll("right")}>
+          <ChevronRight />
+        </button>
+      }
     </motion.div>
   )
 }
 
 export default CategorySlider;
 
-
-// Auto Scroll
-// when categories not in the left side then auto scroll to the right 
-// when categories not in the right side then auto scroll to the left
-
-// when categories not in the left side then left side arrow hide & when categories no the right side then right side arrow hide 
 // 49.27 
