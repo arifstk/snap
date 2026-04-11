@@ -15,11 +15,17 @@ interface IGrocery {
 }
 
 interface ICartSlice {
-  cartData: IGrocery[];
+  cartData: IGrocery[],
+  subTotal: number,
+  deliveryFee: number,
+  finalTotal: number,
 }
 
 const initialState: ICartSlice = {
   cartData: [],
+  subTotal: 0,
+  deliveryFee: 0,
+  finalTotal: 0, 
 };
 
 const cartSlice = createSlice({
@@ -28,6 +34,7 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action: PayloadAction<IGrocery>) => {
       state.cartData.push(action.payload);
+      cartSlice.caseReducers.calculateTotal(state); //total
     },
     increaseQuantity: (
       state,
@@ -37,6 +44,7 @@ const cartSlice = createSlice({
       if (item) {
         item.quantity += 1;
       }
+      cartSlice.caseReducers.calculateTotal(state); //total
     },
     decreaseQuantity: (
       state,
@@ -50,13 +58,20 @@ const cartSlice = createSlice({
           (itm) => itm._id !== action.payload,
         );
       }
+      cartSlice.caseReducers.calculateTotal(state); //total
     },
 
-    removeFromCart: (
-      state,
-      action: PayloadAction<mongoose.Types.ObjectId>
-    ) => {
-      state.cartData=state.cartData.filter((itm) => itm._id !== action.payload);
+    removeFromCart: (state, action: PayloadAction<mongoose.Types.ObjectId>) => {
+      state.cartData = state.cartData.filter(
+        (itm) => itm._id !== action.payload,
+      );
+      cartSlice.caseReducers.calculateTotal(state); //total
+    },
+
+    calculateTotal: (state) => {
+      state.subTotal= state.cartData.reduce((sum, item)=>sum+Number(item.price)*item.quantity ,0 )
+      state.deliveryFee = state.subTotal > 100 ? 0 : 40;
+      state.finalTotal = state.subTotal + state.deliveryFee
     }
   },
 });

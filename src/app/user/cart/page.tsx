@@ -11,7 +11,7 @@ import Image from 'next/image';
 import { decreaseQuantity, increaseQuantity, removeFromCart } from '@/redux/cartSlice';
 
 const CartPage = () => {
-  const { cartData } = useSelector((state: RootState) => state.cart);
+  const { cartData, subTotal, deliveryFee, finalTotal } = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch<AppDispatch>();
 
 
@@ -77,25 +77,53 @@ const CartPage = () => {
                   {/* Quantity increase-decrease */}
                   <div className='flex items-center justify-center sm:justify-end gap-3 mt-3 sm:mt-0 bg-gray-50 px-3 py-2 rounded-full'>
                     <button className='bg-white p-1.5 rounded-full hover:bg-green-100 transition-all border border-gray-200  cursor-pointer'
-                    onClick={()=>dispatch(decreaseQuantity(item._id))}
+                      onClick={() => dispatch(decreaseQuantity(item._id))}
                     >
                       <Minus size={16} className=' text-green -700' />
                     </button>
                     <span className='text-sm font-semibold text-gray-800'>{item.quantity}</span>
                     <button className='bg-white p-1.5 rounded-full hover:bg-green-100 transition-all border border-gray-200  cursor-pointer'
-                    onClick={()=>dispatch(increaseQuantity(item._id))}
+                      onClick={() => dispatch(increaseQuantity(item._id))}
                     >
                       <Plus size={16} className=' text-green -700' />
                     </button>
                   </div>
-                  <button onClick={()=>dispatch(removeFromCart(item._id))}>
-                    <Trash2 size={18} className='sm:ml-4 mt-3 sm:mt-0 text-red-500 hover:text-red-700 transition-all cursor-pointer'/>
+                  <button onClick={() => dispatch(removeFromCart(item._id))}>
+                    <Trash2 size={18} className='sm:ml-4 mt-3 sm:mt-0 text-red-500 hover:text-red-700 transition-all cursor-pointer' />
                   </button>
 
                 </motion.div>
               ))}
             </AnimatePresence>
           </div>
+          {/* Summery */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+            className='bg-white rounded-2xl shadow-xl p-6 h-fit sticky top-24 border border-gray-100 flex flex-col'
+          >
+            <h2 className='text-lg sm:text-xl font-bold text-gray-800 mb-4'>Order Summery</h2>
+            <div className='space-y-3 text-gray-700 text-sm sm:text-base'>
+              <div className='flex justify-between'>
+                <span>SubTotal</span>
+                <span className='text-green-700 font-semibold'>${subTotal}</span>
+              </div>
+              <div className='flex justify-between'>
+                <span>Delivery Fee</span>
+                <span className='text-green-700 font-semibold'>${deliveryFee}</span>
+              </div>
+              <hr className='my-3' />
+              <div className='flex justify-between font-bold'>
+                <span>Total</span>
+                <span className='text-green-700 font-semibold'>${finalTotal}</span>
+              </div>
+            </div>
+            <motion.button whileTap={{ scale: 0.95 }}
+              className='w-full mt-6 bg-green-600 text-white py-3 rounded-full hover:bg-green-700 transition-all font-semibold text-sm sm:text-base cursor-pointer'>
+              Proceed to Checkout
+            </motion.button>
+          </motion.div>
         </div>
       )}
     </div>
