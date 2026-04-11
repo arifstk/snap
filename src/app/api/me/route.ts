@@ -32,3 +32,4 @@ export async function GET(req: NextRequest) {
 }
 
 // store route (redux toolkit)
+// to implement/get uer data create useGetMe.tsx + InitUser.tsx + (set up InitUser.tsx) to layout.tsx 

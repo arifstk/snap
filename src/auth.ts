@@ -69,7 +69,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.name = user.name;
         token.email = user.email;
         token.role = user.role;
-        console.log("JWT TOKEN GENERATED:", token);
+        // console.log("JWT TOKEN GENERATED:", token);
       }
       
       // session update

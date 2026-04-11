@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import Provider from "@/provider";
 import StoreProvider from "@/redux/StoreProvider";
+import InitUser from "@/InitUser";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -27,9 +28,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="w-full min-h-screen bg-linear-to-b from-green-50 to-white ">
+      <body className="max-w-7xl mx-auto w-full min-h-screen bg-linear-to-b from-green-50 to-white ">
         <Provider>
-          <StoreProvider>
+          <StoreProvider> {/*redux Provider wrapper */}
+            <InitUser/>  
             {children}
           </StoreProvider>
         </Provider>
