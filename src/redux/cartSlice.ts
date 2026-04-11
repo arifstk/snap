@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import mongoose from "mongoose";
 
 interface IGrocery {
-  _id?: mongoose.Types.ObjectId;
+  _id: mongoose.Types.ObjectId;
   name: string;
   category: string;
   price: string;
@@ -51,11 +51,19 @@ const cartSlice = createSlice({
         );
       }
     },
+
+    removeFromCart: (
+      state,
+      action: PayloadAction<mongoose.Types.ObjectId>
+    ) => {
+      state.cartData=state.cartData.filter((itm) => itm._id !== action.payload);
+    }
   },
 });
 
-export const { addToCart, increaseQuantity, decreaseQuantity } =
+export const { addToCart, increaseQuantity, decreaseQuantity, removeFromCart } =
   cartSlice.actions;
 export default cartSlice.reducer;
 
 // use this cartSlice to the store.ts file
+
