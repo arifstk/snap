@@ -4,7 +4,7 @@ import HeroSection from './HeroSection';
 import CategorySlider from './CategorySlider';
 import connectDb from '@/lib/db';
 import Grocery from '@/models/grocery.model';
-import GroceryItemCart from './GroceryItemCart';
+import GroceryItemCart from './GroceryItemCard';
 
 const UserDashboard = async () => {
   await connectDb();
