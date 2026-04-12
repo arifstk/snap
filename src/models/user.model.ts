@@ -60,7 +60,6 @@ const User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
 
 export default User;
 
-// arifmefwd_db_user
-// aJODeDRuL872fV5W
-// mongodb+srv://arifmefwd_db_user:aJODeDRuL872fV5W@cluster0.tsmnlca.mongodb.net/
+
+
 
