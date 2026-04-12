@@ -1,4 +1,4 @@
-// /user/cart page
+// /app/user/cart/page.tsx
 'use client';
 import { ArrowLeft, Minus, Plus, ShoppingBasket, Trash2 } from 'lucide-react';
 import Link from 'next/link';

@@ -2,7 +2,7 @@
 // import React from 'react'
 'use client';
 
-import { Boxes, ClipboardCheck, Cross, LogOut, LogOutIcon, Menu, Package, Plus, PlusCircle, Search, SearchIcon, ShoppingCartIcon, User, X } from "lucide-react";
+import { Boxes, ClipboardCheck, Cross, LogOut, LogOutIcon, Menu, Package, Plus, PlusCircle, Search, SearchIcon, ShoppingCartIcon, Tag, User, X } from "lucide-react";
 import mongoose from "mongoose";
 import { AnimatePresence } from "motion/react";
 import Image from "next/image";
@@ -30,7 +30,7 @@ const Navbar = ({ user }: { user: IUser }) => {
   const profileDropdown = useRef<HTMLDivElement>(null);
   const [searchBarOpen, setSearchBarOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const {cartData} = useSelector((state: RootState)=>state.cart);
+  const { cartData } = useSelector((state: RootState) => state.cart);
 
   // profile dropdown false on click outside
   useEffect(() => {
@@ -85,6 +85,12 @@ const Navbar = ({ user }: { user: IUser }) => {
         </div>
 
         <div className="flex flex-col gap-3 mt-6 font-medium md:hidden ">
+          <Link
+            href={"/admin/add-category"}
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
+            <Tag className="w-5 h-5" /> Add Category
+          </Link>
           <Link href={"/admin/add-grocery"} className="flex items-center gap-3 p-3 pl-4  rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
             <PlusCircle className="w-5 h-5" /> Add Grocery</Link>
           <Link href={""} className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
@@ -147,6 +153,9 @@ const Navbar = ({ user }: { user: IUser }) => {
           user.role === "admin" &&
           <>
             <div className="hidden md:flex items-center gap-4">
+              <Link href={"/admin/add-category"} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">
+                <Tag className="w-5 h-5" /> Add Category
+              </Link>
               <Link href={"/admin/add-grocery"} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">
                 <PlusCircle className="w-5 h-5" /> Add Grocery</Link>
               <Link href={""} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">

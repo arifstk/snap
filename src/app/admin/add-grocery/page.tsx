@@ -4,23 +4,28 @@ import { ArrowLeft, Loader, Loader2, PlusCircle, Upload } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'motion/react';
 // import { option } from 'motion/react-client';
-import { ChangeEvent, useState, FormEvent } from 'react';
+import { ChangeEvent, useState, FormEvent, useEffect } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const categories = [
-  "Fruits & Vegetables",
-  "Dairy & Eggs",
-  "Rice, Atta & Grains",
-  "Snacks & Biscuits",
-  "Spices & Masalas",
-  "Beverages & Drinks",
-  "Personal Care",
-  "Household Essentials",
-  "Instant & packaged Food",
-  "Baby & Pet Care",
-]
+// const categories = [
+//   "Fruits & Vegetables",
+//   "Dairy & Eggs",
+//   "Rice, Atta & Grains",
+//   "Snacks & Biscuits",
+//   "Spices & Masalas",
+//   "Beverages & Drinks",
+//   "Personal Care",
+//   "Household Essentials",
+//   "Instant & packaged Food",
+//   "Baby & Pet Care",
+// ]
+
+interface Category {
+  _id: string;
+  name: string;
+}
 const units = [
   "Kg", "g", "ml", "Ltr", "Pcs", "pack",
 ]
@@ -33,6 +38,14 @@ const AddGrocery = () => {
   const [preview, setPreview] = useState<string | null>();
   const [backendImage, setBackendImage] = useState<File | null>(null);
   const [loading, setLoading]= useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  // ✅ Fetch categories from DB on mount
+  useEffect(() => {
+    axios.get('/api/categories')
+      .then((res) => setCategories(res.data))
+      .catch(() => toast.error('Failed to load categories'));
+  }, []);
 
   //reset form
   const resetForm = () => {
@@ -119,9 +132,9 @@ const AddGrocery = () => {
                 className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all cursor-pointer'
                 onChange={(e) => setCategory(e.target.value)} value={category}
               >
-                <option key={category} value="category">Select Category</option>
+                <option value="">Select Category</option>
                 {categories.map(cat => (
-                  <option key={cat} value={cat} style={{ fontSize: '12px' }}>{(cat)}</option>
+                  <option key={cat._id} value={cat.name} style={{ fontSize: '12px' }}>{(cat.name)}</option>
                 ))}
               </select>
             </div>
@@ -132,7 +145,7 @@ const AddGrocery = () => {
               <select name="unit"
                 className='w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-400 transition-all cursor-pointer'
                 onChange={(e) => setUnit(e.target.value)} value={unit}>
-                <option value="unit">Select Unit</option>
+                <option value="">Select Unit</option>
                 {units.map(unit => (
                   <option key={unit} value={unit}>{(unit)}</option>
                 ))}
