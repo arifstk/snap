@@ -1,23 +1,19 @@
 // app/admin/add-category/page.tsx
 'use client';
-import { ArrowLeft, Loader, PlusCircle, Upload, Trash2 } from 'lucide-react';
+import { ArrowLeft, Loader, PlusCircle, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'motion/react';
-import { ChangeEvent, useState, FormEvent, useEffect } from 'react';
-import Image from 'next/image';
+import { useState, FormEvent, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
 interface Category {
   _id: string;
   name: string;
-  image?: string;
 }
 
 const AddCategory = () => {
   const [name, setName] = useState('');
-  const [preview, setPreview] = useState<string | null>(null);
-  const [backendImage, setBackendImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [fetching, setFetching] = useState(true);
@@ -37,38 +33,21 @@ const AddCategory = () => {
     fetchCategories();
   }, []);
 
-  const resetForm = () => {
-    setName('');
-    setPreview(null);
-    setBackendImage(null);
-  };
-
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-    const file = files[0];
-    setBackendImage(file);
-    setPreview(URL.createObjectURL(file));
-  };
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!name) {
+    if (!name.trim()) {
       toast.error('Please enter a category name');
       return;
     }
     try {
       setLoading(true);
-      const formData = new FormData();
-      formData.append('name', name);
-      if (backendImage) formData.append('image', backendImage);
-
-      await axios.post('/api/admin/add-category', formData);
+      await axios.post('/api/admin/add-category', { name }); // ✅ plain JSON, no FormData
       toast.success('Category added successfully! 🎉');
-      resetForm();
-      fetchCategories(); // refresh list
-    } catch (error) {
-      toast.error('Failed to add category. Please try again.');
+      setName('');
+      fetchCategories();
+    } catch (error: any) {
+      const msg = error?.response?.data?.message || 'Failed to add category.';
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -108,7 +87,6 @@ const AddCategory = () => {
         </div>
 
         <form className='flex flex-col gap-6 w-full' onSubmit={handleSubmit}>
-          {/* Name */}
           <div>
             <label htmlFor='name' className='block text-gray-700 font-medium mb-1'>
               Category Name <span className='text-red-500'>*</span>
@@ -123,27 +101,15 @@ const AddCategory = () => {
             />
           </div>
 
-          {/* Image */}
-          <div className='flex flex-col md:flex-row items-center gap-3'>
-            <label htmlFor='image' className='cursor-pointer flex items-center justify-center gap-2 bg-green-50 text-green-700 font-semibold border border-green-200 rounded-xl px-6 py-3 hover:bg-green-100 transition-all w-full sm:w-auto'>
-              <Upload className='w-5 h-5' /> Upload Image
-            </label>
-            <input type='file' id='image' accept='image/*' hidden onChange={handleImageChange} />
-            {preview && (
-              <Image src={preview} width={100} height={100} alt='preview' className='rounded-xl shadow-md border border-gray-200 object-cover' />
-            )}
-          </div>
-
-          {/* Submit */}
           <motion.button
             type='submit'
             disabled={loading}
             whileHover={{ scale: loading ? 1 : 1.02 }}
             whileTap={{ scale: loading ? 1 : 0.9 }}
-            className='mt-4 w-full bg-linear-to-r from-teal-400 via-green-600 to-teal-400 font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 text-white cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed'
+            className='w-full bg-linear-to-r from-teal-400 via-green-600 to-teal-400 font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 text-white cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed'
           >
             {loading ? (
-              <><Loader className='w-5 h-5 animate-spin' /> Uploading...</>
+              <><Loader className='w-5 h-5 animate-spin' /> Adding...</>
             ) : (
               'Add Category'
             )}
@@ -166,15 +132,10 @@ const AddCategory = () => {
                   animate={{ opacity: 1, x: 0 }}
                   className='flex items-center justify-between bg-green-50 border border-green-100 rounded-xl px-4 py-3'
                 >
-                  <div className='flex items-center gap-3'>
-                    {cat.image && (
-                      <Image src={cat.image} width={40} height={40} alt={cat.name} className='rounded-lg object-cover' />
-                    )}
-                    <span className='text-gray-700 font-medium'>{cat.name}</span>
-                  </div>
+                  <span className='text-gray-700 font-medium'>{cat.name}</span>
                   <button
                     onClick={() => handleDelete(cat._id)}
-                    className='text-red-400 hover:text-red-600 transition-colors'
+                    className='text-red-400 hover:text-red-600 transition-colors cursor-pointer'
                   >
                     <Trash2 className='w-5 h-5' />
                   </button>
@@ -189,4 +150,3 @@ const AddCategory = () => {
 };
 
 export default AddCategory;
-
