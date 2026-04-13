@@ -1,6 +1,6 @@
 // app/admin/add-category/page.tsx
 'use client';
-import { ArrowLeft, Loader, PlusCircle, Trash2 } from 'lucide-react';
+import { ArrowLeft, Check, Loader, Pencil, PlusCircle, Trash2, X } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'motion/react';
 import { useState, FormEvent, useEffect } from 'react';
@@ -17,6 +17,9 @@ const AddCategory = () => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [fetching, setFetching] = useState(true);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editLoading, setEditLoading] = useState(false);
 
   const fetchCategories = async () => {
     try {
@@ -32,6 +35,38 @@ const AddCategory = () => {
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  // Start editing
+  const startEdit = (cat: Category) => {
+    setEditingId(cat._id);
+    setEditName(cat.name);
+  };
+  // Cancel editing
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditName('');
+  }; 
+  // Submit edit
+  const handleEdit = async (id:string) => {
+    if(!editName.trim()) {
+      toast.error('Category Name cannot be empty')
+      return;
+    }
+    try {
+      setEditLoading(true);
+      await axios.put(`/api/admin/edit-category/${id}`, {name:editName});
+      toast.success('Category updated successfully');
+      setCategories((prev) =>
+      prev.map((c)=> (c._id === id ? {...c, name:editName} : c))
+    );
+    cancelEdit();
+    } catch (error:any) {
+      const msg = error?.response?.data?.message || 'Failed to update category';
+      toast.error(msg);
+    } finally {
+      setEditLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -132,13 +167,65 @@ const AddCategory = () => {
                   animate={{ opacity: 1, x: 0 }}
                   className='flex items-center justify-between bg-green-50 border border-green-100 rounded-xl px-4 py-3'
                 >
-                  <span className='text-gray-700 font-medium'>{cat.name}</span>
+                  {/* <span className='text-gray-700 font-medium'>{cat.name}</span>
                   <button
                     onClick={() => handleDelete(cat._id)}
                     className='text-red-400 hover:text-red-600 transition-colors cursor-pointer'
                   >
                     <Trash2 className='w-5 h-5' />
-                  </button>
+                  </button> */}
+
+                  {editingId === cat._id ? (
+                      // ✅ Edit mode — inline input
+                      <div className='flex items-center gap-2 w-full'>
+                        <input
+                          type='text'
+                          value={editName}
+                          autoFocus
+                          onChange={(e) => setEditName(e.target.value)}
+                          className='flex-1 border border-green-300 rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-green-400 text-gray-700 text-sm'
+                        />
+                        {/* Confirm */}
+                        <button
+                          onClick={() => handleEdit(cat._id)}
+                          disabled={editLoading}
+                          className='text-green-500 hover:text-green-700 transition-colors cursor-pointer disabled:opacity-50'
+                        >
+                          {editLoading
+                            ? <Loader className='w-4 h-4 animate-spin' />
+                            : <Check className='w-5 h-5' />
+                          }
+                        </button>
+                        {/* Cancel */}
+                        <button
+                          onClick={cancelEdit}
+                          className='text-gray-400 hover:text-gray-600 transition-colors cursor-pointer'
+                        >
+                          <X className='w-5 h-5' />
+                        </button>
+                      </div>
+                    ) : (
+                      // ✅ View mode
+                      <>
+                        <span className='text-gray-700 font-medium flex-1'>{cat.name}</span>
+                        <div className='flex items-center gap-2'>
+                          {/* Edit button */}
+                          <button
+                            onClick={() => startEdit(cat)}
+                            className='text-blue-400 hover:text-blue-600 transition-colors cursor-pointer'
+                          >
+                            <Pencil className='w-4 h-4' />
+                          </button>
+                          {/* Delete button */}
+                          <button
+                            onClick={() => handleDelete(cat._id)}
+                            className='text-red-400 hover:text-red-600 transition-colors cursor-pointer'
+                          >
+                            <Trash2 className='w-5 h-5' />
+                          </button>
+                        </div>
+                      </>
+                    )}
                 </motion.li>
               ))}
             </ul>
