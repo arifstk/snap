@@ -9,11 +9,12 @@ import { AppDispatch, RootState } from '@/redux/store';
 import { div } from 'motion/react-client';
 import Image from 'next/image';
 import { decreaseQuantity, increaseQuantity, removeFromCart } from '@/redux/cartSlice';
-
+// import { useRouter } from 'next/router';
+import {useRouter} from 'next/navigation';
 const CartPage = () => {
   const { cartData, subTotal, deliveryFee, finalTotal } = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch<AppDispatch>();
-
+  const router = useRouter();
 
   return (
     <div className='w-[95%] sm:w-[90%] mx-auto mt-8 mb-24 relative'
@@ -120,8 +121,9 @@ const CartPage = () => {
               </div>
             </div>
             <motion.button whileTap={{ scale: 0.95 }}
-              className='w-full mt-6 bg-green-600 text-white py-3 rounded-full hover:bg-green-700 transition-all font-semibold text-sm sm:text-base cursor-pointer'>
-              Proceed to Checkout
+              className='w-full mt-6 bg-green-600 text-white py-3 rounded-full hover:bg-green-700 transition-all font-semibold text-sm sm:text-base cursor-pointer'
+              onClick={()=>router.push("/user/checkout")}>
+              Proceed to checkout
             </motion.button>
           </motion.div>
         </div>

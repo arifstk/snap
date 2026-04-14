@@ -5,6 +5,7 @@
     "authjs",
     "googleusercontent",
     "Masalas",
-    "nextauth"
+    "nextauth",
+    "pincode"
   ]
 }
