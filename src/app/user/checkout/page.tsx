@@ -1,6 +1,7 @@
 // app/user/checkout/page.tsx
 'use client';
 import MapView from '@/components/MapView';
+import MapViewWrapper from '@/components/MapViewWrapper';
 import { RootState } from '@/redux/store';
 import { ArrowLeft, Building, Home, Mail, MapPin, Navigation, Phone, Search, User } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -16,7 +17,7 @@ interface UserData {
 
 const Checkout = () => {
   const router = useRouter();
-  const { userData } = useSelector((state: RootState) => state.user) as {userData: UserData | null};
+  const { userData } = useSelector((state: RootState) => state.user) as { userData: UserData | null };
   const [address, setAddress] = useState({
     fullName: "",
     mobile: "",
@@ -29,16 +30,16 @@ const Checkout = () => {
 
   const [position, setPosition] = useState<[number, number] | null>([0, 0]);
   useEffect(() => {
-    if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((pos)=>{
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
         // console.log(pos);
-        const {latitude, longitude} = pos.coords
+        const { latitude, longitude } = pos.coords
         setPosition([latitude, longitude]);
       })
     }
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     if (userData) {
       setAddress((prev) => ({
         ...prev,
@@ -77,42 +78,42 @@ const Checkout = () => {
             {/* Name */}
             <div className='relative'>
               <User className='absolute left-3 top-3 text-green-600' size={18} />
-              <input type="text" value={address.fullName} onChange={(e) => setAddress((prev) => ({...prev,fullName: address.fullName}))}
+              <input type="text" value={address.fullName} onChange={(e) => setAddress((prev) => ({ ...prev, fullName: address.fullName }))}
                 className='pl-10 w-full border border-lg p-3 text-sm bg-gray-50' />
             </div>
             {/* mobile */}
             <div className='relative'>
               <Phone className='absolute left-3 top-3 text-green-600' size={18} />
-              <input type="text" value={address.mobile} onChange={(e) => setAddress((prev) => ({...prev,mobile: address.mobile}))}
+              <input type="text" value={address.mobile} onChange={(e) => setAddress((prev) => ({ ...prev, mobile: address.mobile }))}
                 className='pl-10 w-full border border-lg p-3 text-sm bg-gray-50' />
             </div>
             {/* email */}
             <div className='relative'>
               <Mail className='absolute left-3 top-3 text-green-600' size={18} />
-              <input type="text" value={address.email} onChange={(e) => setAddress((prev) => ({...prev,email: address.email}))}
+              <input type="text" value={address.email} onChange={(e) => setAddress((prev) => ({ ...prev, email: address.email }))}
                 className='pl-10 w-full border border-lg p-3 text-sm bg-gray-50' />
             </div>
             {/* address */}
             <div className='relative'>
               <Home className='absolute left-3 top-3 text-green-600' size={18} />
-              <input type="text" value={address.fullAddress} placeholder='Full Address' onChange={(e) => setAddress((prev) => ({...prev,fullAddress: address.fullAddress}))}
+              <input type="text" value={address.fullAddress} placeholder='Full Address' onChange={(e) => setAddress((prev) => ({ ...prev, fullAddress: address.fullAddress }))}
                 className='pl-10 w-full border border-lg p-3 text-sm bg-gray-50' />
             </div>
 
             <div className='grid grid-cols-3 gap-3'>
               <div className='relative'>
                 <Building className='absolute left-3 top-3 text-green-600' size={18} />
-                <input type="text" value={address.city} placeholder='City' onChange={(e) => setAddress((prev) => ({...prev,city: address.city}))}
+                <input type="text" value={address.city} placeholder='City' onChange={(e) => setAddress((prev) => ({ ...prev, city: address.city }))}
                   className='pl-10 w-full border border-lg p-3 text-sm bg-gray-50' />
               </div>
               <div className='relative'>
                 <Navigation className='absolute left-3 top-3 text-green-600' size={18} />
-                <input type="text" value={address.state} placeholder='State' onChange={(e) => setAddress((prev) => ({...prev,state: address.state}))}
+                <input type="text" value={address.state} placeholder='State' onChange={(e) => setAddress((prev) => ({ ...prev, state: address.state }))}
                   className='pl-10 w-full border border-lg p-3 text-sm bg-gray-50' />
               </div>
               <div className='relative'>
                 <Search className='absolute left-3 top-3 text-green-600' size={18} />
-                <input type="text" value={address.pincode} placeholder='pincode' onChange={(e) => setAddress((prev) => ({...prev,pincode: address.pincode}))}
+                <input type="text" value={address.pincode} placeholder='pincode' onChange={(e) => setAddress((prev) => ({ ...prev, pincode: address.pincode }))}
                   className='pl-10 w-full border border-lg p-3 text-sm bg-gray-50' />
               </div>
             </div>
@@ -123,8 +124,11 @@ const Checkout = () => {
                 Search</button>
             </div>
             {/* map */}
-            <div className='relative mt-6 w-full h-82 rounded-xl overflow-hidden border border-gray-200 shadow-inner'>
+            {/* <div className='relative mt-6 w-full h-82 rounded-xl overflow-hidden border border-gray-200 shadow-inner'>
               <MapView position={position}/>
+            </div> */}
+            <div style={{ width: '100%', height: '300px' }} className="rounded-xl overflow-hidden mt-4">
+              <MapViewWrapper position={position} />
             </div>
           </div>
         </motion.div>
