@@ -11,4 +11,7 @@ const MapViewWrapper = dynamic(() => import('./MapView'), {
   ),
 });
 
-export default MapViewWrapper;
+// export default MapViewWrapper;
+export default function MapViewWrapperWithProps(props: any) {
+  return <MapViewWrapper {...props} />;
+}

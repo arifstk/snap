@@ -46,9 +46,25 @@ const Checkout = () => {
         fullName: userData.name || "",
         mobile: userData.mobile || "",
         email: userData.email || "",
-      })); // ✅ fixed: merged into single setAddress call
+      })); // ✅ merged into single setAddress call
     }
   }, [userData]);
+
+  const handleMarkerDrag = (lat: number, lng: number) => {
+    setPosition([lat, lng]);
+  };
+
+  // address found
+  const handleAddressFound = (data: any) => {
+    const address = data.address;
+    setAddress((prev) => ({
+      ...prev,
+      city: address.city || address.town || address.village || "",
+      state: address.state || "",
+      pincode: address.postcode || "",
+      fullAddress: data.display_name || "",
+    }));
+  };
 
   return (
     <div className='w-[92%] md:w-[80%] mx-auto py-10 relative'>
@@ -78,7 +94,7 @@ const Checkout = () => {
             {/* Name */}
             <div className='relative'>
               <User className='absolute left-3 top-3 text-green-600' size={18} />
-              <input type="text" value={address.fullName} onChange={(e) => setAddress((prev) => ({ ...prev, fullName: address.fullName }))}
+              <input type="text" value={address.fullName} onChange={(e) => setAddress((prev) => ({ ...prev, fullName: e.target.value }))}
                 className='pl-10 w-full border border-lg p-3 text-sm bg-gray-50' />
             </div>
             {/* mobile */}
@@ -96,7 +112,7 @@ const Checkout = () => {
             {/* address */}
             <div className='relative'>
               <Home className='absolute left-3 top-3 text-green-600' size={18} />
-              <input type="text" value={address.fullAddress} placeholder='Full Address' onChange={(e) => setAddress((prev) => ({ ...prev, fullAddress: address.fullAddress }))}
+              <input type="text" value={address.fullAddress} placeholder='Full Address' onChange={(e) => setAddress((prev) => ({ ...prev, fullAddress: e.target.value }))}
                 className='pl-10 w-full border border-lg p-3 text-sm bg-gray-50' />
             </div>
 
@@ -128,7 +144,7 @@ const Checkout = () => {
               <MapView position={position}/>
             </div> */}
             <div style={{ width: '100%', height: '300px' }} className="rounded-xl overflow-hidden mt-6">
-              <MapViewWrapper position={position} />
+              <MapViewWrapper position={position} onMarkerDrag={handleMarkerDrag} onAddressFound={handleAddressFound} />
             </div>
           </div>
         </motion.div>

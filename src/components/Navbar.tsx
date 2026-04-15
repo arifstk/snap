@@ -261,7 +261,6 @@ const Navbar = ({ user }: { user: IUser }) => {
                 <button onClick={() => setSearchBarOpen(false)}>
                   <X className="text-gray-500" />
                 </button>
-
               </motion.div>
             }
           </AnimatePresence>

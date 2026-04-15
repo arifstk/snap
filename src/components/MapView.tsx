@@ -1,5 +1,6 @@
 // components/MapView.tsx
 'use client';
+import axios from 'axios';
 import { LatLngExpression } from 'leaflet';
 import React, { useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
@@ -7,9 +8,11 @@ import { useMap } from 'react-leaflet';
 const MapView = ({
   position,
   onMarkerDrag,
+  onAddressFound,
 }: {
   position: [number, number] | null;
   onMarkerDrag?: (lat: number, lng: number) => void;
+  onAddressFound?: (data: any) => void;
 }) => {
   const [MapComponents, setMapComponents] = useState<any>(null);
 
@@ -34,6 +37,25 @@ const MapView = ({
     loadMap();
   }, []);
 
+  // user address auto fetch 
+  useEffect(() => {
+    const fetchAddress = async () => {
+      try {
+        // if (!position) return;
+        if (!position || (position[0] === 0 && position[1] === 0)) return;
+        const result = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${position[0]}&lon=${position[1]}&format=json`);
+        // console.log(result.data);
+        // Send the data back to the Checkout page
+        if (result.data && onAddressFound) {
+          onAddressFound(result.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchAddress();
+  }, [position, onAddressFound]);
+
   if (!position || !MapComponents) return (
     <div className="w-full h-full bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-sm">
       Loading map...
@@ -45,9 +67,9 @@ const MapView = ({
   // Draggable marker
   const DraggableMarker: React.FC = () => {
     const map = useMap();
-    useEffect(()=> {
-      map.setView(position as LatLngExpression, 13, {animate:true});
-    }, [position,map]);
+    useEffect(() => {
+      map.setView(position as LatLngExpression, 13, { animate: true });
+    }, [position, map]);
 
     return <Marker
       position={position as LatLngExpression}
@@ -62,7 +84,7 @@ const MapView = ({
       }}>
       <Popup>Your delivery location</Popup>
     </Marker>
-  }; 
+  };
 
   return (
     <MapContainer
@@ -93,3 +115,4 @@ const MapView = ({
 };
 
 export default MapView;
+
