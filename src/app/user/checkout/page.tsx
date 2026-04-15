@@ -100,13 +100,13 @@ const Checkout = () => {
             {/* mobile */}
             <div className='relative'>
               <Phone className='absolute left-3 top-3 text-green-600' size={18} />
-              <input type="text" value={address.mobile} onChange={(e) => setAddress((prev) => ({ ...prev, mobile: address.mobile }))}
+              <input type="text" value={address.mobile} onChange={(e) => setAddress((prev) => ({ ...prev, mobile: e.target.value }))}
                 className='pl-10 w-full border border-lg p-3 text-sm bg-gray-50' />
             </div>
             {/* email */}
             <div className='relative'>
               <Mail className='absolute left-3 top-3 text-green-600' size={18} />
-              <input type="text" value={address.email} onChange={(e) => setAddress((prev) => ({ ...prev, email: address.email }))}
+              <input type="text" value={address.email} onChange={(e) => setAddress((prev) => ({ ...prev, email: e.target.value}))}
                 className='pl-10 w-full border border-lg p-3 text-sm bg-gray-50' />
             </div>
             {/* address */}
@@ -119,17 +119,17 @@ const Checkout = () => {
             <div className='grid grid-cols-3 gap-3'>
               <div className='relative'>
                 <Building className='absolute left-3 top-3 text-green-600' size={18} />
-                <input type="text" value={address.city} placeholder='City' onChange={(e) => setAddress((prev) => ({ ...prev, city: address.city }))}
+                <input type="text" value={address.city} placeholder='City' onChange={(e) => setAddress((prev) => ({ ...prev, city: e.target.value }))}
                   className='pl-10 w-full border border-lg p-3 text-sm bg-gray-50' />
               </div>
               <div className='relative'>
                 <Navigation className='absolute left-3 top-3 text-green-600' size={18} />
-                <input type="text" value={address.state} placeholder='State' onChange={(e) => setAddress((prev) => ({ ...prev, state: address.state }))}
+                <input type="text" value={address.state} placeholder='State' onChange={(e) => setAddress((prev) => ({ ...prev, state: e.target.value }))}
                   className='pl-10 w-full border border-lg p-3 text-sm bg-gray-50' />
               </div>
               <div className='relative'>
                 <Search className='absolute left-3 top-3 text-green-600' size={18} />
-                <input type="text" value={address.pincode} placeholder='pincode' onChange={(e) => setAddress((prev) => ({ ...prev, pincode: address.pincode }))}
+                <input type="text" value={address.pincode} placeholder='pincode' onChange={(e) => setAddress((prev) => ({ ...prev, pincode: e.target.value }))}
                   className='pl-10 w-full border border-lg p-3 text-sm bg-gray-50' />
               </div>
             </div>
