@@ -1,6 +1,6 @@
 // app/user/checkout/page.tsx
 'use client';
-import MapView from '@/components/MapView';
+// import MapView from '@/components/MapView';
 import MapViewWrapper from '@/components/MapViewWrapper';
 import { RootState } from '@/redux/store';
 import { ArrowLeft, Building, Home, Mail, MapPin, Navigation, Phone, Search, User } from 'lucide-react';
@@ -127,7 +127,7 @@ const Checkout = () => {
             {/* <div className='relative mt-6 w-full h-82 rounded-xl overflow-hidden border border-gray-200 shadow-inner'>
               <MapView position={position}/>
             </div> */}
-            <div style={{ width: '100%', height: '300px' }} className="rounded-xl overflow-hidden mt-4">
+            <div style={{ width: '100%', height: '300px' }} className="rounded-xl overflow-hidden mt-6">
               <MapViewWrapper position={position} />
             </div>
           </div>
@@ -138,4 +138,5 @@ const Checkout = () => {
 }
 
 export default Checkout;
+
 

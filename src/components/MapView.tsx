@@ -1,32 +1,16 @@
-// // components/MapView.tsx
-// 'use client';
-// import { LatLngExpression } from 'leaflet';
-// import React from 'react'
-// import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
-// import "leaflet/dist/leaflet.css";
-
-// const MapView = ({ position }: { position: [number, number] | null }) => {
-//   if(!position) return null;
-//   return (
-//     <MapContainer center={position as LatLngExpression} zoom={13} scrollWheelZoom={false} className='w-full h-full'>
-//       <TileLayer
-//         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-//         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-//       />
-
-//     </MapContainer>
-//   )
-// }
-
-// export default MapView;
-
-
 // components/MapView.tsx
 'use client';
 import { LatLngExpression } from 'leaflet';
 import React, { useEffect, useState } from 'react';
+import { useMap } from 'react-leaflet';
 
-const MapView = ({ position }: { position: [number, number] | null }) => {
+const MapView = ({
+  position,
+  onMarkerDrag,
+}: {
+  position: [number, number] | null;
+  onMarkerDrag?: (lat: number, lng: number) => void;
+}) => {
   const [MapComponents, setMapComponents] = useState<any>(null);
 
   useEffect(() => {
@@ -58,20 +42,52 @@ const MapView = ({ position }: { position: [number, number] | null }) => {
 
   const { MapContainer, TileLayer, Marker, Popup, markerIcon } = MapComponents;
 
+  // Draggable marker
+  const DraggableMarker: React.FC = () => {
+    const map = useMap();
+    useEffect(()=> {
+      map.setView(position as LatLngExpression, 13, {animate:true});
+    }, [position,map]);
+
+    return <Marker
+      position={position as LatLngExpression}
+      icon={markerIcon}
+      draggable={true} // ✅ makes marker draggable
+      eventHandlers={{
+        dragend: (e: L.LeafletEvent) => {
+          const marker = e.target as L.Marker;
+          const { lat, lng } = marker.getLatLng();
+          onMarkerDrag?.(lat, lng);
+        }
+      }}>
+      <Popup>Your delivery location</Popup>
+    </Marker>
+  }; 
+
   return (
     <MapContainer
       center={position as LatLngExpression}
       zoom={13}
-      scrollWheelZoom={false}
+      scrollWheelZoom={true}
       style={{ width: '100%', height: '100%' }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={position as LatLngExpression} icon={markerIcon}>
+      {/* <Marker position={position as LatLngExpression} icon={markerIcon}
+        draggable={true} // ✅ makes marker draggable
+        eventHandlers={{
+          dragend: (e: L.LeafletEvent) => {
+            const marker = e.target as L.Marker;
+            const { lat, lng } = marker.getLatLng();
+            onMarkerDrag?.(lat, lng);
+          }
+        }}>
         <Popup>Your delivery location</Popup>
-      </Marker>
+      </Marker> */}
+      {/* <MapRecenter position={position} /> */}
+      <DraggableMarker />
     </MapContainer>
   );
 };
