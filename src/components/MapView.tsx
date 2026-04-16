@@ -4,6 +4,8 @@ import axios from 'axios';
 import { LatLngExpression } from 'leaflet';
 import React, { useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
+import { motion } from 'motion/react';
+import { LocateFixed } from 'lucide-react';
 
 const MapView = ({
   position,
@@ -86,6 +88,30 @@ const MapView = ({
     </Marker>
   };
 
+  // set location click location icon in the map
+  const handleLocateMe = () => {
+  if (!navigator.geolocation) {
+    alert("Geolocation not supported");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
+
+      // update parent state (important)
+      onMarkerDrag?.(latitude, longitude);
+    },
+    (err) => {
+      console.error(err);
+      alert("Failed to get location");
+    },
+    {
+      enableHighAccuracy: true,
+    }
+  );
+};
+
   return (
     <MapContainer
       center={position as LatLngExpression}
@@ -110,6 +136,13 @@ const MapView = ({
       </Marker> */}
       {/* <MapRecenter position={position} /> */}
       <DraggableMarker />
+      <motion.button
+      onClick={handleLocateMe}
+      whileTap={{scale:0.97}}
+        className='absolute bottom-6 right-2 bg-green-600 text-white shadow-lg rounded-full p-1 hover:bg-green-700 transition-all flex items-center justify-center z-999 cursor-pointer'
+      >
+        <LocateFixed size={22}/>
+      </motion.button>
     </MapContainer>
   );
 };
