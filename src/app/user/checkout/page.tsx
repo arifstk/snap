@@ -2,7 +2,7 @@
 'use client';
 import MapViewWrapper from '@/components/MapViewWrapper';
 import { RootState } from '@/redux/store';
-import { ArrowLeft, Building, Home, Mail, MapPin, Navigation, Phone, Search, User } from 'lucide-react';
+import { ArrowLeft, Building, CreditCard, Home, Mail, MapPin, Navigation, Phone, Search, Truck, User } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
@@ -17,6 +17,7 @@ interface UserData {
 const Checkout = () => {
   const router = useRouter();
   const { userData } = useSelector((state: RootState) => state.user) as { userData: UserData | null };
+  const { subTotal, deliveryFee, finalTotal } = useSelector((state: RootState) => state.cart);
 
   const [address, setAddress] = useState({
     fullName: "",
@@ -29,6 +30,7 @@ const Checkout = () => {
   });
 
   const [position, setPosition] = useState<[number, number] | null>([0, 0]);
+  const [paymentMethod, setPaymentMethod] = useState<"cod" | "online">("cod");
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -86,6 +88,7 @@ const Checkout = () => {
       </motion.h1>
 
       <div className='grid md:grid-cols-2 gap-8'>
+        {/* Delivery Address */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -188,9 +191,63 @@ const Checkout = () => {
             </div>
           </div>
         </motion.div>
+
+        {/* Payment */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3 }}
+          className='bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100 h-fit'
+        >
+          <h2 className='text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2'>
+            <CreditCard size={20} className='text-green-600' /> Payment Method</h2>
+          <div className='space-y-4 mb-6'>
+            {/* online payment */}
+            <button
+              onClick={() => setPaymentMethod("online")} className={`flex items-center gap-3 w-full border border-lg p-3 transition-all cursor-pointer
+              ${paymentMethod === "online"
+                  ? "border-green-600 bg-green-100 shadow-sm"
+                  : "hover:bg-gray-50"
+                }`}>
+              <CreditCard className='text-green-600' />
+              <span className='font-medium text-gray-700'>Pay Online (stripe)</span>
+            </button>
+            {/* Cash on Delivery */}
+            <button
+              onClick={() => setPaymentMethod("cod")} className={`flex items-center gap-3 w-full border border-lg p-3 transition-all cursor-pointer
+              ${paymentMethod === "cod"
+                  ? "border-green-600 bg-green-100 shadow-sm"
+                  : "hover:bg-gray-50"
+                }`}>
+              <Truck className='text-green-600' />
+              <span className='font-medium text-gray-700'>Cash on Delivery</span>
+            </button>
+          </div>
+          {/* Summery */}
+          <div className='border-t pt-4 text-gray-700 space-y-2 text-sm sm:text-base'>
+            <div className='flex justify-between'>
+              <span className='font-semibold'>SubTotal</span>
+              <span className='font-semibold text-green-600'>${subTotal}</span>
+            </div>
+            <div className='flex justify-between'>
+              <span className='font-semibold'>Delivery Fee</span>
+              <span className='font-semibold text-green-600'>${deliveryFee}</span>
+            </div>
+            <div className='flex justify-between font-bold text-lg border-t pt-3'>
+              <span>Final Total</span>
+              <span className='text-green-600'>${finalTotal}</span>
+            </div>
+          </div>
+          <motion.button whileTap={{ scale: 0.95 }}
+            className='w-full mt-6 bg-green-600 text-white py-3 rounded-full hover:bg-green-700 transition-all font-semibold cursor-pointer'
+          >
+            {paymentMethod == "cod" ? "Place Order" : "Pay Now"}
+          </motion.button>
+        </motion.div>
       </div>
     </div>
   );
 };
 
 export default Checkout;
+
