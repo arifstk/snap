@@ -1,9 +1,9 @@
+// api/user/order/route.ts (cod)
 import connectDb from "@/lib/db";
 import Order from "@/models/order.model";
 import User from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 
-// api/user/order/route.ts (cod)
 export async function POST(req:NextRequest) {
   try {
     await connectDb();
