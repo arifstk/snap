@@ -100,7 +100,8 @@ const Checkout = () => {
         },
         paymentMethod: "cod",
       });
-      console.log(result.data);
+      // console.log(result.data);
+      router.push("/user/order-success");
     } catch (error) {
       console.error("Error placing order:", error);
     }
