@@ -2,6 +2,7 @@
 'use client';
 import MapViewWrapper from '@/components/MapViewWrapper';
 import { RootState } from '@/redux/store';
+import axios from 'axios';
 import { ArrowLeft, Building, CreditCard, Home, Mail, MapPin, Navigation, Phone, Search, Truck, User } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
@@ -9,6 +10,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 
 interface UserData {
+  _id?: string;
   name?: string;
   mobile?: string;
   email?: string;
@@ -17,7 +19,7 @@ interface UserData {
 const Checkout = () => {
   const router = useRouter();
   const { userData } = useSelector((state: RootState) => state.user) as { userData: UserData | null };
-  const { subTotal, deliveryFee, finalTotal } = useSelector((state: RootState) => state.cart);
+  const { subTotal, deliveryFee, finalTotal, cartData } = useSelector((state: RootState) => state.cart);
 
   const [address, setAddress] = useState({
     fullName: "",
@@ -65,6 +67,43 @@ const Checkout = () => {
       pincode: address.postcode || "",
       fullAddress: data.display_name || "",
     }));
+  };
+
+  // handle cod order
+  const handleCod = async () => {
+    if (!position) {
+      return null;
+    }
+    try {
+      const result = await axios.post("/api/user/order", {
+        userId: userData?._id,
+        items: cartData.map(item => (
+          {
+            grocery: item._id,
+            name: item.name,
+            price: item.price,
+            unit: item.unit,
+            image: item.image,
+            quantity: item.quantity,
+          }
+        )),
+        totalAmount: finalTotal,
+        address: {
+          fullName: address.fullName,
+          mobile: address.mobile,
+          email: address.email,
+          city: address.city,
+          state: address.state,
+          pincode: address.pincode, fullAddress: address.fullAddress,
+          latitude: position[0],
+          longitude: position[1],
+        },
+        paymentMethod: "cod",
+      });
+      console.log(result.data);
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
   };
 
   return (
@@ -240,6 +279,13 @@ const Checkout = () => {
           </div>
           <motion.button whileTap={{ scale: 0.95 }}
             className='w-full mt-6 bg-green-600 text-white py-3 rounded-full hover:bg-green-700 transition-all font-semibold cursor-pointer'
+            onClick={() => {
+              if (paymentMethod == "cod") {
+                handleCod();
+              } else {
+                null;
+              }
+            }}
           >
             {paymentMethod == "cod" ? "Place Order" : "Pay Now"}
           </motion.button>
