@@ -34,6 +34,8 @@ export async function POST(req:NextRequest) {
       paymentMethod,
       address
     })
+    await newOrder.save(); // save to the database
+
     return NextResponse.json(
       newOrder,
       {status: 202}
