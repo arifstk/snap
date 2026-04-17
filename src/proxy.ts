@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const publicRoutes = ["/login", "/register", "/api/auth"];
+  const publicRoutes = ["/login", "/register", "/api/auth", "/api/webhook"];
 
   if (publicRoutes.some((path) => pathname.startsWith(path))) {
     return NextResponse.next();
