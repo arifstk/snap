@@ -95,7 +95,7 @@ const Navbar = ({ user }: { user: IUser }) => {
             <PlusCircle className="w-5 h-5" /> Add Grocery</Link>
           <Link href={""} className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
             <Boxes className="w-5 h-5" /> View Grocery</Link>
-          <Link href={""} className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
+          <Link href={"/admin/manage-orders"} className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
             <ClipboardCheck className="w-5 h-5" /> Manage Orders</Link>
         </div>
 
@@ -160,7 +160,7 @@ const Navbar = ({ user }: { user: IUser }) => {
                 <PlusCircle className="w-5 h-5" /> Add Grocery</Link>
               <Link href={""} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">
                 <Boxes className="w-5 h-5" /> View Grocery</Link>
-              <Link href={""} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">
+              <Link href={"/admin/manage-orders"} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">
                 <ClipboardCheck className="w-5 h-5" /> Manage Orders</Link>
             </div>
             {/* Sidebar for Small Screen */}
