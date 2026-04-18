@@ -226,7 +226,8 @@ const Navbar = ({ user }: { user: IUser }) => {
 
                 {
                   user.role === "user" &&
-                  <Link href={""} className="flex items-center gap-2 mt-2 px-2 py-3 hover:bg-green-50 rounded-lg text-gray-700" onClick={() => setOpen(false)}>
+                  <Link href={"/user/my-orders"} className="flex items-center gap-2 mt-2 px-2 py-3 hover:bg-green-50 rounded-lg text-gray-700" onClick={() => setOpen(false)}
+                  >
                     <Package className="w-5 h-5 text-green-600" />
                     My Orders
                   </Link>
@@ -275,3 +276,4 @@ const Navbar = ({ user }: { user: IUser }) => {
 
 export default Navbar;
 
+// onClick={() => setOpen(false)}
