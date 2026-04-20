@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import AdminDashboard from "@/components/AdminDashboard";
 import DeliveryBoyDashboard from "@/components/DeliveryBoyDashboard";
 import EditRoleMobile from "@/components/EditRoleMobile";
+import GeoUpdater from "@/components/GeoUpdater";
 import Navbar from "@/components/Navbar";
 import UserDashboard from "@/components/UserDashboard";
 import connectDb from "@/lib/db";
@@ -31,6 +32,7 @@ const Home = async () => {
   return (
     <>
       <Navbar user={plainUser} />
+      <GeoUpdater userId={plainUser._id} />
       {user.role == "user" ? (
         <UserDashboard />
       ) : user.role == "admin" ? (

@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   try {
     await connectDb();
     const { userId, socketId } = await req.json();
-    await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
       userId,
       {
         socketId,
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       },
       { new: true },
     );
-    if(!User) {
+    if(!user) {
       return NextResponse.json(
         {message: "user not found"},
         {status: 400}
