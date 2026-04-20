@@ -12,7 +12,25 @@ interface IUser {
   token?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  location?: {
+    type: {
+      type: string;
+      enum: ["Point"];
+      default: "Point";
+    };
+    coordinates: {
+      type: [Number];
+      default: [0, 0];
+    };
+  };
+  socketId?: string | null;
+  isOnline?: boolean;
 }
+
+// interface ILocation {
+//   type: string;
+//   coordinates: [number, number];
+// }
 
 const userSchema = new mongoose.Schema<IUser>(
   {
@@ -37,7 +55,7 @@ const userSchema = new mongoose.Schema<IUser>(
     mobile: {
       type: String,
       required: false,
-       match: [/^[0-9]{10,15}$/, "Please enter a valid mobile number"],
+      match: [/^[0-9]{10,15}$/, "Please enter a valid mobile number"],
     },
     role: {
       type: String,
@@ -52,14 +70,31 @@ const userSchema = new mongoose.Schema<IUser>(
       type: String,
       default: null,
     },
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point",
+      },
+      coordinates: {
+        type: [Number],
+        default: [0, 0],
+      },
+    },
+    socketId: {
+      type: String,
+      default: null,
+    },
+    isOnline: {
+      type: Boolean,
+      default: false,
+    }
   },
-  {timestamps: true },
+  { timestamps: true },
 );
+userSchema.index({ location: "2dsphere" });
 
 const User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
 
 export default User;
-
-
-
 

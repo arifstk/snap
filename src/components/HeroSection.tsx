@@ -5,8 +5,20 @@ import { AnimatePresence } from 'motion/react';
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import Image from 'next/image';
+import { getSocket } from '@/lib/socket';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 const HeroSection = () => {
+  const { userData } = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    if (userData) {
+      let socket = getSocket();
+      socket.emit("identity", userData?._id)
+    }
+  }, [userData]);
+
   const slides = [
     {
       id: 1,
@@ -66,27 +78,27 @@ const HeroSection = () => {
         <motion.div
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay:0.6 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
           className='flex flex-col items-center justify-center gap-3 max-w-3xl'
         >
           <div className='bg-white/10 backdrop-blur-md p-3 rounded-full shadow-lg'>{slides[current].icon}</div>
           <div className='text sm:text-5xl md:text-6xl font-extrabold tracking-tight drop-shadow-lg'>{slides[current].title}</div>
           <p className='text-lg sm:text-xl text-gray-200 max-w-2xl'>{slides[current].subtitle}</p>
           <motion.button
-          whileHover={{scale: 1.05}}
-          whileTap={{scale: 0.9}}
-          transition={{duration: 0.2}}
-          className='mt-4 bg-white text-green-700 hover:bg-green-100 px-8 py-3 rounded-full font-semibold shadow-lg transition-all duration-300 flex items-center gap-2 cursor-pointer'>
-            <ShoppingBasket className='w-5 h-5'/>
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ duration: 0.2 }}
+            className='mt-4 bg-white text-green-700 hover:bg-green-100 px-8 py-3 rounded-full font-semibold shadow-lg transition-all duration-300 flex items-center gap-2 cursor-pointer'>
+            <ShoppingBasket className='w-5 h-5' />
             {slides[current].btnText}
           </motion.button>
           <div className='absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2'>
-          {slides.map((_,index)=>(
-            <button 
-            key={index}
-            className={`w-3 h-3 rounded-full transition-all ${index === current?"bg-white w-6": "bg-white/50"}`}
-            />
-          ))}
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                className={`w-3 h-3 rounded-full transition-all ${index === current ? "bg-white w-6" : "bg-white/50"}`}
+              />
+            ))}
           </div>
         </motion.div>
       </div>

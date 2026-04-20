@@ -17,7 +17,7 @@ interface IUserSlice {
   userData: IUser | null;
 }
 
-const initialState = {
+const initialState: IUserSlice = {
   userData: null,
 };
 
