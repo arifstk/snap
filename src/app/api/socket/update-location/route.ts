@@ -2,7 +2,7 @@
 
 import connectDb from "@/lib/db";
 import User from "@/models/user.model";
-import { connect } from "http2";
+// import { connect } from "http2";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
