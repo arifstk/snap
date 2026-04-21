@@ -49,6 +49,7 @@ const DeliveryAssignment =
     deliveryAssignmentSchema,
   );
 
+  export default DeliveryAssignment
 
 // add this line to order.model.ts
 // assignment?: mongoose.Types.ObjectId;

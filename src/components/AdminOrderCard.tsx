@@ -1,6 +1,7 @@
 // components/adminOrderCard.tsx
 'use client';
 import { IOrder } from '@/models/order.model';
+import axios from 'axios';
 import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Phone, Truck, User } from 'lucide-react';
 import { motion } from "motion/react";
 import Image from 'next/image';
@@ -9,6 +10,14 @@ import React, { useState } from 'react'
 const AdminOrderCard = ({ order }: { order: IOrder }) => {
   const statusOptions = ["pending", "out of delivery"];
   const [expanded, setExpanded] = useState(false);
+  const updateStatus = async (orderId:string, status:string) => {
+    try {
+      const result = await axios.post(`/api/admin/update-order-status/${orderId}`, {status});
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <motion.div
@@ -69,7 +78,8 @@ const AdminOrderCard = ({ order }: { order: IOrder }) => {
           >
             {order.status}
           </span>
-          <select className='border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-green-400 transition focus:ring-2 focus:ring-green-500 outline-none'>
+          <select className='border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-green-400 transition focus:ring-2 focus:ring-green-500 outline-none'
+          onChange={(e)=>updateStatus(order._id?.toString()!, e.target.value)}>
             {statusOptions.map(st => (
               <option key={st} value={st}>{st.toUpperCase()}</option>
             ))}
