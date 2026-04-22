@@ -23,7 +23,7 @@ export async function POST(
     order.status = status;
 
     let deliveryBoysPayload: any[] = [];
-    if (status === "out of delivery" && !order.assignment) {
+    if (status === "out for delivery" && !order.assignment) {
       const { latitude, longitude } = order.address;
       const nearByDeliveryBoys = await User.find({
         role: "deliveryBoy",
