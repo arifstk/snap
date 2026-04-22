@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import AdminDashboard from "@/components/AdminDashboard";
-import DeliveryBoyDashboard from "@/components/DeliveryBoyDashboard";
+import DeliveryBoy from "@/components/DeliveryBoy";
 import EditRoleMobile from "@/components/EditRoleMobile";
 import GeoUpdater from "@/components/GeoUpdater";
 import Navbar from "@/components/Navbar";
@@ -38,7 +38,7 @@ const Home = async () => {
       ) : user.role == "admin" ? (
         <AdminDashboard />
       ) :
-        <DeliveryBoyDashboard />
+        <DeliveryBoy />
       }
     </>
   )

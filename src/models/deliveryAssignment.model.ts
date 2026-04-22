@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 interface IDeliveryAssignment {
   _id?: mongoose.Types.ObjectId;
   order: mongoose.Types.ObjectId;
-  broadcastedTo: mongoose.Types.ObjectId;
+  broadcastedTo: mongoose.Types.ObjectId[];
   assignedTo: mongoose.Types.ObjectId | null;
   status: "broadcasted" | "assigned" | "completed";
   acceptedAt: Date;
@@ -19,10 +19,12 @@ const deliveryAssignmentSchema = new mongoose.Schema<IDeliveryAssignment>(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Order",
     },
-    broadcastedTo: {
+    broadcastedTo: [
+      {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    ],
     assignedTo: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -43,7 +45,7 @@ const deliveryAssignmentSchema = new mongoose.Schema<IDeliveryAssignment>(
 );
 
 const DeliveryAssignment =
-  mongoose.models.deliveryAssignment ||
+  mongoose.models.DeliveryAssignment ||
   mongoose.model<IDeliveryAssignment>(
     "DeliveryAssignment",
     deliveryAssignmentSchema,
