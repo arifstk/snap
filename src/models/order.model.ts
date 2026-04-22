@@ -90,7 +90,7 @@ const orderSchema = new mongoose.Schema<IOrder>(
     status: {
       type: String,
       enum: ["pending", "out for delivery", "delivered"],
-      // default: "pending",
+      default: "pending",
     },
   },
   { timestamps: true },

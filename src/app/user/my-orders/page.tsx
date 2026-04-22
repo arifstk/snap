@@ -32,7 +32,7 @@ const MyOrders = () => {
   }
 
   return (
-    <div className='bg-linear-to-b from-white to-gray-100 min-h-screen w-full'>
+    <div className='bg-linear-to-b from-white to-gray-100 min-h-screen'>
 
       {/* Header */}
       <div className='fixed top-0 left-0 w-full backdrop-blur-lg bg-white/70 shadow-sm border-b z-50'>

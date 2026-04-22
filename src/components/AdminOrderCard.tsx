@@ -10,10 +10,12 @@ import React, { useState } from 'react'
 const AdminOrderCard = ({ order }: { order: IOrder }) => {
   const statusOptions = ["pending", "out for delivery"];
   const [expanded, setExpanded] = useState(false);
+  const [status, setStatus] = useState<string>(order.status);
   const updateStatus = async (orderId:string, status:string) => {
     try {
       const result = await axios.post(`/api/admin/update-order-status/${orderId}`, {status});
       console.log(result.data);
+      setStatus(status);
     } catch (error) {
       console.log(error);
     }
@@ -69,16 +71,17 @@ const AdminOrderCard = ({ order }: { order: IOrder }) => {
         {/* status badge change */}
         <div className='flex flex-col items-start md:items-end gap-2 mt-2 md:mt-0'>
           <span
-            className={`text-xs font-semibold px-3 py-1 rounded-full capitalize ${order.status === "delivered"
+            className={`text-xs font-semibold px-3 py-1 rounded-full capitalize ${status === "delivered"
               ? "bg-green-100 text-green-700"
-              : order.status === "pending"
+              : status === "pending"
                 ? "bg-yellow-100 text-yellow-700"
                 : "bg-blue-100 text-blue-700"
               }`}
           >
-            {order.status}
+            {status}
           </span>
           <select className='border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-green-400 transition focus:ring-2 focus:ring-green-500 outline-none'
+          value={status}
           onChange={(e)=>updateStatus(order._id?.toString()!, e.target.value)}>
             {statusOptions.map(st => (
               <option key={st} value={st}>{st.toUpperCase()}</option>
@@ -129,7 +132,7 @@ const AdminOrderCard = ({ order }: { order: IOrder }) => {
         <div className='flex justify-between items-center mt-3 px-3 py-2 bg-gray-100 rounded-lg'>
           <div className='flex items-center gap-2 text-gray-700 text-sm'>
             <Truck size={16} className='text-green-600' />
-            <p className='text-md font-semibold text-gray-500'>Delivery: <span>{order.status}</span></p>
+            <p className='text-md font-semibold text-gray-500'>Delivery: <span>{status}</span></p>
           </div>
           <p className='font-semibold text-green-600'> <span className='text-gray-500'>Total: </span>
             ${order.items.reduce((total, item) => total + (Number(item.price) * item.quantity), 0).toFixed(2)}
