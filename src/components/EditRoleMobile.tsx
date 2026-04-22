@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 // import { Router } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const EditRoleMobile = () => {
   const [roles, setRoles] = useState([
@@ -17,22 +17,38 @@ const EditRoleMobile = () => {
 
   const [selectedRole, setSelectedRole] = useState("");
   const [mobile, setMobile] = useState("");
-  const {update} =useSession();
+  const { update } = useSession();
   const router = useRouter();
-  const handleEdit = async ()=> {
+  const handleEdit = async () => {
     // Handle the logic to save the selected role and mobile number
     try {
       const result = await axios.post("/api/user/edit-role-mobile", {
         role: selectedRole,
         mobile: mobile
       })
-      await update({role: selectedRole})
+      await update({ role: selectedRole })
       // console.log(result.data);
       router.push("/");
     } catch (error) {
       console.log(error);
     }
   }
+
+  // admin check
+  useEffect(() => {
+    const checkForAdmin = async () => {
+      try {
+        const result = await axios.get("/api/check-for-admin");
+        // console.log(result.data);
+        if(result.data.adminExist) {
+          setRoles(prev=>prev.filter(r=>r.id!=="admin"));
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    checkForAdmin();
+  }, []);
 
   return (
     <div className='flex flex-col justify-center items-center min-h-screen p-6 w-full bg-white'>
@@ -86,10 +102,10 @@ const EditRoleMobile = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
-        disabled={mobile.length!==11 || !selectedRole}
+        disabled={mobile.length !== 11 || !selectedRole}
         className={`flex items-center justify-center gap-2 font-semibold py-3 px-8 rounded-2xl shadow-md transition-all duration-200 w-50 mt-5
-          ${selectedRole && mobile.length===11 ? "bg-green-600 text-white hover:bg-green-700 cursor-pointer" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}
-          onClick={handleEdit}
+          ${selectedRole && mobile.length === 11 ? "bg-green-600 text-white hover:bg-green-700 cursor-pointer" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}
+        onClick={handleEdit}
       >
         Go to Home <ArrowRight size={18} />
       </motion.button>
