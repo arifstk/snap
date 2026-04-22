@@ -8,7 +8,7 @@ import Image from 'next/image';
 import React, { useState } from 'react'
 
 const AdminOrderCard = ({ order }: { order: IOrder }) => {
-  const statusOptions = ["pending", "out of delivery"];
+  const statusOptions = ["pending", "out for delivery"];
   const [expanded, setExpanded] = useState(false);
   const updateStatus = async (orderId:string, status:string) => {
     try {

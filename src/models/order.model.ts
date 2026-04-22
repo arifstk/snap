@@ -30,7 +30,7 @@ export interface IOrder {
   };
   assignment?: mongoose.Types.ObjectId;
   assignedDeliveryBoy?: mongoose.Types.ObjectId;
-  status: "pending" | "out of delivery" | "delivered";
+  status: "pending" | "out for delivery" | "delivered";
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -89,8 +89,8 @@ const orderSchema = new mongoose.Schema<IOrder>(
     },
     status: {
       type: String,
-      enum: ["pending", "out of delivery", "delivered"],
-      default: "pending",
+      enum: ["pending", "out for delivery", "delivered"],
+      // default: "pending",
     },
   },
   { timestamps: true },

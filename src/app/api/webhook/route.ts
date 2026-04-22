@@ -40,7 +40,7 @@ export async function POST(req: Request) {
         // Find the order and update isPaid to true
         await Order.findByIdAndUpdate(orderId, {
           isPaid: true,
-          status: "processing", // Move status from pending to processing
+          // status: "pending",
         });
 
         console.log(`✅ Order ${orderId} is now PAID`);
