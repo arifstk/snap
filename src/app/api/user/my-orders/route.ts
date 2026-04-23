@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
     await connectDb();
     const session = await auth();
     const orders = await Order.find({ user: session?.user?.id })
-      .populate("user")
+      .populate("user assignedDeliveryBoy")
       .sort({ createdAt: -1 });
 
     if (!orders) {

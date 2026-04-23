@@ -1,11 +1,47 @@
 // components/UserOrderCard.tsx
 'use client';
 import { getSocket } from '@/lib/socket';
-import { IOrder } from '@/models/order.model';
-import { ChevronDown, ChevronUp, CreditCard, Package, Truck } from 'lucide-react';
+// import { IOrder } from '@/models/order.model';
+import { IUser } from '@/models/user.model';
+import { ChevronDown, ChevronUp, CreditCard, Package, Truck, UserCheck } from 'lucide-react';
+import mongoose from 'mongoose';
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
+
+interface IOrder {
+  _id?: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
+  items: [
+    {
+      grocery: mongoose.Types.ObjectId;
+      name: string;
+      price: string;
+      unit: string;
+      image: string;
+      quantity: number;
+    },
+  ];
+  isPaid: boolean;
+  totalAmount: string;
+  paymentMethod: "cod" | "online";
+  address: {
+    fullName: string;
+    mobile: string;
+    email: string;
+    city: string;
+    state: string;
+    pincode: string;
+    fullAddress: string;
+    latitude: number;
+    longitude: number;
+  };
+  assignment?: mongoose.Types.ObjectId;
+  assignedDeliveryBoy?: IUser;
+  status: "pending" | "out for delivery" | "delivered";
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 const UserOrderCard = ({ order }: { order: IOrder }) => {
   const [expanded, setExpanded] = useState(false);
@@ -18,7 +54,7 @@ const UserOrderCard = ({ order }: { order: IOrder }) => {
         return "bg-yellow-100 text-yellow-700 border-yellow-300";
       case "processing":
         return "bg-teal-100 text-teal-700 border-teal-300";
-      case "out of delivery":
+      case "out for delivery":
         return "bg-blue-100 text-blue-700 border-blue-300";
       case "delivered":
         return "bg-green-100 text-green-700 border-green-300";
@@ -28,14 +64,14 @@ const UserOrderCard = ({ order }: { order: IOrder }) => {
   };
 
   // status change instantly
-  useEffect(():any => {
+  useEffect((): any => {
     const socket = getSocket();
     socket.on("order-status-update", (data) => {
       if (data.orderId == order._id) {
         setStatus(data.status);
       }
     })
-    return ()=> socket.off("order-status-update")
+    return () => socket.off("order-status-update")
   }, []);
 
   return (
@@ -78,6 +114,7 @@ const UserOrderCard = ({ order }: { order: IOrder }) => {
               <CreditCard size={16} className='text-green-600' />
               Online Payment
             </div>}
+
         </div>
         {/* address */}
         <div className='text-sm text-gray-600 mb-2'>
@@ -126,7 +163,7 @@ const UserOrderCard = ({ order }: { order: IOrder }) => {
           <div className='flex justify-between items-center mt-3 px-3 py-2 bg-gray-100 rounded-lg'>
             <div className='flex items-center gap-2 text-gray-700 text-sm'>
               <Truck size={16} className='text-green-600' />
-              <p className='text-md font-semibold text-gray-500'>Delivery: 
+              <p className='text-md font-semibold text-gray-500'>Delivery:
                 <span className='text-green-600'> {status}</span></p>
             </div>
             <p className='font-semibold text-green-600'> <span className='text-gray-500'>Total: </span>
@@ -134,6 +171,25 @@ const UserOrderCard = ({ order }: { order: IOrder }) => {
             </p>
           </div>
         </div>
+
+        {/* delivery boy */}
+        {
+          order.assignedDeliveryBoy &&
+          <div className='w-full mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-between'>
+            <div className='flex items-center gap-3 text-sm text-gray-700'>
+              <UserCheck size={18} className='text-blue-600' />
+              <div>
+                <p className='font-semibold'>Delivery Boy: <span>
+                  {order.assignedDeliveryBoy.name}</span></p>
+                <p className='text-xs text-gray-600'>📞 {order.assignedDeliveryBoy.mobile}</p>
+                <p className='text-xs text-gray-600'>✉︎ {order.assignedDeliveryBoy.email}</p>
+              </div>
+            </div>
+
+            <a href={`tel: ${order.assignedDeliveryBoy.mobile}`}
+              className='bg-blue-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-700 transition'>Call</a>
+          </div>
+        }
       </div>
     </motion.div>
   )

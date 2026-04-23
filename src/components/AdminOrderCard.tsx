@@ -1,19 +1,55 @@
 // components/adminOrderCard.tsx
 'use client';
-import { IOrder } from '@/models/order.model';
+import { IUser } from '@/models/user.model';
+// import { IOrder } from '@/models/order.model';
 import axios from 'axios';
-import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Phone, Truck, User } from 'lucide-react';
+import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Phone, Truck, User, UserCheck } from 'lucide-react';
+import mongoose from 'mongoose';
 import { motion } from "motion/react";
 import Image from 'next/image';
 import React, { useState } from 'react'
+
+interface IOrder {
+  _id?: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
+  items: [
+    {
+      grocery: mongoose.Types.ObjectId;
+      name: string;
+      price: string;
+      unit: string;
+      image: string;
+      quantity: number;
+    },
+  ];
+  isPaid: boolean;
+  totalAmount: string;
+  paymentMethod: "cod" | "online";
+  address: {
+    fullName: string;
+    mobile: string;
+    email: string;
+    city: string;
+    state: string;
+    pincode: string;
+    fullAddress: string;
+    latitude: number;
+    longitude: number;
+  };
+  assignment?: mongoose.Types.ObjectId;
+  assignedDeliveryBoy?: IUser;
+  status: "pending" | "out for delivery" | "delivered";
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 const AdminOrderCard = ({ order }: { order: IOrder }) => {
   const statusOptions = ["pending", "out for delivery"];
   const [expanded, setExpanded] = useState(false);
   const [status, setStatus] = useState<string>(order.status);
-  const updateStatus = async (orderId:string, status:string) => {
+  const updateStatus = async (orderId: string, status: string) => {
     try {
-      const result = await axios.post(`/api/admin/update-order-status/${orderId}`, {status});
+      const result = await axios.post(`/api/admin/update-order-status/${orderId}`, { status });
       console.log(result.data);
       setStatus(status);
     } catch (error) {
@@ -64,6 +100,25 @@ const AdminOrderCard = ({ order }: { order: IOrder }) => {
               <CreditCard size={16} className='text-green-600' />
               <span>{order?.paymentMethod === "cod" ? "Cash on Delivery" : "Online Payment"}</span>
             </p>
+            {/* delivery boy */}
+            {
+              order.assignedDeliveryBoy &&
+              <div className='w-full mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-between'>
+                <div className='flex items-center gap-3 text-sm text-gray-700'>
+                  <UserCheck size={18} className='text-blue-600' />
+                  <div>
+                    <p className='font-semibold'>Delivery Boy: <span>
+                      {order.assignedDeliveryBoy.name}</span></p>
+                    <p className='text-xs text-gray-600'>📞 {order.assignedDeliveryBoy.mobile}</p>
+                    <p className='text-xs text-gray-600'>✉︎ {order.assignedDeliveryBoy.email}</p>
+                  </div>
+                </div>
+
+                <a href={`tel: ${order.assignedDeliveryBoy.mobile}`}
+                className='bg-blue-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-700 transition'>Call</a>
+              </div>
+            }
+
           </div>
         </div>
 
@@ -81,8 +136,8 @@ const AdminOrderCard = ({ order }: { order: IOrder }) => {
             {status}
           </span>
           <select className='border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-green-400 transition focus:ring-2 focus:ring-green-500 outline-none'
-          value={status}
-          onChange={(e)=>updateStatus(order._id?.toString()!, e.target.value)}>
+            value={status}
+            onChange={(e) => updateStatus(order._id?.toString()!, e.target.value)}>
             {statusOptions.map(st => (
               <option key={st} value={st}>{st.toUpperCase()}</option>
             ))}
