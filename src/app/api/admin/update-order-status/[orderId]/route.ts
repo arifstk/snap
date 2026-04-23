@@ -53,7 +53,10 @@ export async function POST(
       if (candidates.length == 0) {
         await order.save();
         // update order status instantly
-        await emitEventHandler("order-status-update", {orderId:order._id, status:order.status});
+        await emitEventHandler("order-status-update", {
+          orderId: order._id,
+          status: order.status,
+        });
 
         return NextResponse.json(
           { message: "There is no available delivery boys" },
@@ -65,6 +68,16 @@ export async function POST(
         broadcastedTo: candidates,
         status: "broadcasted",
       });
+
+      // update status instantly (deliveryBoy found order)
+      await deliveryAssignment.populate("order");
+      for (const boyId of candidates) {
+        const boy = await User.findById(boyId);
+        if (boy.socketId) {
+          await emitEventHandler("new-assignment", deliveryAssignment, boy.socketId);
+        }
+      }
+
       order.assignment = deliveryAssignment._id;
       deliveryBoysPayload = availableDeliveryBoys.map((b) => ({
         id: b._id,
@@ -81,7 +94,10 @@ export async function POST(
     await order.populate("user");
 
     // update status instantly
-    await emitEventHandler("order-status-update", {orderId:order._id, status:order.status});
+    await emitEventHandler("order-status-update", {
+      orderId: order._id,
+      status: order.status,
+    });
 
     return NextResponse.json(
       {
@@ -90,7 +106,6 @@ export async function POST(
       },
       { status: 200 },
     );
-
   } catch (error) {
     console.error("Update order status error:", error);
     return NextResponse.json(
@@ -99,5 +114,3 @@ export async function POST(
     );
   }
 }
-
- 

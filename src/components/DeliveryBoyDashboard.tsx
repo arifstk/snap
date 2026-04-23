@@ -1,5 +1,6 @@
 // components/DeliveryBoyDashboard.tsx
 'use client';
+import { getSocket } from '@/lib/socket';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
@@ -18,7 +19,16 @@ const DeliveryBoyDashboard = () => {
       }
     }
     fetchAssignment();
-  }, [])
+  }, []);
+
+  // update status instantly (deliveryBoy found order)
+  useEffect((): any => {
+    const socket = getSocket();
+    socket.on("new-assignment", (deliveryAssignment) => {
+      setAssignments(prev => [...prev, deliveryAssignment]);
+    })
+    return () => socket.off("new-assignment");
+  }, []);
 
   return (
     <div className='w-full min-h-screen bg-gray-50 p-4 mt-25'>

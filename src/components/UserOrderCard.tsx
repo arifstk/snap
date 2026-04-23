@@ -126,7 +126,8 @@ const UserOrderCard = ({ order }: { order: IOrder }) => {
           <div className='flex justify-between items-center mt-3 px-3 py-2 bg-gray-100 rounded-lg'>
             <div className='flex items-center gap-2 text-gray-700 text-sm'>
               <Truck size={16} className='text-green-600' />
-              <p className='text-md font-semibold text-gray-500'>Delivery: <span>{status}</span></p>
+              <p className='text-md font-semibold text-gray-500'>Delivery: 
+                <span className='text-green-600'> {status}</span></p>
             </div>
             <p className='font-semibold text-green-600'> <span className='text-gray-500'>Total: </span>
               ${order.items.reduce((total, item) => total + (Number(item.price) * item.quantity), 0).toFixed(2)}
