@@ -1,6 +1,7 @@
 // app/admin/manage-orders/page.tsx
 'use client';
 import AdminOrderCard from '@/components/AdminOrderCard';
+import { getSocket } from '@/lib/socket';
 import { IOrder } from '@/models/order.model';
 import axios from 'axios'
 import { ArrowLeft } from 'lucide-react';
@@ -22,6 +23,18 @@ const ManageOrders = () => {
     }
     getOrders();
   }, []);
+
+  // emit event (instant show orders)
+  useEffect(():any => {
+    const socket = getSocket();
+    socket?.on("new-order", (newOrder) => {
+      // console.log(newOrder);
+      setOrders(prev=>[newOrder, ...prev!]); 
+    })
+    return ()=> socket.off("new-order");
+  }, []);
+
+
   return (
     <div className='min-h-screen bg-gray-50 w-full'>
       {/* Header */}

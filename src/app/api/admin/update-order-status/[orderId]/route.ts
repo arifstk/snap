@@ -1,6 +1,7 @@
 // api/ admin/update-order-status/[orderId]/route.ts
 
 import connectDb from "@/lib/db";
+import emitEventHandler from "@/lib/emitEventHandler";
 import DeliveryAssignment from "@/models/deliveryAssignment.model";
 import Order from "@/models/order.model";
 import User from "@/models/user.model";
@@ -51,6 +52,9 @@ export async function POST(
 
       if (candidates.length == 0) {
         await order.save();
+        // update order status instantly
+        await emitEventHandler("order-status-update", {orderId:order._id, status:order.status});
+
         return NextResponse.json(
           { message: "There is no available delivery boys" },
           { status: 200 },
@@ -75,6 +79,9 @@ export async function POST(
 
     await order.save(); // ✅ order saved
     await order.populate("user");
+
+    // update status instantly
+    await emitEventHandler("order-status-update", {orderId:order._id, status:order.status});
 
     return NextResponse.json(
       {

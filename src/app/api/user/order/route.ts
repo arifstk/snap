@@ -1,5 +1,6 @@
 // api/user/order/route.ts (cod)
 import connectDb from "@/lib/db";
+import emitEventHandler from "@/lib/emitEventHandler";
 import Order from "@/models/order.model";
 import User from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
@@ -22,11 +23,6 @@ export async function POST(req:NextRequest) {
       )
     }
   
-    // if(paymentMethod === "cod") {
-    //   const order = await Order.create({
-    //     user: userId,
-    //     items,
-    // }
     const newOrder = new Order({
       user: userId,
       items,
@@ -35,6 +31,9 @@ export async function POST(req:NextRequest) {
       address
     })
     await newOrder.save(); // save to the database
+
+    // emit event
+    await emitEventHandler("new-order", newOrder);
 
     return NextResponse.json(
       newOrder,

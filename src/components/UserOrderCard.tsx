@@ -1,13 +1,16 @@
 // components/UserOrderCard.tsx
 'use client';
+import { getSocket } from '@/lib/socket';
 import { IOrder } from '@/models/order.model';
 import { ChevronDown, ChevronUp, CreditCard, Package, Truck } from 'lucide-react';
 import { motion } from 'motion/react';
 import Image from 'next/image';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const UserOrderCard = ({ order }: { order: IOrder }) => {
   const [expanded, setExpanded] = useState(false);
+  // instant update status
+  const [status, setStatus] = useState(order.status);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -23,6 +26,17 @@ const UserOrderCard = ({ order }: { order: IOrder }) => {
         return "bg-gray-100 text-gray-600 border-gray-300";
     }
   };
+
+  // status change instantly
+  useEffect(():any => {
+    const socket = getSocket();
+    socket.on("order-status-update", (data) => {
+      if (data.orderId == order._id) {
+        setStatus(data.status);
+      }
+    })
+    return ()=> socket.off("order-status-update")
+  }, []);
 
   return (
     <motion.div
@@ -47,8 +61,8 @@ const UserOrderCard = ({ order }: { order: IOrder }) => {
               }`}>
               {order.isPaid ? "Paid" : "Unpaid"}
             </span>
-            <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${getStatusColor(order.status)}`}>
-              {order.status}
+            <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${getStatusColor(status)}`}>
+              {status}
             </span>
           </div>
         </div>
@@ -112,7 +126,7 @@ const UserOrderCard = ({ order }: { order: IOrder }) => {
           <div className='flex justify-between items-center mt-3 px-3 py-2 bg-gray-100 rounded-lg'>
             <div className='flex items-center gap-2 text-gray-700 text-sm'>
               <Truck size={16} className='text-green-600' />
-              <p className='text-md font-semibold text-gray-500'>Delivery: <span>{order.status}</span></p>
+              <p className='text-md font-semibold text-gray-500'>Delivery: <span>{status}</span></p>
             </div>
             <p className='font-semibold text-green-600'> <span className='text-gray-500'>Total: </span>
               ${order.items.reduce((total, item) => total + (Number(item.price) * item.quantity), 0).toFixed(2)}

@@ -8,7 +8,7 @@ import GroceryItemCart from './GroceryItemCard';
 
 const UserDashboard = async () => {
   await connectDb();
-  const groceries = await Grocery.find({})
+  const groceries = await Grocery.find({}).sort({ createdAt: -1 })
   const plainGrocery = JSON.parse(JSON.stringify(groceries))
 
   return (
