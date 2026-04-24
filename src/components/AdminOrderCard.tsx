@@ -4,53 +4,18 @@ import { IUser } from '@/models/user.model';
 import { IOrder } from '@/models/order.model';
 import axios from 'axios';
 import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Phone, Truck, User, UserCheck } from 'lucide-react';
-import mongoose from 'mongoose';
 import { motion } from "motion/react";
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface Props {
   order: IOrder;
 }
 
-// interface IOrder {
-//   _id?: mongoose.Types.ObjectId;
-//   user: mongoose.Types.ObjectId;
-//   items: [
-//     {
-//       grocery: mongoose.Types.ObjectId;
-//       name: string;
-//       price: string;
-//       unit: string;
-//       image: string;
-//       quantity: number;
-//     },
-//   ];
-//   isPaid: boolean;
-//   totalAmount: string;
-//   paymentMethod: "cod" | "online";
-//   address: {
-//     fullName: string;
-//     mobile: string;
-//     email: string;
-//     city: string;
-//     state: string;
-//     pincode: string;
-//     fullAddress: string;
-//     latitude: number;
-//     longitude: number;
-//   };
-//   assignment?: mongoose.Types.ObjectId;
-//   assignedDeliveryBoy?: IUser;
-//   status: "pending" | "out for delivery" | "delivered";
-//   createdAt?: Date;
-//   updatedAt?: Date;
-// }
-
-const AdminOrderCard = ({ order }:Props) => {
+const AdminOrderCard = ({ order }: Props) => {
   const statusOptions = ["pending", "out for delivery"];
   const [expanded, setExpanded] = useState(false);
-  const [status, setStatus] = useState<string>(order.status);
+  const [status, setStatus] = useState<string>("pending");
   const updateStatus = async (orderId: string, status: string) => {
     try {
       const result = await axios.post(`/api/admin/update-order-status/${orderId}`, { status });
@@ -60,6 +25,11 @@ const AdminOrderCard = ({ order }:Props) => {
       console.log(error);
     }
   }
+
+  // order changed then update status automatically
+  useEffect(() => {
+    setStatus(order.status);
+  }, [order]);
 
   return (
     <motion.div
@@ -107,7 +77,7 @@ const AdminOrderCard = ({ order }:Props) => {
             {/* delivery boy */}
             {
               order.assignedDeliveryBoy &&
-              <div className='w-full mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-between'>
+              <div className='w-full mt-4 bg-blue-50 border border-blue-200 rounded-xl px-4 py-2 flex items-center justify-between'>
                 <div className='flex items-center gap-3 text-sm text-gray-700'>
                   <UserCheck size={18} className='text-blue-600' />
                   <div>
@@ -119,7 +89,7 @@ const AdminOrderCard = ({ order }:Props) => {
                 </div>
 
                 <a href={`tel: ${(order.assignedDeliveryBoy as IUser).mobile}`}
-                className='bg-blue-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-700 transition'>Call</a>
+                  className='bg-blue-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-700 transition'>Call</a>
               </div>
             }
 

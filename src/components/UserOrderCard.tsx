@@ -3,7 +3,7 @@
 import { getSocket } from '@/lib/socket';
 import { IOrder } from '@/models/order.model';
 import { IUser } from '@/models/user.model';
-import { ChevronDown, ChevronUp, CreditCard, Package, Truck, UserCheck } from 'lucide-react';
+import { ChevronDown, ChevronUp, CreditCard, Package, Phone, Truck, TruckIcon, UserCheck } from 'lucide-react';
 import mongoose from 'mongoose';
 import { motion } from 'motion/react';
 import Image from 'next/image';
@@ -12,41 +12,8 @@ import React, { useEffect, useState } from 'react'
 interface Props {
   order: IOrder;
 }
-// interface IOrder {
-//   _id?: mongoose.Types.ObjectId;
-//   user: mongoose.Types.ObjectId;
-//   items: [
-//     {
-//       grocery: mongoose.Types.ObjectId;
-//       name: string;
-//       price: string;
-//       unit: string;
-//       image: string;
-//       quantity: number;
-//     },
-//   ];
-//   isPaid: boolean;
-//   totalAmount: string;
-//   paymentMethod: "cod" | "online";
-//   address: {
-//     fullName: string;
-//     mobile: string;
-//     email: string;
-//     city: string;
-//     state: string;
-//     pincode: string;
-//     fullAddress: string;
-//     latitude: number;
-//     longitude: number;
-//   };
-//   assignment?: mongoose.Types.ObjectId;
-//   assignedDeliveryBoy?: IUser;
-//   status: "pending" | "out for delivery" | "delivered";
-//   createdAt?: Date;
-//   updatedAt?: Date;
-// }
 
-const UserOrderCard = ({ order }:Props) => {
+const UserOrderCard = ({ order }: Props) => {
   const [expanded, setExpanded] = useState(false);
   // instant update status
   const [status, setStatus] = useState(order.status);
@@ -124,6 +91,34 @@ const UserOrderCard = ({ order }:Props) => {
           <span className='bg-gray-200 p-0.5 px-2 rounded-md mr-2'>Address:</span>
           {order.address.fullAddress}
         </div>
+
+        {/* delivery boy */}
+        {
+          order.assignedDeliveryBoy &&
+          <div className='w-full mt-4 bg-blue-50 border border-blue-200 rounded-xl px-4 py-2 flex flex-col md:flex-row gap-2  justify-between'>
+            <div className='flex items-center gap-3 text-sm text-gray-700'>
+              <UserCheck size={18} className='text-blue-600' />
+              <div>
+                <p className='font-semibold'>Delivery Boy: <span>
+                  {(order.assignedDeliveryBoy as IUser).name}</span></p>
+                <p className='text-xs text-gray-600'>📞 {(order.assignedDeliveryBoy as IUser).mobile}</p>
+                <p className='text-xs text-gray-600'>✉︎ {(order.assignedDeliveryBoy as IUser).email}</p>
+              </div>
+            </div>
+
+            <div className='flex gap-3 py-0 md:py-3'>
+              {/* call delivery boy */}
+              <a href={`tel: ${(order.assignedDeliveryBoy as IUser).mobile}`}
+                className='flex items-center gap-2 bg-blue-600 text-white font-semibold px-3 rounded-xl hover:bg-blue-700 transition'>
+                  <Phone size={18} /> Call</a>
+              {/* track order */}
+              <button className='w-full flex items-center justify-center gap-2 bg-green-600 text-white font-semibold px-4 py-1 rounded-xl shadow hover:bg-green-700 transition'>
+                <TruckIcon size={18} /> Track Your Order
+              </button>
+            </div>
+          </div>
+        }
+
         {/* items */}
         <div className='border-t border-gray-200 pt-2'>
           <button className='w-full flex justify-between items-center text-sm font-medium text-gray-700 hover:text-green-700 transition cursor-pointer'
@@ -174,25 +169,6 @@ const UserOrderCard = ({ order }:Props) => {
             </p>
           </div>
         </div>
-
-        {/* delivery boy */}
-        {
-          order.assignedDeliveryBoy &&
-          <div className='w-full mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-between'>
-            <div className='flex items-center gap-3 text-sm text-gray-700'>
-              <UserCheck size={18} className='text-blue-600' />
-              <div>
-                <p className='font-semibold'>Delivery Boy: <span>
-                  {(order.assignedDeliveryBoy as IUser).name}</span></p>
-                <p className='text-xs text-gray-600'>📞 {(order.assignedDeliveryBoy as IUser).mobile}</p>
-                <p className='text-xs text-gray-600'>✉︎ {(order.assignedDeliveryBoy as IUser).email}</p>
-              </div>
-            </div>
-
-            <a href={`tel: ${(order.assignedDeliveryBoy as IUser).mobile}`}
-              className='bg-blue-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-700 transition'>Call</a>
-          </div>
-        }
       </div>
     </motion.div>
   )
