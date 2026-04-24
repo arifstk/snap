@@ -1,7 +1,7 @@
 // components/UserOrderCard.tsx
 'use client';
 import { getSocket } from '@/lib/socket';
-// import { IOrder } from '@/models/order.model';
+import { IOrder } from '@/models/order.model';
 import { IUser } from '@/models/user.model';
 import { ChevronDown, ChevronUp, CreditCard, Package, Truck, UserCheck } from 'lucide-react';
 import mongoose from 'mongoose';
@@ -9,41 +9,44 @@ import { motion } from 'motion/react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 
-interface IOrder {
-  _id?: mongoose.Types.ObjectId;
-  user: mongoose.Types.ObjectId;
-  items: [
-    {
-      grocery: mongoose.Types.ObjectId;
-      name: string;
-      price: string;
-      unit: string;
-      image: string;
-      quantity: number;
-    },
-  ];
-  isPaid: boolean;
-  totalAmount: string;
-  paymentMethod: "cod" | "online";
-  address: {
-    fullName: string;
-    mobile: string;
-    email: string;
-    city: string;
-    state: string;
-    pincode: string;
-    fullAddress: string;
-    latitude: number;
-    longitude: number;
-  };
-  assignment?: mongoose.Types.ObjectId;
-  assignedDeliveryBoy?: IUser;
-  status: "pending" | "out for delivery" | "delivered";
-  createdAt?: Date;
-  updatedAt?: Date;
+interface Props {
+  order: IOrder;
 }
+// interface IOrder {
+//   _id?: mongoose.Types.ObjectId;
+//   user: mongoose.Types.ObjectId;
+//   items: [
+//     {
+//       grocery: mongoose.Types.ObjectId;
+//       name: string;
+//       price: string;
+//       unit: string;
+//       image: string;
+//       quantity: number;
+//     },
+//   ];
+//   isPaid: boolean;
+//   totalAmount: string;
+//   paymentMethod: "cod" | "online";
+//   address: {
+//     fullName: string;
+//     mobile: string;
+//     email: string;
+//     city: string;
+//     state: string;
+//     pincode: string;
+//     fullAddress: string;
+//     latitude: number;
+//     longitude: number;
+//   };
+//   assignment?: mongoose.Types.ObjectId;
+//   assignedDeliveryBoy?: IUser;
+//   status: "pending" | "out for delivery" | "delivered";
+//   createdAt?: Date;
+//   updatedAt?: Date;
+// }
 
-const UserOrderCard = ({ order }: { order: IOrder }) => {
+const UserOrderCard = ({ order }:Props) => {
   const [expanded, setExpanded] = useState(false);
   // instant update status
   const [status, setStatus] = useState(order.status);
@@ -180,13 +183,13 @@ const UserOrderCard = ({ order }: { order: IOrder }) => {
               <UserCheck size={18} className='text-blue-600' />
               <div>
                 <p className='font-semibold'>Delivery Boy: <span>
-                  {order.assignedDeliveryBoy.name}</span></p>
-                <p className='text-xs text-gray-600'>📞 {order.assignedDeliveryBoy.mobile}</p>
-                <p className='text-xs text-gray-600'>✉︎ {order.assignedDeliveryBoy.email}</p>
+                  {(order.assignedDeliveryBoy as IUser).name}</span></p>
+                <p className='text-xs text-gray-600'>📞 {(order.assignedDeliveryBoy as IUser).mobile}</p>
+                <p className='text-xs text-gray-600'>✉︎ {(order.assignedDeliveryBoy as IUser).email}</p>
               </div>
             </div>
 
-            <a href={`tel: ${order.assignedDeliveryBoy.mobile}`}
+            <a href={`tel: ${(order.assignedDeliveryBoy as IUser).mobile}`}
               className='bg-blue-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-700 transition'>Call</a>
           </div>
         }

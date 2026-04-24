@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react'
 
 const ManageOrders = () => {
   const router = useRouter();
-  const [orders, setOrders] = useState<IOrder[]>();
+  const [orders, setOrders] = useState<IOrder[]>([]);
 
   useEffect(() => {
     const getOrders = async () => {
@@ -51,8 +51,8 @@ const ManageOrders = () => {
       <div className='max-w-6xl mx-auto px-4 pt-24 pb-16 space-y-8'>
         <div className='space-y-5'>
           {
-            orders?.map((order, index) => (
-              <AdminOrderCard order={order} key={index} />
+            orders?.map((order) => (
+              <AdminOrderCard order={order} key={order._id?.toString()} />
             ))
           }
         </div>

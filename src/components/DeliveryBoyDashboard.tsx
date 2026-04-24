@@ -34,7 +34,7 @@ const DeliveryBoyDashboard = () => {
     try {
       const result = await axios.get(`/api/delivery/assignment/${id}/accept-assignment`);
       console.log(result.data);
-
+      
     } catch (error) {
       console.log(error);
     }

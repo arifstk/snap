@@ -10,7 +10,7 @@ import { motion } from 'motion/react';
 
 const MyOrders = () => {
   const router = useRouter();
-  const [orders, setOrders] = useState<IOrder[]>();
+  const [orders, setOrders] = useState<IOrder[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -56,9 +56,9 @@ const MyOrders = () => {
         ) :
           <div className='pt-25 px-4 space-7-3 max-w-4xl mx-auto'>
             {
-              orders?.map((order, index) => (
+              orders?.map((order) => (
                 <motion.div
-                  key={index}
+                  key={order._id?.toString()}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.1 }}
