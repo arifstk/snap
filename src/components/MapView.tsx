@@ -147,5 +147,5 @@ const MapView = ({
   );
 };
 
-export default MapView;
+export default MapView; 
 
