@@ -123,18 +123,6 @@ const MapView = ({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {/* <Marker position={position as LatLngExpression} icon={markerIcon}
-        draggable={true} // ✅ makes marker draggable
-        eventHandlers={{
-          dragend: (e: L.LeafletEvent) => {
-            const marker = e.target as L.Marker;
-            const { lat, lng } = marker.getLatLng();
-            onMarkerDrag?.(lat, lng);
-          }
-        }}>
-        <Popup>Your delivery location</Popup>
-      </Marker> */}
-      {/* <MapRecenter position={position} /> */}
       <DraggableMarker />
       <motion.button
       onClick={handleLocateMe}
