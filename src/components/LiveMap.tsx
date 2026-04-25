@@ -1,5 +1,4 @@
 // components/LiveMap.tsx
-
 import dynamic from 'next/dynamic';
 
 const LiveMap = dynamic(() => import('./LiveMapClient'), {

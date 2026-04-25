@@ -33,10 +33,6 @@ const TrackOrder = ({ params }: { params: Promise<{ orderId: string }> }) => {
         const data = result.data;
         console.log(data);
         setOrder(data);
-        // setUserLocation({
-        //   latitude: result.data.address.latitude,
-        //   longitude: result.data.address.longitude,
-        // })
 
         if (data?.address?.latitude && data?.address?.longitude) {
           setUserLocation({
@@ -44,11 +40,6 @@ const TrackOrder = ({ params }: { params: Promise<{ orderId: string }> }) => {
             longitude: data.address.longitude,
           });
         }
-
-        // setDeliveryBoyLocation({
-        //   latitude: result.data.assignedDeliveryBoy.location.latitude,
-        //   longitude: result.data.assignedDeliveryBoy.location.longitude
-        // })
 
         if (
           data?.assignedDeliveryBoy?.location?.latitude &&
@@ -91,30 +82,6 @@ const TrackOrder = ({ params }: { params: Promise<{ orderId: string }> }) => {
     };
   }, [deliveryBoyId]);
 
-
-  // Real time location update via socket
-  // useEffect(() => {
-  //   if (!deliveryBoyId) return;
-  //   const socket = getSocket();
-
-  //   // ✅ join the room on the socket server for this delivery boy
-  //   socket.emit("track-delivery-boy", deliveryBoyId);
-
-  //   // ✅ CHANGED: listen to 'location-updated' not 'update-location'
-  //   // 'update-location' goes delivery boy → server only
-  //   // 'location-updated' goes server → user (re-broadcast)
-  //   socket.on("location-updated", (data: { latitude: number; longitude: number }) => {
-  //     setDeliveryBoyLocation({
-  //       latitude: data.latitude,
-  //       longitude: data.longitude,
-  //     });
-  //   });
-
-  //   return () => {
-  //     socket.off("location-updated");
-  //   };
-  // }, [deliveryBoyId]);
-
   useEffect((): any => {
     const socket = getSocket();
     socket.on("update-deliveryBoy-location", ({ userId, location }) => {
@@ -133,7 +100,7 @@ const TrackOrder = ({ params }: { params: Promise<{ orderId: string }> }) => {
     <div className='w-full min-h-screen bg-linear-to-b from-green30 to-white'>
       <div className='max-w-2xl mx-auto pb-24'>
         {/* Header */}
-        <div className='sticky top-0 bg-white/80 backdrop-blur-xl p-4 border-b shadow flex gap-3 items-center z-999'>
+        <div className='sticky top-0 bg-white/80 backdrop-blur-xl p-4 border-b shadow flex gap-3 items-center'>
           <button className='p-2 bg-green-100 rounded-full cursor-pointer'
             onClick={() => router.back()}>
             <ArrowLeft className='text-green-700' size={20} />

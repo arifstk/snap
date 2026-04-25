@@ -3,7 +3,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { MapContainer, Marker, Polyline, Popup, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from 'react-leaflet';
 import type { Icon } from 'leaflet';
 import "leaflet/dist/leaflet.css";
 
@@ -15,6 +15,18 @@ interface ILocation {
 interface IProps {
   userLocation: ILocation;
   deliveryBoyLocation?: ILocation;
+}
+
+function Recenter({ positions }: { positions: [number, number] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (positions[0] !== 0 && positions[1] !== 0) {
+      map.setView(positions, map.getZoom(), {
+        animate: true
+      })
+    }
+  }, [positions,map]);
+  return null;
 }
 
 const LiveMapClient = ({ userLocation, deliveryBoyLocation }: IProps) => {
@@ -41,12 +53,11 @@ const LiveMapClient = ({ userLocation, deliveryBoyLocation }: IProps) => {
 
   const linePositions =
     deliveryBoyLocation && userLocation
-    ? [
-      [userLocation.latitude, userLocation.longitude],
-      [deliveryBoyLocation.latitude, deliveryBoyLocation.longitude],
-    ] :
-    [];
-  
+      ? [
+        [userLocation.latitude, userLocation.longitude],
+        [deliveryBoyLocation.latitude, deliveryBoyLocation.longitude],
+      ] :
+      [];
 
   return (
     <div className='w-full h-100 rounded-xl overflow-hidden shadow relative'>
@@ -56,6 +67,7 @@ const LiveMapClient = ({ userLocation, deliveryBoyLocation }: IProps) => {
         scrollWheelZoom={true}
         style={{ width: '100%', height: '100%' }}
       >
+        <Recenter positions={center} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -71,7 +83,7 @@ const LiveMapClient = ({ userLocation, deliveryBoyLocation }: IProps) => {
             <Popup>Delivery Boy Location</Popup>
           </Marker>
         )}
-        <Polyline positions={linePositions as any} color="green"/>
+        <Polyline positions={linePositions as any} color="green" />
       </MapContainer>
     </div>
   );
