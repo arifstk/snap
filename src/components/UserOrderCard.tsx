@@ -7,6 +7,7 @@ import { ChevronDown, ChevronUp, CreditCard, Package, Phone, Truck, TruckIcon, U
 import mongoose from 'mongoose';
 import { motion } from 'motion/react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 interface Props {
@@ -17,6 +18,7 @@ const UserOrderCard = ({ order }: Props) => {
   const [expanded, setExpanded] = useState(false);
   // instant update status
   const [status, setStatus] = useState(order.status);
+  const router = useRouter();
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -112,7 +114,8 @@ const UserOrderCard = ({ order }: Props) => {
                 className='flex items-center gap-2 bg-blue-600 text-white font-semibold px-3 rounded-xl hover:bg-blue-700 transition'>
                   <Phone size={18} /> Call</a>
               {/* track order */}
-              <button className='w-full flex items-center justify-center gap-2 bg-green-600 text-white font-semibold px-4 py-1 rounded-xl shadow hover:bg-green-700 transition'>
+              <button className='w-full flex items-center justify-center gap-2 bg-green-600 text-white font-semibold px-4 py-1 rounded-xl shadow hover:bg-green-700 transition cursor-pointer'
+              onClick={()=>router.push(`/user/track-order/${order._id?.toString()}`)}>
                 <TruckIcon size={18} /> Track Your Order
               </button>
             </div>
