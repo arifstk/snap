@@ -1,4 +1,4 @@
-// components/DeliveryChat.tsx
+// // components/UserChats.tsx
 'use client';
 import axios from 'axios';
 import { getSocket } from '@/lib/socket';
@@ -15,10 +15,10 @@ type Message = {
 
 type Props = {
   orderId: mongoose.Types.ObjectId;
-  deliveryBoyId: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
 };
 
-const DeliveryChat = ({ orderId, deliveryBoyId }: Props) => {
+const UserChat = ({ orderId, userId }: Props) => {
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -55,7 +55,7 @@ const DeliveryChat = ({ orderId, deliveryBoyId }: Props) => {
     const message: Message = {
       roomId: orderId,
       text: newMessage,
-      senderId: deliveryBoyId,
+      senderId: userId,
       time: new Date().toLocaleTimeString([], {
         hour: '2-digit',
         minute: '2-digit',
@@ -63,7 +63,6 @@ const DeliveryChat = ({ orderId, deliveryBoyId }: Props) => {
     };
 
     socket.emit("send-message", message);
-    // setMessages(prev => [...prev, message]);
     setNewMessage('');
   };
 
@@ -72,23 +71,24 @@ const DeliveryChat = ({ orderId, deliveryBoyId }: Props) => {
   };
 
   return (
-    <div className='bg-white rounded-3xl shadow-lg p-4 h-105 flex flex-col'>
-      <h2 className='font-semibold text-gray-700 mb-2'>Live Chat</h2>
+    <div className='bg-white rounded-3xl shadow-lg mt-3 p-4 h-105 flex flex-col'>
+      <h2 className='font-semibold text-gray-700 mb-2'>Chat with Delivery Boy</h2>
 
-      <div className='flex-1 overflow-y-auto space-y-1.5 pr-2
-        [&::-webkit-scrollbar]:w-1
-        [&::-webkit-scrollbar-track]:bg-transparent
-        [&::-webkit-scrollbar-thumb]:bg-transparent
-        [&::-webkit-scrollbar-thumb]:rounded-full
-        hover:[&::-webkit-scrollbar-thumb]:bg-gray-300'>
+      <div className='flex-1 overflow-y-auto space-y-1.5 pr-1
+          [&::-webkit-scrollbar]:w-1
+          [&::-webkit-scrollbar-track]:bg-transparent
+          [&::-webkit-scrollbar-thumb]:bg-transparent
+          [&::-webkit-scrollbar-thumb]:rounded-full
+          hover:[&::-webkit-scrollbar-thumb]:bg-gray-300'>
         {messages.length === 0 && (
           <p className='text-center text-gray-400 text-sm mt-8'>No messages yet</p>
         )}
         {messages.map((msg, i) => {
-          const isMe = msg.senderId.toString() === deliveryBoyId.toString();
+          const isMe = msg.senderId.toString() === userId.toString();
           return (
             <div key={i} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[70%] px-4 py-1 rounded-2xl text-sm ${isMe ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-800'}`}>
+              <div className={`max-w-[70%] px-4 py-1 rounded-2xl text-sm
+                ${isMe ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-800'}`}>
                 <p>{msg.text}</p>
                 <p className={`text-xs mt-1 ${isMe ? 'text-green-200 text-right' : 'text-gray-400 text-left'}`}>
                   {msg.time}
@@ -121,5 +121,4 @@ const DeliveryChat = ({ orderId, deliveryBoyId }: Props) => {
   );
 };
 
-export default DeliveryChat;
-
+export default UserChat;

@@ -10,6 +10,7 @@ import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getSocket } from '@/lib/socket';
+import UserChat from '@/components/UserChats';
 
 interface ILocation {
   latitude: number,
@@ -97,8 +98,8 @@ const TrackOrder = ({ params }: { params: Promise<{ orderId: string }> }) => {
 
 
   return (
-    <div className='w-full min-h-screen bg-linear-to-b from-green30 to-white'>
-      <div className='max-w-2xl mx-auto pb-24'>
+    <div className='w-full min-h-screen bg-linear-to-b from-green/30 to-white'>
+      <div className='max-w-2xl mx-auto pb-4'>
         {/* Header */}
         <div className='sticky top-0 bg-white/80 backdrop-blur-xl p-4 border-b shadow flex gap-3 items-center'>
           <button className='p-2 bg-green-100 rounded-full cursor-pointer'
@@ -118,7 +119,6 @@ const TrackOrder = ({ params }: { params: Promise<{ orderId: string }> }) => {
         {/* Map */}
         <div className='px-4 mt-6'>
           <div className='rounded-3xl overflow-hidden border shadow'>
-            {/* <LiveMap userLocation={userLocation} deliveryBoyLocation={deliveryBoyLocation} /> */}
             {userLocation ? (
               <LiveMap
                 userLocation={userLocation}
@@ -130,6 +130,13 @@ const TrackOrder = ({ params }: { params: Promise<{ orderId: string }> }) => {
               </div>
             )}
           </div>
+          {/* live chat */}
+          {order?._id && userData?._id && (
+            <UserChat
+              orderId={order._id}
+              userId={userData._id}
+            />
+          )}
         </div>
       </div>
     </div>
