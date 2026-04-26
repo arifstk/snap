@@ -15,7 +15,7 @@ const messageSchema = new mongoose.Schema<IMessage>(
   {
     roomId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "ChatRoom",
+      ref: "Order",
       // required: true,
     },
     text: {
