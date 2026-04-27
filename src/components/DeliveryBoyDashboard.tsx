@@ -102,7 +102,7 @@ const DeliveryBoyDashboard = () => {
       <div className='p-4 pt-25 min-h-screen bg-gray-50'>
         <div className='max-w-3xl mx-auto pt-8'>
           <h1 className='text-2xl font-bold text-green-700 mb-2'>Active Delivery</h1>
-          <p className='text-gray-600 text-sm mb-4'>order# {activeOrder.order._id.slice(-6)}</p>
+          <p className='text-gray-600 text-sm mb-4'>order# {activeOrder.order._id?.slice(-6)}</p>
 
           <div className='rounded-xl border shadow-lg overflow-hidden mb-6'>
             <LiveMap userLocation={userLocation} deliveryBoyLocation={deliveryBoyLocation} />

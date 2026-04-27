@@ -19,7 +19,7 @@ export async function GET() {
       })
       .lean();
 
-    if (!activeAssignment) {
+    if (!activeAssignment || !activeAssignment.order) {
       return NextResponse.json({ active: false }, { status: 200 });
     }
 
