@@ -3,10 +3,11 @@
 'use client';
 import axios from 'axios';
 import { getSocket } from '@/lib/socket';
-import { Send } from 'lucide-react';
+import { Send, Sparkle } from 'lucide-react';
 import mongoose from 'mongoose';
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
+import { motion } from 'motion/react';
 
 type Message = {
   roomId: mongoose.Types.ObjectId;
@@ -48,6 +49,9 @@ const UserChat = ({ orderId, userId }: Props) => {
   const [customer, setCustomer] = useState<PersonInfo>({ name: 'Me' });
   const [deliveryBoy, setDeliveryBoy] = useState<PersonInfo>({ name: 'Delivery Boy' });
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [suggestions, setSuggestions] = useState([
+      "hello", "thank you", "hi",
+    ]);
 
   // ✅ fetch both customer and delivery boy info
   useEffect(() => {
@@ -116,6 +120,31 @@ const UserChat = ({ orderId, userId }: Props) => {
           <p className='text-green-200 text-xs'>Online</p>
         </div>
       </div>
+
+       {/* AI suggestions */}
+            <div className='px-4 py-1 bg-[#ece5dd] text-xs'>
+              <div className='flex justify-between items-center'>
+                <span className='font-semibold text-gray-700 text-sm'>Quick Replies</span>
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  className='px-3 py-1 flex items-center gap-1 text-xs bg-purple-100 text-purple-700 rounded-full shadow-sm border border-purple-200 cursor-pointer'
+                >
+                  <Sparkle size={14} />AI suggest
+                </motion.button>
+              </div>
+              <div className='flex gap-2 flex-wrap pb-1'>
+                {suggestions.map((s, i) => (
+                  <motion.div
+                    key={s}
+                    whileTap={{scale: 0.92}}
+                    className='px-3 py-1 bg-green-50 border border-green-200 text-green-700 rounded-full cursor-pointer'
+                    onClick={()=>setNewMessage(s)}
+                  >
+                    {s}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
 
       {/* Messages */}
       <div

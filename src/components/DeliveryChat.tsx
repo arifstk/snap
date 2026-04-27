@@ -2,10 +2,11 @@
 'use client';
 import axios from 'axios';
 import { getSocket } from '@/lib/socket';
-import { Send } from 'lucide-react';
+import { Send, Sparkle } from 'lucide-react';
 import mongoose from 'mongoose';
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
+import { motion } from 'motion/react';
 
 type Message = {
   roomId: mongoose.Types.ObjectId;
@@ -47,6 +48,10 @@ const DeliveryChat = ({ orderId, deliveryBoyId }: Props) => {
   const [customer, setCustomer] = useState<PersonInfo>({ name: 'Customer' });
   const [deliveryBoy, setDeliveryBoy] = useState<PersonInfo>({ name: 'Me' });
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [suggestions, setSuggestions] = useState([
+    "hello", "thank you", "hi",
+  ]);
+
 
   // ✅ fetch both customer and delivery boy info
   useEffect(() => {
@@ -104,15 +109,50 @@ const DeliveryChat = ({ orderId, deliveryBoyId }: Props) => {
     if (e.key === 'Enter') sendMsg();
   };
 
+  //AI suggestions
+  const getSuggestion = async () => {
+    try {
+      const lastMessage = messages?.filter(m => m.senderId !== deliveryBoyId)?.at(-1);
+      const result = await axios.post("/api/chat/ai-suggestions", { message: lastMessage?.text, role: 'delivery_boy' });
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className='flex flex-col h-120 rounded-2xl overflow-hidden shadow-xl border border-gray-200'>
-
       {/* ✅ Header — shows customer avatar + name */}
       <div className='flex items-center gap-3 px-4 py-3 bg-[#075E54]'>
         <Avatar name={customer.name} image={customer.image} />
         <div>
           <p className='text-white font-semibold text-sm'>{customer.name}</p>
           <p className='text-green-200 text-xs'>Online</p>
+        </div>
+      </div>
+      {/* AI suggestions */}
+      <div className='px-4 py-2 bg-[#ece5dd] text-xs'>
+        <div className='flex justify-between items-center'>
+          <span className='font-semibold text-gray-700 text-sm'>Quick Replies</span>
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            className='px-3 py-1 flex items-center gap-1 text-xs bg-purple-100 text-purple-700 rounded-full shadow-sm border border-purple-200 cursor-pointer'
+            onClick={getSuggestion}
+          >
+            <Sparkle size={14} />AI suggest
+          </motion.button>
+        </div>
+        <div className='flex gap-2 flex-wrap pb-1'>
+          {suggestions.map((s, i) => (
+            <motion.div
+              key={s}
+              whileTap={{ scale: 0.92 }}
+              className='px-3 py-1 bg-green-50 border border-green-200 text-green-700 rounded-full cursor-pointer'
+              onClick={() => setNewMessage(s)}
+            >
+              {s}
+            </motion.div>
+          ))}
         </div>
       </div>
 
