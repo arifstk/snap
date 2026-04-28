@@ -110,15 +110,29 @@ const DeliveryChat = ({ orderId, deliveryBoyId }: Props) => {
   };
 
   //AI suggestions
+  // const getSuggestion = async () => {
+  //   try {
+  //     const lastMessage = messages?.filter(m => m.senderId !== deliveryBoyId)?.at(-1);
+  //     const result = await axios.post("/api/chat/ai-suggestions", { message: lastMessage?.text, role: 'delivery_boy' });
+  //     console.log(result.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
   const getSuggestion = async () => {
-    try {
-      const lastMessage = messages?.filter(m => m.senderId !== deliveryBoyId)?.at(-1);
-      const result = await axios.post("/api/chat/ai-suggestions", { message: lastMessage?.text, role: 'delivery_boy' });
-      console.log(result.data);
-    } catch (error) {
-      console.log(error);
-    }
+  try {
+    const lastMessage = messages?.filter(m => m.senderId !== deliveryBoyId)?.at(-1);
+    const result = await axios.post("/api/chat/ai-suggestions", {
+      message: lastMessage?.text,
+      role: 'delivery_boy'
+    });
+    // ✅ actually update state
+     console.log(result.data.suggestions);
+    setSuggestions(result.data.suggestions);
+  } catch (error) {
+    console.log(error);
   }
+};
 
   return (
     <div className='flex flex-col h-120 rounded-2xl overflow-hidden shadow-xl border border-gray-200'>
