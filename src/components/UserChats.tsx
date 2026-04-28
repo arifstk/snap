@@ -34,7 +34,7 @@ const Avatar = ({ name, image, size = 'md' }: { name: string; image?: string | n
   return (
     <div className={`${sizeClass} rounded-full overflow-hidden shrink-0 bg-[#25D366] flex items-center justify-center relative`}>
       {image ? (
-        <Image src={image} alt={name} width={dimension} height={dimension} className='object-cover w-full h-full' />
+        <img src={image} alt={name} width={dimension} height={dimension} className='object-cover w-full h-full' />
       ) : (
         <span className='text-white font-bold'>{initials}</span>
       )}
