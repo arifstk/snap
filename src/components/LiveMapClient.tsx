@@ -60,7 +60,7 @@ const LiveMapClient = ({ userLocation, deliveryBoyLocation }: IProps) => {
       [];
 
   return (
-    <div className='w-full h-100 rounded-xl overflow-hidden shadow relative'>
+    <div className='w-full h-100 rounded-xl overflow-hidden shadow relative z-0'>
       <MapContainer
         center={center}
         zoom={13}

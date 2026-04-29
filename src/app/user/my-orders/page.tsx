@@ -35,7 +35,7 @@ const MyOrders = () => {
     <div className='bg-linear-to-b from-white to-gray-100 min-h-screen'>
 
       {/* Header */}
-      <div className='fixed top-0 left-0 w-full backdrop-blur-lg bg-white/70 shadow-sm border-b z-50'>
+      <div className='fixed top-0 left-0 w-full backdrop-blur-lg bg-white/70 shadow-sm border-b z-999'>
         <div className='flex items-center gap-3 px-4 py-3'>
           <button className='flex items-center gap-2 p-2 bg-gray-100 rounded-full hover:bg-gray-200 active:scale-95 transition cursor-pointer'
             onClick={() => router.push("/")}>
