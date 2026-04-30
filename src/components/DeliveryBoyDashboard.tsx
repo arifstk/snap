@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import LiveMap from './LiveMap';
 import DeliveryChat from './DeliveryChat';
 import { Loader } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface ILocation {
   latitude: number,
@@ -48,8 +49,12 @@ const DeliveryBoyDashboard = () => {
   const handleAccept = async (id: string) => {
     try {
       const result = await axios.get(`/api/delivery/assignment/${id}/accept-assignment`);
-      console.log(result.data);
-
+      toast.success('Order accepted! Redirecting...', {
+        duration: 3000,
+        icon: '🛵',
+      });
+      // console.log(result.data);
+      fetchCurrentOrder();  // existing delivery completed then show others undelivered order
     } catch (error) {
       console.log(error);
     }
@@ -65,10 +70,10 @@ const DeliveryBoyDashboard = () => {
           latitude: result.data.assignment.order.address.latitude,
           longitude: result.data.assignment.order.address.longitude
         })
+      } else {
+        setActiveOrder(null);
       }
       // console.log(result.data);
-
-
     } catch (error) {
       console.log(error);
     }
@@ -122,9 +127,15 @@ const DeliveryBoyDashboard = () => {
     try {
       const result = await axios.post("/api/delivery/otp/verify", { orderId: activeOrder.order._id, otp });
       console.log(result.data);
+
       setActiveOrder(null);
+      setShowOtpBox(false);
+      setOtp('')
+      setOtpError('')
       setVerifyOtpLoading(false);
-      await fetchCurrentOrder(); //
+      // await fetchCurrentOrder();
+      // Refresh BOTH
+      await Promise.all([fetchCurrentOrder(), fetchAssignment()]);
 
     } catch (error) {
       // console.log(error);
@@ -147,8 +158,8 @@ const DeliveryBoyDashboard = () => {
           {/* delivery status */}
           <div className='mt-6 bg-white rounded-xl shadow border p-3'>
             {!activeOrder.order.deliveryOtpVerification && !showOtpBox && (
-              <button className='w-full py-4 bg-green-600 text-white rounded-lg cursor-pointer'
-                onClick={sendOtp}> {sendOtpLoading ? <Loader size={16} className='animate-spin text-white' /> : "Mark as Delivered"}
+              <button className='w-full py-4 bg-green-600 text-white rounded-lg text-center cursor-pointer'
+                onClick={sendOtp}> {sendOtpLoading ? <Loader size={16} className='animate-spin text-white text-center' /> : "Mark as Delivered"}
               </button>
             )}
             {/* verify otp */}
@@ -157,8 +168,8 @@ const DeliveryBoyDashboard = () => {
               <div className=''>
                 <input type='text' className='w-full py-3 border rounded-lg text-center' placeholder='OTP' maxLength={4} value={otp}
                   onChange={(e) => setOtp(e.target.value)} />
-                <button className='w-full mt-4 bg-blue-600 text-white py-3 rounded-lg cursor-pointer'
-                  onClick={verifyOtp}> {verifyOtpLoading ? <Loader size={16} className='animate-spin text-white' /> : "Verify OTP"}
+                <button className='w-full mt-4 bg-blue-600 text-white py-3 rounded-lg text-center cursor-pointer'
+                  onClick={verifyOtp}> {verifyOtpLoading ? <Loader size={16} className='animate-spin text-white text-center' /> : "Verify OTP"}
                 </button>
                 {otpError && <div className='text-red-600 mt-2'>{otpError}</div>}
                 {activeOrder.order.deliveryOtpVerification && <div className='text-green-600 text-center font-bold mt-2'>Delivery Completed!</div>}

@@ -7,6 +7,7 @@ import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Phone, Truck, User
 import { motion } from "motion/react";
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
+import { getSocket } from '@/lib/socket';
 
 interface Props {
   order: IOrder;
@@ -30,6 +31,16 @@ const AdminOrderCard = ({ order }: Props) => {
   useEffect(() => {
     setStatus(order.status);
   }, [order]);
+  // status change instantly
+  useEffect((): any => {
+    const socket = getSocket();
+    socket.on("order-status-update", (data) => {
+      if (data.orderId == order._id) {
+        setStatus(data.status);
+      }
+    })
+    return () => socket.off("order-status-update")
+  }, []);
 
   return (
     <motion.div
@@ -47,12 +58,15 @@ const AdminOrderCard = ({ order }: Props) => {
             <Package size={16} />
             <p>Order #{order._id?.toString().slice(-10)}</p>
           </div>
-          <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${order.isPaid
-            ? "bg-green-100 text-green700 border-green-300"
-            : "bg-red-100 text-red-700 border-red-300"
-            }`}>
-            {order.isPaid ? "Paid" : "Unpaid"}
-          </span>
+          {
+            status !== "delivered" &&
+            <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${order.isPaid
+              ? "bg-green-100 text-green700 border-green-300"
+              : "bg-red-100 text-red-700 border-red-300"
+              }`}>
+              {order.isPaid ? "Paid" : "Unpaid"}
+            </span>
+          }
           <p className='text-xs text-gray-500 mt-2'>
             {new Date(order.createdAt!).toLocaleString()}
           </p>
@@ -109,13 +123,17 @@ const AdminOrderCard = ({ order }: Props) => {
           >
             {status}
           </span>
-          <select className='border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-green-400 transition focus:ring-2 focus:ring-green-500 outline-none'
-            value={status}
-            onChange={(e) => updateStatus(order._id?.toString()!, e.target.value)}>
-            {statusOptions.map(st => (
-              <option key={st} value={st}>{st.toUpperCase()}</option>
-            ))}
-          </select>
+          {
+            status !== "delivered" &&
+            <select className='border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-green-400 transition focus:ring-2 focus:ring-green-500 outline-none'
+              value={status}
+              onChange={(e) => updateStatus(order._id?.toString()!, e.target.value)}>
+              {statusOptions.map(st => (
+                <option key={st} value={st}>{st.toUpperCase()}</option>
+              ))}
+            </select>
+          }
+
         </div>
       </div>
 

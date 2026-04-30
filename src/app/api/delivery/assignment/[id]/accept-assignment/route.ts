@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import connectDb from "@/lib/db";
+import emitEventHandler from "@/lib/emitEventHandler";
 import DeliveryAssignment from "@/models/deliveryAssignment.model";
 import Order from "@/models/order.model";
 import { NextRequest, NextResponse } from "next/server";
@@ -57,6 +58,10 @@ export async function GET(
     order.assignedDeliveryBoy = deliveryBoyId;
     await order.save();
 
+    await order.populate("assignedDeliveryBoy");
+
+    await emitEventHandler("order-assigned", {orderId: order._id,assignedDeliveryBoy: order.assignedDeliveryBoy});
+
     await DeliveryAssignment.updateMany(
       {
         _id: { $ne: assignment._id },
@@ -67,6 +72,7 @@ export async function GET(
         $pull: { broadcastedTo: deliveryBoyId },
       },
     );
+
     return NextResponse.json(
       { message: "order accepted successfully" },
       { status: 200 },

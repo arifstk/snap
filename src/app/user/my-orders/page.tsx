@@ -7,6 +7,7 @@ import { ArrowLeft, LoaderIcon, Package, PackageSearch } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { motion } from 'motion/react';
+import { getSocket } from '@/lib/socket';
 
 const MyOrders = () => {
   const router = useRouter();
@@ -23,6 +24,16 @@ const MyOrders = () => {
       }
     }
     getMyOrders();
+  }, []);
+
+  useEffect(() => {
+    const socket = getSocket();
+    socket.on("order-assigned", ({ orderId, assignedDeliveryBoy }) => {
+      setOrders((prev) => prev?.map((o) => (
+        o._id ? { ...o, assignedDeliveryBoy } : o
+      )))
+    })
+    return () => { socket.off("order-assigned") }
   }, []);
 
   if (loading) {

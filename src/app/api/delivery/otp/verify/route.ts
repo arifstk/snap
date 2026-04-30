@@ -1,6 +1,7 @@
 // api/delivery/otp/send/route.ts
 
 import connectDb from "@/lib/db";
+import emitEventHandler from "@/lib/emitEventHandler";
 import DeliveryAssignment from "@/models/deliveryAssignment.model";
 import Order from "@/models/order.model";
 import { NextRequest, NextResponse } from "next/server";
@@ -29,6 +30,12 @@ export async function POST(req: NextRequest) {
     order.deliveredAt = new Date();
     await order.save();
 
+    // update status instantly
+    await emitEventHandler("order-status-update", {
+      orderId: order._id,
+      status: order.status,
+    });
+
     await DeliveryAssignment.updateOne(
       { order: orderId },
       { $set: { assignedTo: null, status: "completed" } },
@@ -44,4 +51,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
