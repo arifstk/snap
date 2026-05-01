@@ -34,8 +34,27 @@ const AdminDashboard = async () => {
     { title: "Total Customers", value: totalCustomers, color: "bg-blue-500" },
     { title: "Pending Deliveries", value: pendingDeliveries, color: "bg-red-500" },
     { title: "Total Revenue", value: totalRevenue, color: "bg-green-600" },
+  ];
 
-  ]
+  // Chart
+  const chartData = []
+  for (let i = 6; i >= 0; i--) {
+
+    const date = new Date();
+    date.setDate(date.getDate() - i)
+    date.setHours(0, 0, 0, 0)
+
+    const nextDay = new Date(date);
+    nextDay.setDate(nextDay.getDate() + 1)
+
+    const ordersCount = orders.filter((o)=>new Date(o.createdAt) >=date && new Date(o.createdAt)<nextDay).length
+
+    chartData.push({
+      day: date.toLocaleDateString("en-US", {weekday: "short"}),
+      orders: ordersCount
+    })
+  }
+
 
   return (
     <>
@@ -44,7 +63,8 @@ const AdminDashboard = async () => {
           today: todayRevenue, sevenDays: sevenDaysRevenue, total: totalRevenue
         }}
         stats={stats}
-        />
+        chartData={chartData}
+      />
     </>
   )
 }

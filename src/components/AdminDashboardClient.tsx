@@ -3,6 +3,7 @@
 import { DollarSign, Package, Truck, User } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState } from 'react';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 type Props = {
   earning: {
@@ -13,10 +14,14 @@ type Props = {
   stats: {
     title: string;
     value: number;
-  }[];
+  }[],
+  chartData: {
+    day: string;
+    orders: number;
+  }[],
 };
 
-const AdminDashboardClient = ({ earning, stats }: Props) => {
+const AdminDashboardClient = ({ earning, stats, chartData }: Props) => {
   const [filter, setFilter] = useState<"today" | "sevenDays" | "total">("total");
 
   const currentEarning = filter === "today" ? earning.today
@@ -97,7 +102,19 @@ const AdminDashboardClient = ({ earning, stats }: Props) => {
 
       </motion.div>
 
-      {/* Chart */}
+      {/* Chart Data*/}
+      <div className='bg-white border border-gray-100 rounded-2xl p-5 mb-10 shadow-md'>
+        <h2 className='text-lg font-semibold text-gray-700 mb-4'>📈 Order Overview (Last 7 days)</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={chartData}>
+            <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+            <XAxis dataKey="day" stroke="green" />
+            {/* <YAxis stroke="orders" /> */}
+            <Tooltip />
+            <Bar dataKey="orders" fill="green" barSize={30} radius={[6, 6, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
       
 
     </div>
