@@ -1,5 +1,6 @@
 // components/AdminDashboardClient.tsx
 'use client';
+import { DollarSign, Package, Truck, User } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState } from 'react';
 
@@ -8,10 +9,14 @@ type Props = {
     today: number;
     sevenDays: number;
     total: number;
-  }
+  },
+  stats: {
+    title: string;
+    value: number;
+  }[];
 };
 
-const AdminDashboardClient = ({ earning }: Props) => {
+const AdminDashboardClient = ({ earning, stats }: Props) => {
   const [filter, setFilter] = useState<"today" | "sevenDays" | "total">("total");
 
   const currentEarning = filter === "today" ? earning.today
@@ -52,11 +57,48 @@ const AdminDashboardClient = ({ earning }: Props) => {
         <h2 className='text-lg font-semibold text-green-700 mb-2'>{title}</h2>
         <p className='text-4xl font-extrabold text-green-800'>$ {currentEarning.toLocaleString(
           undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          }
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }
         )}</p>
       </motion.div>
+
+      {/* Stats */}
+      <motion.div
+        className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10'
+      >
+        {stats.map((s, i) => {
+          const icons = [
+            <Package className='text-green-700 w-6 h-6' />,
+            <User className='text-green-700 w-6 h-6' />,
+            <Truck className='text-green-700 w-6 h-6' />,
+            <DollarSign className='text-green-700 w-6 h-6' />,
+          ];
+
+          const isRevenue = s.title.toLowerCase().includes("revenue");
+          return (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className='bg-white border border-gray-100 shadow-md rounded-2xl p-2 flex items-center gap-4 hover:shadow-lg transition-all'
+            >
+              <div className='bg-green-100 p-3 rounded-xl'>
+                {icons[i]}
+              </div>
+              <div>
+                <p className='text-gray-600 text-sm'>{s.title}</p>
+                <p className='text-2xl font-bold text-gray-800'>{isRevenue ? `$${s.value.toFixed(2)}` : s.value}</p>
+              </div>
+
+            </motion.div>)
+        })}
+
+      </motion.div>
+
+      {/* Chart */}
+      
 
     </div>
   )

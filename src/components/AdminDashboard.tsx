@@ -29,12 +29,22 @@ const AdminDashboard = async () => {
   const sevenDaysOrders = orders.filter((o) => new Date(o.createdAt) >= sevenDaysAgo)
   const sevenDaysRevenue = sevenDaysOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0)
 
+  const stats = [
+    { title: "Total Orders", value: totalOrders, color: "bg-green-500" },
+    { title: "Total Customers", value: totalCustomers, color: "bg-blue-500" },
+    { title: "Pending Deliveries", value: pendingDeliveries, color: "bg-red-500" },
+    { title: "Total Revenue", value: totalRevenue, color: "bg-green-600" },
+
+  ]
+
   return (
     <>
       <AdminDashboardClient
         earning={{
           today: todayRevenue, sevenDays: sevenDaysRevenue, total: totalRevenue
-        }} />
+        }}
+        stats={stats}
+        />
     </>
   )
 }
