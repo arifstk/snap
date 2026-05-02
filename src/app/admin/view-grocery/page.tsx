@@ -372,14 +372,14 @@ const ViewGrocery = () => {
                         <div className="flex gap-2">
                           <button
                             onClick={() => setConfirmDelete(false)}
-                            className="flex-1 py-2 rounded-lg border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-100 transition-all cursor-pointer"
+                            className="flex-1 py-2 rounded-lg border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50 hover:shadow-sm transition-all cursor-pointer"
                           >
                             Cancel
                           </button>
                           <button
                             onClick={handleDelete}
                             disabled={deleting}
-                            className="flex-1 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-all cursor-pointer disabled:opacity-60"
+                            className="flex-1 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 hover:shadow-sm transition-all cursor-pointer disabled:opacity-60"
                           >
                             {deleting ? 'Deleting...' : 'Yes, Delete'}
                           </button>
@@ -407,7 +407,7 @@ const ViewGrocery = () => {
               <div className="px-6 py-4 border-t border-gray-100 bg-white flex gap-3">
                 <button
                   onClick={() => setEditing(null)}
-                  className="flex-1 border-2 border-gray-200 text-gray-600 rounded-xl py-3 font-bold hover:bg-gray-50 transition-all cursor-pointer"
+                  className="flex-1 border-2 border-gray-200 text-gray-600 rounded-xl py-3 font-bold hover:bg-gray-100 transition-all cursor-pointer"
                 >
                   Cancel
                 </button>

@@ -7,16 +7,6 @@ import { motion } from 'motion/react';
 import Image from 'next/image';
 
 const HeroSection = () => {
-  // const { userData } = useSelector((state: RootState) => state.user);
-
-  // useEffect(() => {
-  //   if (userData) {
-  //     let socket = getSocket();
-  //     socket.emit("identity", userData?._id)
-  //   }
-  // }, [userData]);
-
-
   const slides = [
     {
       id: 1,
@@ -58,10 +48,6 @@ const HeroSection = () => {
       <AnimatePresence>
         <motion.div
           key={current}
-          // initial={{ opacity: 0 }}
-          // animate={{ opacity: 1 }}
-          // transition={{ duration: 0.5 }}
-          // exit={{ opacity: 0 }}
           initial={{ opacity: 0, filter: 'blur(12px)' }} animate={{ opacity: 1, filter: 'blur(0px)' }} exit={{ opacity: 0, filter: 'blur(12px)' }} transition={{ duration: 0.8 }}
           className='absolute inset-0'
         >
