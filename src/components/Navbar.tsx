@@ -1,8 +1,7 @@
 // Navbar component
-// import React from 'react'
-'use client';
 
-import { Boxes, ClipboardCheck, Cross, LogOut, LogOutIcon, Menu, Package, Plus, PlusCircle, Search, SearchIcon, ShoppingCartIcon, Tag, User, X } from "lucide-react";
+'use client';
+import { Boxes, ClipboardCheck, Cross, LogOut, LogOutIcon, Menu, Package, Plus, PlusCircle, Search, SearchIcon, Settings, ShoppingCartIcon, Tag, User, X } from "lucide-react";
 import mongoose from "mongoose";
 import { AnimatePresence } from "motion/react";
 import Image from "next/image";
@@ -93,10 +92,12 @@ const Navbar = ({ user }: { user: IUser }) => {
           </Link>
           <Link href={"/admin/add-grocery"} className="flex items-center gap-3 p-3 pl-4  rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
             <PlusCircle className="w-5 h-5" /> Add Grocery</Link>
-          <Link href={""} className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
+          <Link href={"/admin/view-grocery"} className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
             <Boxes className="w-5 h-5" /> View Grocery</Link>
           <Link href={"/admin/manage-orders"} className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
             <ClipboardCheck className="w-5 h-5" /> Manage Orders</Link>
+          <Link href={"/admin/settings"} className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
+            <Settings className="w-5 h-5" />Setting</Link>
         </div>
 
         <div className="my-5 border-t border-white/20"></div>
@@ -162,6 +163,8 @@ const Navbar = ({ user }: { user: IUser }) => {
                 <Boxes className="w-5 h-5" /> View Grocery</Link>
               <Link href={"/admin/manage-orders"} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">
                 <ClipboardCheck className="w-5 h-5" /> Manage Orders</Link>
+              <Link href={"/admin/settings"} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">
+                <Settings className="w-5 h-5" /> Settings</Link>
             </div>
             {/* Sidebar for Small Screen */}
             <div className="md:hidden bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md cursor-pointer"
