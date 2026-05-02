@@ -5,6 +5,8 @@ import { Toaster } from "react-hot-toast";
 import Provider from "@/provider";
 import StoreProvider from "@/redux/StoreProvider";
 import InitUser from "@/InitUser";
+import connectDb from '@/lib/db';
+import Settings from '@/models/settings.model';
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -16,10 +18,16 @@ import InitUser from "@/InitUser";
 //   subsets: ["latin"],
 // });
 
-export const metadata: Metadata = {
-  title: "Snap",
-  description: "Ten minutes grocery delivery app",
-};
+// export const metadata: Metadata = {
+//   title: "Snap",
+//   description: "Ten minutes grocery delivery app",
+// };
+
+export async function generateMetadata() {
+  await connectDb();
+  const settings = await Settings.findOne();
+  return { title: settings?.websiteName ?? 'Snap' };
+}
 
 export default function RootLayout({
   children,
@@ -31,7 +39,7 @@ export default function RootLayout({
       <body className="max-w-7xl mx-auto w-full min-h-screen bg-linear-to-b from-green-50 to-white ">
         <Provider>
           <StoreProvider> {/*redux Provider wrapper */}
-            <InitUser/>  
+            <InitUser />
             {children}
           </StoreProvider>
         </Provider>
