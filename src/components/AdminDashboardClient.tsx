@@ -1,8 +1,10 @@
 // components/AdminDashboardClient.tsx
 'use client';
+import { RootState } from '@/redux/store';
 import { DollarSign, Package, Truck, User } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 type Props = {
@@ -23,6 +25,8 @@ type Props = {
 
 const AdminDashboardClient = ({ earning, stats, chartData }: Props) => {
   const [filter, setFilter] = useState<"today" | "sevenDays" | "total">("total");
+
+  const currencySymbol = useSelector((state: RootState) => state.settings.data.currencySymbol);
 
   const currentEarning = filter === "today" ? earning.today
     : filter === "sevenDays" ? earning.sevenDays
@@ -60,7 +64,7 @@ const AdminDashboardClient = ({ earning, stats, chartData }: Props) => {
         className='bg-green-50 border border-green-200 shadow-sm rounded-2xl p-6 text-center mb-10'
       >
         <h2 className='text-lg font-semibold text-green-700 mb-2'>{title}</h2>
-        <p className='text-4xl font-extrabold text-green-800'>$ {currentEarning.toLocaleString(
+        <p className='text-4xl font-extrabold text-green-800'>{currencySymbol} {currentEarning.toLocaleString(
           undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2
@@ -94,7 +98,7 @@ const AdminDashboardClient = ({ earning, stats, chartData }: Props) => {
               </div>
               <div>
                 <p className='text-gray-600 text-sm'>{s.title}</p>
-                <p className='text-2xl font-bold text-gray-800'>{isRevenue ? `$${s.value.toFixed(2)}` : s.value}</p>
+                <p className='text-2xl font-bold text-gray-800'>{isRevenue ? `${currencySymbol}${s.value.toFixed(2)}` : s.value}</p>
               </div>
 
             </motion.div>)

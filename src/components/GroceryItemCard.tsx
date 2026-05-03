@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import React from 'react'
 import { motion } from 'motion/react';
 import Image from 'next/image';
-import { Minus, Plus, PlusCircle, ShoppingCart } from 'lucide-react';
+import { Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { addToCart, decreaseQuantity, increaseQuantity } from '@/redux/cartSlice';
@@ -21,6 +21,9 @@ interface IGrocery {
 }
 
 const GroceryItemCard = ({ item }: { item: IGrocery }) => {
+  // Dynamic symbol
+  const currencySymbol = useSelector((state: RootState) => state.settings.data.currencySymbol);
+
   const dispatch = useDispatch<AppDispatch>();
   const { cartData } = useSelector((state: RootState) => state.cart);
   const cartItem = cartData.find(itm => itm._id === item._id);
@@ -44,7 +47,11 @@ const GroceryItemCard = ({ item }: { item: IGrocery }) => {
         <h2 className='text-sm md:text-lg font-semibold truncate'>{item.name}</h2>
         <div className='flex items-center justify-between mt-2'>
           <span className='text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-full'>Unit: {item.unit}</span>
-          <span className='text-green-700 font-bold text-md'>$ {item.price}</span>
+
+          <span className='text-green-700 font-bold text-md'>
+            {currencySymbol}{item.price}
+          </span>
+          {/* <span className='text-green-700 font-bold text-md'>$ {item.price}</span> */}
         </div>
         {
           !cartItem ?
@@ -63,13 +70,13 @@ const GroceryItemCard = ({ item }: { item: IGrocery }) => {
               className='mt-4 flex items-center justify-center gap-3 bg-green-50 border border-green-200 rounded-full py-1.5 text-sm font-medium transition-all'
             >
               <button className='w-7 h-7 flex items-center justify-center rounded-full bg-green-100 hover:bg-green-200 transition-all'
-              onClick={()=>dispatch(decreaseQuantity(item._id))}
+                onClick={() => dispatch(decreaseQuantity(item._id))}
               >
                 <Minus size={16} className=' text-green -700 cursor-pointer' />
               </button>
               <span className='text-sm font-semibold text-gray-800'>{cartItem.quantity}</span>
               <button className='w-7 h-7 flex items-center justify-center rounded-full bg-green-100 hover:bg-green-200 transition-all'
-              onClick={()=>dispatch(increaseQuantity(item._id))}
+                onClick={() => dispatch(increaseQuantity(item._id))}
               >
                 <Plus size={16} className=' text-green -700 cursor-pointer' />
               </button>

@@ -658,6 +658,9 @@ const DeliveryBoyDashboard = ({ earning, weeklyData }: { earning: number; weekly
   const [sendOtpLoading, setSendOtpLoading] = useState(false);
   const [verifyOtpLoading, setVerifyOtpLoading] = useState(false);
 
+  // currency symbol 
+  const currencySymbol = useSelector((state: RootState) => state.settings.data.currencySymbol);
+
   const fetchAssignment = async () => {
     try {
       const result = await axios.get("/api/delivery/get-assignments")
@@ -796,8 +799,8 @@ const DeliveryBoyDashboard = ({ earning, weeklyData }: { earning: number; weekly
 
         {/* Stat Cards */}
         <div className='px-4 -mt-8 grid grid-cols-2 gap-3 max-w-2xl mx-auto'>
-          <StatCard icon={Wallet} label="Today's Earning" value={`৳${earning}`} sub={`${todayDeliveries} deliveries`} accent="#16a34a" />
-          <StatCard icon={TrendingUp} label="Week Earning" value={`৳${totalWeeklyEarning}`} sub="Last 7 days" accent="#2563eb" />
+          <StatCard icon={Wallet} label="Today's Earning" value={`${currencySymbol}${earning}`} sub={`${todayDeliveries} deliveries`} accent="#16a34a" />
+          <StatCard icon={TrendingUp} label="Week Earning" value={`${currencySymbol}${totalWeeklyEarning}`} sub="Last 7 days" accent="#2563eb" />
           <StatCard icon={Package} label="Total Drops" value={totalDeliveries} sub="This week" accent="#9333ea" />
           <StatCard icon={Star} label="Rating" value="4.9" sub="Excellent!" accent="#f59e0b" />
         </div>
@@ -921,3 +924,4 @@ const DeliveryBoyDashboard = ({ earning, weeklyData }: { earning: number; weekly
 }
 
 export default DeliveryBoyDashboard
+
