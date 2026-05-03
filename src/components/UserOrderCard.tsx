@@ -3,12 +3,14 @@
 import { getSocket } from '@/lib/socket';
 import { IOrder } from '@/models/order.model';
 import { IUser } from '@/models/user.model';
+import { RootState } from '@/redux/store';
 import { ChevronDown, ChevronUp, CreditCard, Package, Phone, Truck, TruckIcon, UserCheck } from 'lucide-react';
 import mongoose from 'mongoose';
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 
 interface Props {
   order: IOrder;
@@ -19,6 +21,20 @@ const UserOrderCard = ({ order }: Props) => {
   // instant update status
   const [status, setStatus] = useState(order.status);
   const router = useRouter();
+
+  const {
+    currencySymbol,
+    deliveryFee,
+    freeDeliveryThreshold,
+  } = useSelector((state: RootState) => state.settings.data);
+
+  // ── Compute subtotal and dynamic delivery charge 
+  const subTotal = order.items.reduce(
+    (sum, item) => sum + Number(item.price) * item.quantity,
+    0
+  );
+  const appliedDeliveryFee = subTotal >= freeDeliveryThreshold ? 0 : deliveryFee;
+  const grandTotal = subTotal + appliedDeliveryFee;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -161,14 +177,14 @@ const UserOrderCard = ({ order }: Props) => {
                       </div>
 
                       <p className='text-sm font-semibold text-green-600'>
-                        $ {(Number(item.price) * item.quantity).toFixed(2)}</p>
+                        {currencySymbol} {(Number(item.price) * item.quantity).toFixed(2)}</p>
                     </div>
                   ))}
                 </div>
               </motion.div>
 
               {/* total */}
-              <div className='flex justify-between items-center mt-3 px-3 py-2 bg-gray-100 rounded-lg'>
+              {/* <div className='flex justify-between items-center mt-3 px-3 py-2 bg-gray-100 rounded-lg'>
                 <div className='flex items-center gap-2 text-gray-700 text-sm'>
                   <Truck size={16} className='text-green-600' />
                   <p className='text-md font-semibold text-gray-500'>Delivery:
@@ -177,6 +193,41 @@ const UserOrderCard = ({ order }: Props) => {
                 <p className='font-semibold text-green-600'> <span className='text-gray-500'>Total: </span>
                   ${order.items.reduce((total, item) => total + (Number(item.price) * item.quantity), 0).toFixed(2)}
                 </p>
+              </div> */}
+
+              <div className='mt-3 rounded-xl border border-gray-100 overflow-hidden'>
+                <div className='flex justify-between items-center px-3 py-2 bg-gray-50 text-sm text-gray-600'>
+                  <span>Subtotal</span>
+                  <span className='font-semibold text-gray-700'>
+                    {currencySymbol}{subTotal.toFixed(2)}
+                  </span>
+                </div>
+
+                <div className='flex justify-between items-center px-3 py-2 bg-gray-50 text-sm text-gray-600 border-t border-gray-100'>
+                  <span className='flex items-center gap-1.5'>
+                    <Truck size={14} className='text-green-600' />
+                    Delivery Fee
+                  </span>
+                  {appliedDeliveryFee === 0 ? (
+                    <span className='font-semibold text-green-500'>Free 🎉</span>
+                  ) : (
+                    <span className='font-semibold text-gray-700'>
+                      {currencySymbol}{appliedDeliveryFee.toFixed(2)}
+                    </span>
+                  )}
+                </div>
+
+                <div className='flex justify-between items-center px-3 py-2.5 bg-green-50 border-t border-green-100'>
+                  <p className='text-sm font-bold text-gray-700'>
+                    Total
+                    <span className='ml-2 text-xs font-normal text-gray-400'>
+                      (Status: <span className='text-green-600'>{status}</span>)
+                    </span>
+                  </p>
+                  <p className='font-bold text-green-700 text-base'>
+                    {currencySymbol}{grandTotal.toFixed(2)}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

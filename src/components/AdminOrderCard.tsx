@@ -8,6 +8,8 @@ import { motion } from "motion/react";
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { getSocket } from '@/lib/socket';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 interface Props {
   order: IOrder;
@@ -17,6 +19,21 @@ const AdminOrderCard = ({ order }: Props) => {
   const statusOptions = ["pending", "out for delivery"];
   const [expanded, setExpanded] = useState(false);
   const [status, setStatus] = useState<string>("pending");
+
+  const {
+    currencySymbol,
+    deliveryFee,
+    freeDeliveryThreshold,
+  } = useSelector((state: RootState) => state.settings.data);
+
+  // ── Compute subtotal and dynamic delivery charge 
+  const subTotal = order.items.reduce(
+    (sum, item) => sum + Number(item.price) * item.quantity,
+    0
+  );
+  const appliedDeliveryFee = subTotal >= freeDeliveryThreshold ? 0 : deliveryFee;
+  const grandTotal = subTotal + appliedDeliveryFee;
+
   const updateStatus = async (orderId: string, status: string) => {
     try {
       const result = await axios.post(`/api/admin/update-order-status/${orderId}`, { status });
@@ -176,7 +193,7 @@ const AdminOrderCard = ({ order }: Props) => {
         </motion.div>
 
         {/* total */}
-        <div className='flex justify-between items-center mt-3 px-3 py-2 bg-gray-100 rounded-lg'>
+        {/* <div className='flex justify-between items-center mt-3 px-3 py-2 bg-gray-100 rounded-lg'>
           <div className='flex items-center gap-2 text-gray-700 text-sm'>
             <Truck size={16} className='text-green-600' />
             <p className='text-md font-semibold text-gray-500'>Delivery: <span>{status}</span></p>
@@ -184,6 +201,42 @@ const AdminOrderCard = ({ order }: Props) => {
           <p className='font-semibold text-green-600'> <span className='text-gray-500'>Total: </span>
             ${order.items.reduce((total, item) => total + (Number(item.price) * item.quantity), 0).toFixed(2)}
           </p>
+        </div> */}
+
+
+        <div className='mt-3 rounded-xl border border-gray-100 overflow-hidden'>
+          <div className='flex justify-between items-center px-3 py-2 bg-gray-50 text-sm text-gray-600'>
+            <span>Subtotal</span>
+            <span className='font-semibold text-gray-700'>
+              {currencySymbol}{subTotal.toFixed(2)}
+            </span>
+          </div>
+
+          <div className='flex justify-between items-center px-3 py-2 bg-gray-50 text-sm text-gray-600 border-t border-gray-100'>
+            <span className='flex items-center gap-1.5'>
+              <Truck size={14} className='text-green-600' />
+              Delivery Fee
+            </span>
+            {appliedDeliveryFee === 0 ? (
+              <span className='font-semibold text-green-500'>Free 🎉</span>
+            ) : (
+              <span className='font-semibold text-gray-700'>
+                {currencySymbol}{appliedDeliveryFee.toFixed(2)}
+              </span>
+            )}
+          </div>
+
+          <div className='flex justify-between items-center px-3 py-2.5 bg-green-50 border-t border-green-100'>
+            <p className='text-sm font-bold text-gray-700'>
+              Total
+              <span className='ml-2 text-xs font-normal text-gray-400'>
+                (Status: <span className='text-green-600'>{status}</span>)
+              </span>
+            </p>
+            <p className='font-bold text-green-700 text-base'>
+              {currencySymbol}{grandTotal.toFixed(2)}
+            </p>
+          </div>
         </div>
       </div>
 
