@@ -806,7 +806,7 @@ const DeliveryBoyDashboard = ({ earning, weeklyData }: { earning: number; weekly
         </div>
 
         {/* Bar Chart */}
-        <div className='mt-5 bg-white rounded-2xl shadow-sm border border-gray-100 p-5 max-w-2xl mx-auto'>
+        <div className='mt-5 px-4 bg-white rounded-2xl shadow-sm border border-gray-100 p-5 max-w-2xl mx-auto'>
           <div className='flex items-center justify-between mb-4'>
             <div>
               <h2 className='text-base font-black text-gray-800'>Weekly Earnings</h2>
@@ -828,7 +828,7 @@ const DeliveryBoyDashboard = ({ earning, weeklyData }: { earning: number; weekly
         </div>
 
         {/* No Orders Banner */}
-        <div className='mt-5 max-w-2xl mx-auto'>
+        <div className='mt-5 px-4 max-w-2xl mx-auto'>
           <div className='bg-linear-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-5 flex items-center gap-4'>
             <div className='bg-green-100 p-3 rounded-xl'>
               <Bike size={28} className='text-green-600' />
@@ -842,7 +842,7 @@ const DeliveryBoyDashboard = ({ earning, weeklyData }: { earning: number; weekly
         </div>
 
         {/* Quick Tips */}
-        <div className='mt-5 max-w-2xl mx-auto'>
+        <div className='mt-5 px-4 max-w-2xl mx-auto'>
           <h3 className='text-sm font-bold text-gray-400 uppercase tracking-widest mb-3 px-1'>Quick Tips</h3>
           {[
             { icon: Navigation, text: 'Keep GPS on for faster order matching' },
