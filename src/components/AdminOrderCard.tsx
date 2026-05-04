@@ -1,4 +1,6 @@
+
 // components/adminOrderCard.tsx
+
 'use client';
 import { IUser } from '@/models/user.model';
 import { IOrder } from '@/models/order.model';
@@ -186,7 +188,7 @@ const AdminOrderCard = ({ order }: Props) => {
                 </div>
 
                 <p className='text-sm font-semibold text-green-600'>
-                  $ {(Number(item.price) * item.quantity).toFixed(2)}</p>
+                  {currencySymbol} {(Number(item.price) * item.quantity).toFixed(2)}</p>
               </div>
             ))}
           </div>
