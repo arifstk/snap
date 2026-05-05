@@ -13,6 +13,7 @@ export interface ISettings extends Document {
   }[];
   deliveryFee: number;
   freeDeliveryThreshold: number;
+  deliveryBoyEarningPerOrder: number;
   contactInfo: {
     email: string;
     phone: string;

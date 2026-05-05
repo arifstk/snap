@@ -589,10 +589,10 @@
 // components/DeliveryBoyDashboard.tsx
 'use client';
 import { getSocket } from '@/lib/socket';
-import { RootState } from '@/redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import LiveMap from './LiveMap';
 import DeliveryChat from './DeliveryChat';
 import { Loader, Wallet, TrendingUp, Package, Star, Bike, ChevronRight, Navigation, Clock, CheckCircle } from 'lucide-react';
@@ -600,20 +600,21 @@ import toast from 'react-hot-toast';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
+import { fetchSettings } from '@/redux/settingsSlice';
 
 interface ILocation {
   latitude: number,
   longitude: number
 }
 
-// ── Weekly Data type (data passed from DeliveryBoy server component) ───
+// Weekly Data type (data passed from DeliveryBoy server component) ───
 interface WeeklyData {
   day: string;
   earnings: number;
   deliveries: number;
 }
 
-// ── stat card component ───────
+// stat card component ───────
 const StatCard = ({ icon: Icon, label, value, sub, accent }: {
   icon: React.ElementType; label: string; value: string | number; sub?: string; accent: string;
 }) => (
@@ -657,9 +658,15 @@ const DeliveryBoyDashboard = ({ earning, weeklyData }: { earning: number; weekly
   const [otpError, setOtpError] = useState('');
   const [sendOtpLoading, setSendOtpLoading] = useState(false);
   const [verifyOtpLoading, setVerifyOtpLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   // currency symbol 
-  const currencySymbol = useSelector((state: RootState) => state.settings.data.currencySymbol);
+  const { currencySymbol, deliveryFee: deliveryBoyEarning } = useSelector((state: RootState) => state.settings.data);
+
+  // ✅ Fetch real settings from DB on mount — no more hardcoded 40
+  useEffect(() => {
+    dispatch(fetchSettings());
+  }, [dispatch]);
 
   const fetchAssignment = async () => {
     try {
@@ -687,7 +694,7 @@ const DeliveryBoyDashboard = ({ earning, weeklyData }: { earning: number; weekly
         icon: '🛵',
       });
       // console.log(result.data);
-      fetchCurrentOrder();  // existing delivery completed then show others undelivered order
+      fetchCurrentOrder();
     } catch (error) {
       console.log(error);
     }
@@ -782,7 +789,10 @@ const DeliveryBoyDashboard = ({ earning, weeklyData }: { earning: number; weekly
   if (!activeOrder && assignments.length === 0) {
     const totalWeeklyEarning = weeklyData.reduce((s, d) => s + d.earnings, 0);
     const totalDeliveries = weeklyData.reduce((s, d) => s + d.deliveries, 0);
-    const todayDeliveries = Math.round(earning / 40);
+    // const todayDeliveries = Math.round(earning / 40);
+    const todayDeliveries = deliveryBoyEarning > 0
+      ? Math.round(earning / deliveryBoyEarning)
+      : 0;
 
     return (
       <div className='min-h-screen bg-[#f4f6fb] pb-10'>
@@ -810,7 +820,7 @@ const DeliveryBoyDashboard = ({ earning, weeklyData }: { earning: number; weekly
           <div className='flex items-center justify-between mb-4'>
             <div>
               <h2 className='text-base font-black text-gray-800'>Weekly Earnings</h2>
-              <p className='text-xs text-gray-400'>৳ Bangladesh Taka</p>
+              <p className='text-xs text-gray-400'>{currencySymbol} Earnings per day</p>
             </div>
             <div className='flex items-center gap-1.5 text-xs text-gray-400'>
               <span className='w-2.5 h-2.5 rounded-sm bg-green-600 inline-block' /> Earnings
@@ -826,6 +836,15 @@ const DeliveryBoyDashboard = ({ earning, weeklyData }: { earning: number; weekly
             </BarChart>
           </ResponsiveContainer>
         </div>
+
+        {/* Earning info banner */}
+        <div className='mt-5 px-4 max-w-2xl mx-auto'>
+          <div className='bg-blue-50 border border-blue-200 rounded-2xl p-4 text-sm text-blue-700'>
+            💡 You earn <strong>{currencySymbol}{deliveryBoyEarning}</strong> per delivery.
+            This rate is set by admin and may change anytime.
+          </div>
+        </div>
+
 
         {/* No Orders Banner */}
         <div className='mt-5 px-4 max-w-2xl mx-auto'>
@@ -846,7 +865,7 @@ const DeliveryBoyDashboard = ({ earning, weeklyData }: { earning: number; weekly
           <h3 className='text-sm font-bold text-gray-400 uppercase tracking-widest mb-3 px-1'>Quick Tips</h3>
           {[
             { icon: Navigation, text: 'Keep GPS on for faster order matching' },
-            { icon: Clock, text: 'Peak hours: 12–2pm & 7–9pm' },
+            { icon: Clock, text: 'Peak hours: 10am–1pm & 6–9pm' },
             { icon: CheckCircle, text: 'Verify OTP every delivery to confirm completion' },
           ].map(({ icon: Icon, text }, i) => (
             <div key={i} className='flex items-center gap-3 bg-white rounded-xl px-4 py-3 mb-2 border border-gray-100'>
