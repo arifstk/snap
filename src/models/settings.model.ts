@@ -13,7 +13,7 @@ export interface ISettings extends Document {
   }[];
   deliveryFee: number;
   freeDeliveryThreshold: number;
-  deliveryBoyEarningPerOrder: number;
+ 
   contactInfo: {
     email: string;
     phone: string;
@@ -70,8 +70,8 @@ const settingsSchema = new Schema<ISettings>(
         },
       ],
     },
-    deliveryFee: { type: Number, default: 40 },
-    freeDeliveryThreshold: { type: Number, default: 100 },
+    deliveryFee: { type: Number, default:0 },
+    freeDeliveryThreshold: { type: Number, default:100 },
     contactInfo: {
       email: { type: String, default: "hello@freshmart.com" },
       phone: { type: String, default: "+1 (800) 123-4567" },
