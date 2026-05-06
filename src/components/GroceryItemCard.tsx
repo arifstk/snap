@@ -8,6 +8,7 @@ import { Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { addToCart, decreaseQuantity, increaseQuantity } from '@/redux/cartSlice';
+import Link from 'next/link';
 
 interface IGrocery {
   _id: mongoose.Types.ObjectId;
@@ -29,18 +30,22 @@ const GroceryItemCard = ({ item }: { item: IGrocery }) => {
   const cartItem = cartData.find(itm => itm._id === item._id);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50, scale: 0.9 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.6 }}
-      viewport={{ once: false, amount: 0.3 }}
-      className='bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col'
-    >
-      <div className='relative w-full aspect-4/3 bg-gray-50 overflow-hidden group'>
-        <Image src={item.image} fill alt={item.name} sizes='(max-width: 768px) 100vw, 25vw'
-          className='object-contain p-4 transition-transform duration-500 group-hover:scale-103' />
-        <div className='absolute inset-0 bg-linear-to-r from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300' />
-      </div>
+    <div>
+      <motion.div
+        initial={{ opacity: 0, y: 50, scale: 0.9 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: false, amount: 0.3 }}
+        className='bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col'
+      >
+        {/* image */}
+        <Link href={`/user/grocery/${item._id}`}>
+        <div className='relative w-full aspect-4/3 bg-gray-50 overflow-hidden group'>
+          <Image src={item.image} fill alt={item.name} sizes='(max-width: 768px) 100vw, 25vw'
+            className='object-contain p-4 transition-transform duration-500 group-hover:scale-103' />
+          <div className='absolute inset-0 bg-linear-to-r from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300' />
+        </div>
+      </Link>
       {/* detail */}
       <div className='p-3 flex flex-col flex-1'>
         <p className='text-xs text-gray-500 font-medium mb-1'>{item.category}</p>
@@ -58,7 +63,10 @@ const GroceryItemCard = ({ item }: { item: IGrocery }) => {
             <motion.button
               whileTap={{ scale: 0.96 }}
               className='mt-4 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white rounded-full py-2 text-sm font-medium transition-all cursor-pointer'
-              onClick={() => dispatch(addToCart({ ...item, quantity: 1 }))}
+              onClick={(e) => {
+                e.stopPropagation();
+                dispatch(addToCart({ ...item, quantity: 1 }))
+              }}
             >
               <ShoppingCart />  Add to Cart
             </motion.button> :
@@ -82,9 +90,9 @@ const GroceryItemCard = ({ item }: { item: IGrocery }) => {
               </button>
             </motion.div>
         }
-
       </div>
     </motion.div>
+    </div >
   )
 }
 
