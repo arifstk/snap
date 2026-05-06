@@ -3,10 +3,12 @@
 import { AppDispatch, RootState } from '@/redux/store';
 import { ArrowLeft, Minus, Plus, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'motion/react';
 import { addToCart, decreaseQuantity, increaseQuantity } from '@/redux/cartSlice';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import GroceryItemCard from '@/components/GroceryItemCard';
 
 const GroceryDetailClient = ({ item }: any) => {
   // Dynamic symbol
@@ -14,10 +16,39 @@ const GroceryDetailClient = ({ item }: any) => {
   const dispatch = useDispatch<AppDispatch>();
   const { cartData } = useSelector((state: RootState) => state.cart);
   const cartItem = cartData.find(itm => itm._id === item._id);
+  const [similarProducts, setSimilarProducts] = useState<any[]>([]);
+  const [loadingSimilar, setLoadingSimilar] = useState(false);
+
+  // similar product
+  useEffect(() => {
+    if (!item?.category) return;
+
+    const fetchSimilar = async () => {
+      try {
+        setLoadingSimilar(true);
+        const res = await axios.get(
+          `/api/grocery/similar/${encodeURIComponent(item.category)}`
+        );
+
+        // ✅ Only fix: compare as strings
+        const filtered = res.data.filter(
+          (p: any) => String(p._id) !== String(item._id)
+        );
+
+        setSimilarProducts(filtered.length ? filtered : []);
+      } catch (err) {
+        console.log("SIMILAR ERROR:", err);
+      } finally {
+        setLoadingSimilar(false);
+      }
+    };
+
+    fetchSimilar();
+  }, [item.category, item._id]);
 
 
   return (
-    <div className='w-[95%] sm:w-[90%] mx-auto mt-8 mb-24 relative'>
+    <div className='w-[95%] sm:w-[90%] mx-auto mt-8 mb-24 relative p-3'>
       <Link
         href={"/"}
         className='absolute -top-2 left-0 flex items-center gap-2 text-green-700 hover:text-green-800 font-semibold transition-all'
@@ -25,7 +56,7 @@ const GroceryDetailClient = ({ item }: any) => {
         <ArrowLeft size={20} />
         <span>Back</span>
       </Link>
-      <div className='flex justify-between gap-10 pt-10'>
+      <div className='flex flex-col md:flex-row justify-between gap-10 pt-10'>
         {/* image */}
         <div className='relative w-full aspect-4/3 bg-gray-50 overflow-hidden group flex-1'>
           <img src={item.image} alt={item.name} sizes='(max-width: 768px) 100vw, 25vw'
@@ -79,6 +110,21 @@ const GroceryDetailClient = ({ item }: any) => {
           }
         </div>
       </div>
+
+      {/* Similar Products */}
+      <h2 className="text-2xl font-semibold text-gray-700 mt-10 mb-5">
+        Similar Products
+      </h2>
+      {similarProducts.length === 0 ? (
+        <p className="text-gray-400 text-sm">No similar products found</p>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {similarProducts.map((prod) => (
+            <GroceryItemCard key={prod._id} item={prod} />
+          ))}
+        </div>
+      )}
+
     </div>
   )
 }

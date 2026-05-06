@@ -1,6 +1,6 @@
+// grocery.model.ts
 import mongoose from "mongoose";
 
-// grocery.model.ts
 export interface IGrocery {
   _id?: mongoose.Types.ObjectId;
   name: string;
