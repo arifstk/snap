@@ -297,12 +297,8 @@
 
 
 
-
-
-
-
-'use client';
 // src/components/AdminSettingsPage.tsx
+'use client';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -319,7 +315,7 @@ import { fetchSettings, saveSettings, setLocalSettings, ISettings } from '@/redu
 
 type SectionKey = 'general' | 'banner' | 'delivery' | 'contact' | 'social' | 'store' | 'danger';
 
-// ── Reusable UI ───────────────────────────────────────────────────────────────
+// ── Reusable UI ──────
 
 const SectionCard = ({ children, title, icon }: { children: React.ReactNode; title: string; icon: React.ReactNode }) => (
   <motion.div
@@ -380,8 +376,7 @@ const navItems: { key: SectionKey; label: string; icon: React.ReactNode }[] = [
   { key: 'danger', label: 'Danger Zone', icon: <ShieldAlert className="w-4 h-4" /> },
 ];
 
-// ── Main Component ────────────────────────────────────────────────────────────
-
+// ── Main Component ───────
 const AdminSettingsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { data: settings, isLoading, isSaving, error } = useSelector((s: RootState) => s.settings);
@@ -450,10 +445,6 @@ const AdminSettingsPage = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
 
           <div className="flex items-center gap-3">
-            {/* ✅ Back to Home button */}
-            <Link href="/" className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-medium transition-all">
-              <ChevronRight className="w-3.5 h-3.5 rotate-180" /> Home
-            </Link>
             <div className="bg-green-100 p-2 rounded-xl">
               <Settings className="w-5 h-5 text-green-600" />
             </div>
@@ -465,13 +456,13 @@ const AdminSettingsPage = () => {
 
           <div className="flex items-center gap-2">
             <button onClick={handleReset}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${resetConfirm ? 'bg-red-100 text-red-600 border border-red-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${resetConfirm ? 'bg-red-100 text-red-600 border border-red-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 cursor-pointer'}`}>
               {resetConfirm
                 ? <><AlertTriangle className="w-3.5 h-3.5" /> Confirm?</>
                 : <><RotateCcw className="w-3.5 h-3.5" /> Reset</>}
             </button>
             <motion.button whileTap={{ scale: 0.96 }} onClick={handleSave} disabled={isSaving}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-green-600 hover:bg-green-700 text-white disabled:opacity-60 transition-all">
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-green-600 hover:bg-green-700 text-white disabled:opacity-60 transition-all cursor-pointer">
               {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
               {isSaving ? 'Saving...' : 'Save Changes'}
             </motion.button>
@@ -479,14 +470,21 @@ const AdminSettingsPage = () => {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex gap-6">
+      {/* ✅ Back to Home button */}
+      <div className="max-w-6xl mx-auto px-2 pt-2">
+        <Link href="/" className="flex items-center gap-1 px-3 py-2 rounded-xl  hover:text-gray-700 text-gray-500 text-xs font-medium transition-all">
+          <ChevronRight className="w-3.5 h-3.5 rotate-180" />Back to Home
+        </Link>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row md:flex-row gap-6">
 
         {/* ── Sidebar Nav ── */}
         <aside className="w-48 shrink-0 hidden md:block">
           <nav className="space-y-1 sticky top-24">
             {navItems.map((item) => (
               <button key={item.key} onClick={() => setActiveSection(item.key)}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-left ${activeSection === item.key ? 'bg-green-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'}`}>
+                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-left cursor-pointer ${activeSection === item.key ? 'bg-green-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'}`}>
                 {item.icon} {item.label}
                 {activeSection === item.key && <ChevronRight className="w-3.5 h-3.5 ml-auto" />}
               </button>
@@ -495,10 +493,10 @@ const AdminSettingsPage = () => {
         </aside>
 
         {/* ── Mobile Nav ── */}
-        <div className="md:hidden w-full mb-4 flex gap-2 overflow-x-auto pb-2">
+        <div className="md:hidden w-full mb-4 flex flex-col gap-2 overflow-x-auto pb-2">
           {navItems.map((item) => (
             <button key={item.key} onClick={() => setActiveSection(item.key)}
-              className={`shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${activeSection === item.key ? 'bg-green-600 text-white' : 'bg-white text-gray-600 border border-gray-200'}`}>
+              className={`shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer ${activeSection === item.key ? 'bg-green-600 text-white' : 'bg-white text-gray-600 border border-gray-200'}`}>
               {item.icon} {item.label}
             </button>
           ))}
