@@ -7,6 +7,7 @@ import StoreProvider from "@/redux/StoreProvider";
 import InitUser from "@/InitUser";
 import connectDb from '@/lib/db';
 import Settings from '@/models/settings.model';
+import Footer from "@/components/Footer";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -41,6 +42,7 @@ export default function RootLayout({
           <StoreProvider> {/*redux Provider wrapper */}
             <InitUser />
             {children}
+            <Footer />
           </StoreProvider>
         </Provider>
         <Toaster position="top-right" />
