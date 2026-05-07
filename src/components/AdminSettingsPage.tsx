@@ -471,10 +471,12 @@ const AdminSettingsPage = () => {
       </div>
 
       {/* ✅ Back to Home button */}
-      <div className="max-w-6xl mx-auto px-2 pt-2">
-        <Link href="/" className="flex items-center gap-1 px-3 py-2 rounded-xl  hover:text-gray-700 text-gray-500 text-xs font-medium transition-all">
-          <ChevronRight className="w-3.5 h-3.5 rotate-180" />Back to Home
-        </Link>
+      <div className="max-w-6xl mx-auto px-3 pt-2">
+        <button>
+          <Link href="/" className="flex items-center gap-1 px-4 py-2 rounded-xl  hover:text-gray-700 text-gray-500 text-xs font-medium transition-all">
+            <ChevronRight className="w-3.5 h-3.5 rotate-180" />Back to Home
+          </Link>
+        </button>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row md:flex-row gap-6">
@@ -645,6 +647,7 @@ const AdminSettingsPage = () => {
 
           </AnimatePresence>
         </main>
+
       </div>
     </div>
   );
