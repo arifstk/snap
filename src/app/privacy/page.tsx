@@ -146,7 +146,7 @@ const PrivacyPolicy = () => {
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <div className="bg-green-700 px-6 py-3 rounded-xl text-sm font-bold">
-                    Email: {settings.contactInfo?.email || 'privacy@snapgrocery.com'}
+                    Email: {settings.contactInfo?.email || 'info@snap.com'}
                   </div>
                   <div className="bg-green-700 px-6 py-3 rounded-xl text-sm font-bold">
                     Phone: {settings.contactInfo?.phone}
