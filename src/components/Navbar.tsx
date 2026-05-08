@@ -24,7 +24,9 @@ interface IUser {
   token?: string;
 }
 
-const Navbar = ({ user }: { user: IUser }) => {
+// const Navbar = ({ user }: { user: IUser }) => {
+const Navbar = () => {
+  const user = useSelector((state: RootState) => state.user.userData);
   const [open, setOpen] = useState(false);
   const profileDropdown = useRef<HTMLDivElement>(null);
   const [searchBarOpen, setSearchBarOpen] = useState(false);
@@ -63,11 +65,11 @@ const Navbar = ({ user }: { user: IUser }) => {
           <div className="flex items-center gap-3 py-3 pl-4 mt-4 rounded-xl bg-white/20 hover:bg-white/30 transition-all shadow-inner">
             <div className="w-12 h-12 rounded-full bg-gray-500 flex items-center justify-center overflow-hidden relative">
               {
-                user.image ? <Image src={user.image} alt='user' fill
+                user?.image ? <Image src={user.image} alt='user' fill
                   className="object-cover rounded-full w-10 h-10"
                 /> :
                   (<span className="bg-gray-300 font-bold text-2xl">
-                    {user.name
+                    {user?.name
                       .split(" ")
                       .map(n => n[0])
                       .join("")
@@ -77,8 +79,8 @@ const Navbar = ({ user }: { user: IUser }) => {
               }
             </div>
             <div>
-              <div className="text-lg font-semibold tracking-wide">{user.name}</div>
-              <div className="text-xs text-gray-700 capitalize tracking-wide">{user.role}</div>
+              <div className="text-lg font-semibold tracking-wide">{user?.name}</div>
+              <div className="text-xs text-gray-700 capitalize tracking-wide">{user?.role}</div>
             </div>
           </div>
         </div>
@@ -121,7 +123,7 @@ const Navbar = ({ user }: { user: IUser }) => {
 
       {/* search bar*/}
       {
-        user.role === "user" &&
+        user?.role === "user" &&
         <form className="hidden md:flex items-center bg-white rounded-full px-4 py-2 w-1/2 max-w-lg shadow-md">
           <SearchIcon className="text-gray-500 w-5 h-5 mr-2" />
           <input type="text" placeholder="Search groceries..."
@@ -134,7 +136,7 @@ const Navbar = ({ user }: { user: IUser }) => {
       <div className="flex items-center gap-3 md:gap-6">
         {/* search icon */}
         {
-          user.role === "user" &&
+          user?.role === "user" &&
           <div className="bg-white rounded-full w-11 h-11 flex items-center justify-center shadow-md hover:scale-105 transition md:hidden" onClick={() => setSearchBarOpen((prev) => !prev)}>
             <Search className="text-green-600 w-6 h-6" />
           </div>
@@ -142,7 +144,7 @@ const Navbar = ({ user }: { user: IUser }) => {
 
         {/* Cart */}
         {
-          user.role === "user" &&
+          user?.role === "user" &&
           <Link href={"/user/cart"} className="flex items-center justify-center rounded-full bg-white w-11 h-11 hover:scale-105 shadow-md  transition relative">
             <ShoppingCartIcon className="text-green-600 w-6 h-6" />
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-semibold shadow">{cartData.length}</span>
@@ -151,7 +153,7 @@ const Navbar = ({ user }: { user: IUser }) => {
 
         {/* Admin Only */}
         {
-          user.role === "admin" &&
+          user?.role === "admin" &&
           <>
             <div className="hidden md:flex items-center gap-4">
               <Link href={"/admin/add-category"} className="flex items-center gap-2 bg-white text-green-700 font-semibold px-4 py-2 rounded-full hover:bg-green-100 transition-all">
@@ -180,11 +182,11 @@ const Navbar = ({ user }: { user: IUser }) => {
             onClick={() => setOpen(prev => !prev)}
           >
             {
-              user.image ? <Image src={user.image} alt='user' fill
+              user?.image ? <Image src={user?.image} alt='user' fill
                 className="object-cover rounded-full"
               /> :
                 (<span className="text-green-700 font-bold text-2xl">
-                  {user.name
+                  {user?.name
                     .split(" ")
                     .map(n => n[0])
                     .join("")
@@ -207,11 +209,11 @@ const Navbar = ({ user }: { user: IUser }) => {
                 <div className="flex items-center gap-3 py-2 border-b border-gray-200">
                   <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center overflow-hidden relative">
                     {
-                      user.image ? <Image src={user.image} alt='user' fill
+                      user?.image ? <Image src={user?.image} alt='user' fill
                         className="object-cover rounded-full w-10 h-10"
                       /> :
                         (<span className="text-green-700 font-bold text-2xl">
-                          {user.name
+                          {user?.name
                             .split(" ")
                             .map(n => n[0])
                             .join("")
@@ -222,13 +224,13 @@ const Navbar = ({ user }: { user: IUser }) => {
                   </div>
 
                   <div>
-                    <div className="text-gray-800 font-semibold tracking-tight">{user.name}</div>
-                    <div className="text-xs text-gray-500 capitalize">{user.role}</div>
+                    <div className="text-gray-800 font-semibold tracking-tight">{user?.name}</div>
+                    <div className="text-xs text-gray-500 capitalize">{user?.role}</div>
                   </div>
                 </div>
 
                 {
-                  user.role === "user" &&
+                  user?.role === "user" &&
                   <Link href={"/user/my-orders"} className="flex items-center gap-2 mt-2 px-2 py-3 hover:bg-green-50 rounded-lg text-gray-700" onClick={() => setOpen(false)}
                   >
                     <Package className="w-5 h-5 text-green-600" />

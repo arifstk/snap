@@ -8,6 +8,7 @@ import InitUser from "@/InitUser";
 import connectDb from '@/lib/db';
 import Settings from '@/models/settings.model';
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default function RootLayout({
       <body className="max-w-7xl mx-auto w-full min-h-screen bg-linear-to-b from-green-50 to-white ">
         <Provider>
           <StoreProvider> {/*redux Provider wrapper */}
+            <Navbar />
             <InitUser />
             {children}
             <Footer />
