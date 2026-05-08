@@ -2,8 +2,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
-import { ShieldCheck, Lock, Eye, FileText, Bell, UserCheck } from 'lucide-react';
+import { ShieldCheck, Lock, Eye, FileText, Bell, UserCheck, ChevronRight } from 'lucide-react';
 import { RootState } from '@/redux/store';
+import Link from 'next/link';
 
 const PrivacyPolicy = () => {
   const { data: settings } = useSelector((state: RootState) => state.settings);
@@ -53,9 +54,18 @@ const PrivacyPolicy = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 mt-10">
       {/* ── Header ── */}
       <header className="bg-white border-b border-gray-100 py-16">
+{/* ✅ Back to Home button */}
+        <div className="max-w-6xl mx-auto">
+          <button>
+            <Link href="/" className="flex items-center gap-1 px-4 py-2 rounded-xl  hover:text-gray-700 text-gray-500 text-xs font-medium transition-all">
+              <ChevronRight className="w-3.5 h-3.5 rotate-180" />Back to Home
+            </Link>
+          </button>
+        </div>
+
         <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: -20 }}

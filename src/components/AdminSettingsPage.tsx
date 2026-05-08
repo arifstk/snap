@@ -438,7 +438,7 @@ const AdminSettingsPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 mt-23">
 
       {/* ── Sticky Header ── */}
       <div className="sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm">
