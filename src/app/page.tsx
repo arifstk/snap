@@ -31,7 +31,7 @@ const Home = async () => {
   const plainUser = JSON.parse(JSON.stringify(user));
   return (
     <>
-      <Navbar user={plainUser} />
+      <Navbar />
       <GeoUpdater userId={plainUser._id} />
       {user.role == "user" ? (
         <UserDashboard />
