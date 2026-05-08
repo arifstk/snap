@@ -27,8 +27,8 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-200 border-t border-gray-100 pt-5 sm:pt-16 md:pt-16 pb-5">
-      <div className="container mx-auto px-4">
+    <footer className="bg-gray-100 border-t border-gray-100 pt-5 sm:pt-16 md:pt-16 pb-5">
+      <div className=" w-[93%] mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-3">
 
           {/* Brand Section */}
@@ -109,11 +109,11 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-5 border-t border-gray-100 flex md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-400 text-xs -tracking-tighter">
+        <div className="pt-4 border-t border-gray-300 flex md:flex-row justify-between items-center gap-4">
+          <p className="text-gray-500 text-xs -tracking-tighter">
             © {currentYear} {settings?.websiteName || 'Snap'}. All rights reserved.
           </p>
-          <div className="group text-xs text-gray-400 hover:text-green-600 flex items-center gap-1 transition-colors -tracking-tighter">
+          <div className="group text-xs text-gray-500 hover:text-green-600 flex items-center gap-1 transition-colors -tracking-tighter">
             Developed by: Arif
           </div>
         </div>

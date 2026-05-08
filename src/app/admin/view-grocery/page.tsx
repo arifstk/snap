@@ -135,7 +135,7 @@ const ViewGrocery = () => {
 
   
   return (
-    <div className='pt-4 w-[90%] mx-auto pb-20'>
+    <div className='pt-4 w-[90%] mx-auto pb-20 mt-20'>
 
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-4 pt-5">

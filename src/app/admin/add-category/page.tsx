@@ -99,7 +99,7 @@ const AddCategory = () => {
   };
 
   return (
-    <div className='min-h-screen flex flex-col items-center justify-start bg-linear-to-br from-green-50 to-white py-16 sm:px-2 md:px-4 relative'>
+    <div className='min-h-screen flex flex-col items-center justify-start bg-linear-to-br from-green-50 to-white mt-20 py-16 sm:px-2 md:px-4 relative'>
       <Link href="/" className='absolute top-6 left-6 flex items-center gap-2 text-green-700 font-semibold bg-white px-4 py-2 rounded-full shadow-md hover:bg-green-100 hover:shadow-lg transition-all'>
         <ArrowLeft className='w-5 h-5' />
         <span className='hidden md:flex'>Back to home</span>

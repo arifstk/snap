@@ -46,7 +46,7 @@ const MyOrders = () => {
     <div className='bg-linear-to-b from-white to-gray-100 min-h-screen'>
 
       {/* Header */}
-      <div className='fixed top-0 left-0 w-full backdrop-blur-lg bg-white/70 shadow-sm border-b z-999'>
+      <div className='fixed top-21 left-0 w-full backdrop-blur-lg bg-white/70 shadow-sm border-b z-999'>
         <div className='flex items-center gap-3 px-4 py-3'>
           <button className='flex items-center gap-2 p-2 bg-gray-100 rounded-full hover:bg-gray-200 active:scale-95 transition cursor-pointer'
             onClick={() => router.push("/")}>
@@ -59,13 +59,13 @@ const MyOrders = () => {
       {/* Page Content */}
       {
         orders?.length == 0 ? (
-          <div className='flex flex-col items-center justify-center max-w-4xl mx-auto pt-25 px-4'>
+          <div className='flex flex-col items-center justify-center max-w-4xl mx-auto pt-40 px-4'>
             <PackageSearch size={70} className='text-green-600 mb-4' />
             <h2 className='text-xl font-semibold text-gray-700'>No orders found</h2>
             <p className='text-gray-500 text-sm mt-1'>Start shopping to view your orders here</p>
           </div>
         ) :
-          <div className='pt-25 px-4 space-7-3 max-w-4xl mx-auto'>
+          <div className='pt-40 px-4 space-7-3 max-w-4xl mx-auto'>
             {
               orders?.map((order) => (
                 <motion.div
