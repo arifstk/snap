@@ -15,10 +15,15 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { RootState } from '@/redux/store';
+import Settings from '@/models/settings.model';
 
 const AboutPage = () => {
   const { data: settings } = useSelector((state: RootState) => state.settings);
   const siteName = settings.websiteName || 'SnapGrocery';
+  // dynamic image
+  const heroImage = settings?.bannerSlides?.[0]?.bg
+  const missionImage1 = settings.bannerSlides?.[1]?.bg
+  const missionImage2 = settings.bannerSlides?.[2]?.bg
 
   const stats = [
     { label: 'Orders Delivered', value: '10k+' },
@@ -70,8 +75,8 @@ const AboutPage = () => {
             >
               <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl rotate-2">
                 <img
-                  src="https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1000&auto=format&fit=crop"
-                  alt="Fresh Marketplace"
+                  src={heroImage}
+                  alt="Hero Banner"
                   className="w-full h-100 object-cover"
                 />
               </div>
@@ -129,8 +134,8 @@ const AboutPage = () => {
           <div className="flex flex-col md:flex-row items-center gap-16">
             <div className="flex-1">
               <div className="grid grid-cols-2 gap-4">
-                <img className="rounded-3xl shadow-lg" src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?q=80&w=400&auto=format&fit=crop" alt="Store" />
-                <img className="rounded-3xl shadow-lg mt-8" src="https://images.unsplash.com/photo-1516594798947-e65505dbb29d?q=80&w=400&auto=format&fit=crop" alt="Bag" />
+                <img className="rounded-3xl shadow-lg" src={missionImage1} alt="Store" />
+                <img className="rounded-3xl shadow-lg mt-8" src={missionImage2} alt="Bag" />
               </div>
             </div>
             <div className="flex-1 space-y-3">
@@ -166,7 +171,7 @@ const AboutPage = () => {
             <div className="relative z-10">
               <h2 className="text-3xl md:text-5xl font-black text-white mb-6">Experience the freshness today</h2>
               <p className="text-green-100 text-lg mb-10 max-w-xl mx-auto italic">"The quality is better than my local market, and the delivery is always on time."</p>
-              <Link href="/products" className="bg-white text-green-700 px-10 py-4 rounded-2xl font-black text-lg hover:scale-105 transition-transform inline-block">
+              <Link href="/" className="bg-white text-green-700 px-10 py-4 rounded-2xl font-black text-lg hover:scale-105 transition-transform inline-block">
                 Start My First Order
               </Link>
             </div>
@@ -191,3 +196,4 @@ const ValueCard = ({ icon, title, description }: { icon: React.ReactNode, title:
 );
 
 export default AboutPage;
+
