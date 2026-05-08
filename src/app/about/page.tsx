@@ -73,7 +73,7 @@ const AboutPage = () => {
               animate={{ opacity: 1, scale: 1 }}
               className="flex-1 relative"
             >
-              <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl rotate-2">
+              <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl rotate-3">
                 <img
                   src={heroImage}
                   alt="Hero Banner"
@@ -134,8 +134,8 @@ const AboutPage = () => {
           <div className="flex flex-col md:flex-row items-center gap-16">
             <div className="flex-1">
               <div className="grid grid-cols-2 gap-4">
-                <img className="rounded-3xl shadow-lg" src={missionImage1} alt="Store" />
-                <img className="rounded-3xl shadow-lg mt-8" src={missionImage2} alt="Bag" />
+                <img className="rounded-3xl shadow-lg w-full h-30 md:h-52 -rotate-3" src={missionImage1} alt="Store" />
+                <img className="rounded-3xl shadow-lg mt-10 w-full h-30 md:h-52 rotate-4" src={missionImage2} alt="Bag" />
               </div>
             </div>
             <div className="flex-1 space-y-3">

@@ -60,9 +60,9 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className='flex flex-col items-center justify-center gap-3 max-w-3xl'
         >
-          <div className='text sm:text-5xl md:text-6xl font-extrabold tracking-tight drop-shadow-lg'>
+          <h1 className='text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight drop-shadow-lg md:tracking-wider'>
             {currentSlide.title}
-          </div>
+          </h1>
           <p className='text-lg sm:text-xl text-gray-200 max-w-2xl'>
             {currentSlide.subtitle}
           </p>
