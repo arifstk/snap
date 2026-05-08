@@ -98,7 +98,7 @@ const TrackOrder = ({ params }: { params: Promise<{ orderId: string }> }) => {
 
 
   return (
-    <div className='w-full min-h-screen bg-linear-to-b from-green/30 to-white'>
+    <div className='w-full min-h-screen bg-linear-to-b from-green/30 to-white mt-22'>
       <div className='max-w-2xl mx-auto pb-4'>
         {/* Header */}
         <div className='sticky top-0 bg-white/80 backdrop-blur-xl p-4 border-b shadow flex gap-3 items-center z-50'>
