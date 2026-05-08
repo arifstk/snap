@@ -10,8 +10,9 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react"
 import { signOut } from "next-auth/react";
 import { createPortal } from "react-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { setSearchQuery } from "@/redux/userSlice";
 
 interface IUser {
   _id?: mongoose.Types.ObjectId;
@@ -31,7 +32,10 @@ const Navbar = () => {
   const profileDropdown = useRef<HTMLDivElement>(null);
   const [searchBarOpen, setSearchBarOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { cartData } = useSelector((state: RootState) => state.cart);
+  // const { cartData } = useSelector((state: RootState) => state.cart);
+  const cartData = useSelector((state: RootState) => (state.cart as any).cartData);
+  const dispatch = useDispatch();
+  const [query, setQuery] = useState("");
 
   // profile dropdown false on click outside
   useEffect(() => {
@@ -126,20 +130,85 @@ const Navbar = () => {
         user?.role === "user" &&
         <form className="hidden md:flex items-center bg-white rounded-full px-4 py-2 w-1/2 max-w-lg shadow-md">
           <SearchIcon className="text-gray-500 w-5 h-5 mr-2" />
-          <input type="text" placeholder="Search groceries..."
+          <input type="text"
+            value={query}
+            placeholder="Search groceries..."
             className="w-full focus:outline-none text-gray-700 placeholder-gray-400"
+            onChange={(e) => {
+              dispatch(setSearchQuery(e.target.value))
+              setQuery(e.target.value)
+            }}
           />
+          {query && (
+            <button type="button"
+              onClick={() => {
+                setQuery("")
+                dispatch(setSearchQuery(""))
+              }} className="text-gray-400 hover:text-gray-600 cursor-pointer">
+              <X size={16} />
+            </button>
+          )}
         </form>
       }
 
 
       <div className="flex items-center gap-3 md:gap-6">
         {/* search icon */}
-        {
+        {/* {
           user?.role === "user" &&
           <div className="bg-white rounded-full w-11 h-11 flex items-center justify-center shadow-md hover:scale-105 transition md:hidden" onClick={() => setSearchBarOpen((prev) => !prev)}>
             <Search className="text-green-600 w-6 h-6" />
           </div>
+        } */}
+
+        {
+          user?.role === "user" &&
+          <div
+            className="bg-white rounded-full w-11 h-11 flex items-center justify-center shadow-md hover:scale-105 transition md:hidden"
+            onClick={() => setSearchBarOpen((prev) => !prev)}
+          >
+            <Search className="text-green-600 w-6 h-6" />
+          </div>
+        }
+
+        {/* mobile search overlay */}
+        {
+          user?.role === "user" && searchBarOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="fixed top-17 left-0 w-full px-4 md:hidden z-50"
+            >
+              <form className="flex items-center bg-white rounded-full px-4 py-2 w-full shadow-md">
+                <SearchIcon className="text-gray-500 w-5 h-5 mr-2" />
+                <input
+                  type="text"
+                  value={query}
+                  placeholder="Search groceries..."
+                  autoFocus
+                  className="w-full focus:outline-none text-gray-700 placeholder-gray-400"
+                  onChange={(e) => {
+                    dispatch(setSearchQuery(e.target.value));
+                    setQuery(e.target.value);
+                  }}
+                />
+                {query && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setQuery("");
+                      dispatch(setSearchQuery(""));
+                    }}
+                    className="text-gray-400 hover:text-gray-600 cursor-pointer"
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+              </form>
+            </motion.div>
+          )
         }
 
         {/* Cart */}

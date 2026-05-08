@@ -15,10 +15,12 @@ interface IUser {
 
 interface IUserSlice {
   userData: IUser | null;
+  searchQuery: string;
 }
 
 const initialState: IUserSlice = {
   userData: null,
+  searchQuery: "",
 };
 
 const userSlice = createSlice({
@@ -28,9 +30,12 @@ const userSlice = createSlice({
     setUserData: (state, action) => {
       state.userData = action.payload;
     },
+    setSearchQuery: (state, action) => {
+      state.searchQuery = action.payload;
+    }
   },
 });
 
-export const {setUserData}= userSlice.actions;
+export const {setUserData, setSearchQuery}= userSlice.actions;
 export default userSlice.reducer;
 

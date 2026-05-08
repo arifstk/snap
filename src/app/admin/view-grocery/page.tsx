@@ -30,6 +30,7 @@ const ViewGrocery = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const itemsPerPage = 10;
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
   // fetch groceries
   useEffect(() => {
@@ -127,6 +128,12 @@ const ViewGrocery = () => {
     }
   };
 
+  // Search
+  const filteredGroceries = groceries
+  .filter((item) => selectedCategory === 'All' || item.category === selectedCategory)
+  .filter((item) => item.name.toLowerCase().includes(query.toLowerCase())); // 👈 search filter added
+
+  
   return (
     <div className='pt-4 w-[90%] mx-auto pb-20'>
 
