@@ -57,7 +57,7 @@ const PrivacyPolicy = () => {
     <div className="min-h-screen bg-gray-50 mt-10">
       {/* ── Header ── */}
       <header className="bg-white border-b border-gray-100 py-16">
-{/* ✅ Back to Home button */}
+        {/* ✅ Back to Home button */}
         <div className="max-w-6xl mx-auto">
           <button>
             <Link href="/" className="flex items-center gap-1 px-4 py-2 rounded-xl  hover:text-gray-700 text-gray-500 text-xs font-medium transition-all">
@@ -86,7 +86,7 @@ const PrivacyPolicy = () => {
       {/* ── Content ── */}
       <main className="container mx-auto px-4 py-12 max-w-6xl">
         <div className="flex flex-col lg:flex-row gap-12">
-          
+
           {/* Table of Contents (Desktop Only) */}
           <aside className="hidden lg:block w-64 shrink-0">
             <div className="sticky top-24 space-y-4">
@@ -109,7 +109,7 @@ const PrivacyPolicy = () => {
           <div className="flex-1 space-y-12">
             <section className="prose prose-green max-w-none">
               <p className="text-lg text-gray-600 leading-relaxed italic">
-                At {siteName}, we take your privacy seriously. This policy describes how your personal 
+                At {siteName}, we take your privacy seriously. This policy describes how your personal
                 information is collected, used, and shared when you visit or make a purchase from our platform.
               </p>
             </section>
@@ -141,7 +141,7 @@ const PrivacyPolicy = () => {
               <div className="relative z-10">
                 <h2 className="text-2xl font-black mb-4">Questions about your data?</h2>
                 <p className="text-green-100 mb-6 max-w-xl">
-                  If you would like to access, correct, or delete any personal information we have about you, 
+                  If you would like to access, correct, or delete any personal information we have about you,
                   please contact our Privacy Compliance Officer.
                 </p>
                 <div className="flex flex-wrap gap-4">
