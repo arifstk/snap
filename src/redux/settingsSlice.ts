@@ -8,6 +8,7 @@ interface IBannerSlide {
   subtitle: string;
   btnText: string;
   bg: string;
+  link: string;
 }
 
 interface IContactInfo {

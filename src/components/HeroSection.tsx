@@ -7,6 +7,7 @@ import { motion } from 'motion/react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import Link from 'next/link';
 
 const HeroSection = () => {
   // ✅ Read slides from admin settings instead of hardcoding
@@ -72,8 +73,10 @@ const HeroSection = () => {
             transition={{ duration: 0.2 }}
             className='mt-4 bg-white text-green-700 hover:bg-green-100 px-8 py-3 rounded-full font-semibold shadow-lg transition-all duration-300 flex items-center gap-2 cursor-pointer'
           >
-            <ShoppingBasket className='w-5 h-5' />
-            {currentSlide.btnText}
+            <Link href={currentSlide.link || '/'} className="flex items-center gap-2">
+              <ShoppingBasket className='w-5 h-5' />
+              {currentSlide.btnText}
+            </Link>
           </motion.button>
 
           {/* Dots */}
@@ -82,9 +85,8 @@ const HeroSection = () => {
               <button
                 key={index}
                 onClick={() => setCurrent(index)}
-                className={`h-3 rounded-full transition-all ${
-                  index === current ? 'bg-white w-6' : 'bg-white/50 w-3'
-                }`}
+                className={`h-3 rounded-full transition-all ${index === current ? 'bg-white w-6' : 'bg-white/50 w-3'
+                  }`}
               />
             ))}
           </div>

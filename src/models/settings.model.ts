@@ -43,6 +43,7 @@ const settingsSchema = new Schema<ISettings>(
           subtitle: String,
           btnText: String,
           bg: String,
+          link: { type: String, default: '/' },
         },
       ],
       default: [
