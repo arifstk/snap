@@ -20,22 +20,12 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    // try {
-    //   await signIn("credentials", { email, password, redirect: false });
-    //   setLoading(false);
-    //   toast.success("Login successful!");
-    //   router.push("/");
-
-    // } catch (error) {
-    //   console.log(error);
-    //   setLoading(false);
-    //   toast.error("Login failed. Please check your credentials.");
-    // }
 
     const result = await signIn("credentials", {
       email,
       password,
-      redirect: false
+      redirect: false,
+      callbackUrl: "/",
     });
     console.log("SIGNIN RESULT", result);
 
@@ -49,6 +39,7 @@ const Login = () => {
     if (result?.ok) {
       toast.success("Login successful!");
       router.push("/");
+      router.refresh();
     }
   };
 
