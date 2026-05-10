@@ -38,7 +38,9 @@ const Login = () => {
 
     if (result?.ok) {
       toast.success("Login successful!");
-      router.push("/");
+      // router.push("/");
+      const redirectUrl = result.url ? new URL(result.url).pathname : "/";
+      router.push(redirectUrl);
       router.refresh();
     }
   };
