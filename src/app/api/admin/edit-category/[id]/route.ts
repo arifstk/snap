@@ -25,7 +25,8 @@ export async function PUT(
     const updated = await Category.findByIdAndUpdate(
       id,
       { name },
-      { new: true }
+      // { new: true }
+      { returnDocument: "after" }
     );
 
     return NextResponse.json(updated, { status: 200 });

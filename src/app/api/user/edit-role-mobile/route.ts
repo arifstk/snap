@@ -12,19 +12,9 @@ export async function POST(req: NextRequest) {
     const user = await User.findOneAndUpdate(
       { email: session?.user?.email },
       { role, mobile },
-      { new: true },
+      // { new: true },
+      { returnDocument: "after" },
     );
-
-    // if (!user) {
-    //   return NextResponse.json({ message: "User not found" }, { status: 400 });
-    // }
-
-    // if (user) {
-    //   return NextResponse.json(
-    //     user,
-    //     { status: 200 },
-    //   );
-    // }
 
     // ✅ Clean
     if (!user) {
