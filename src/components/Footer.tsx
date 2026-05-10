@@ -64,8 +64,8 @@ const Footer = () => {
             <h4 className="text-sm font-bold uppercase tracking-wider text-gray-900 mb-4">Shopping</h4>
             <ul className="space-y-2 text-sm">
               {/* <li><Link href="/products" className="text-gray-500 hover:text-green-600 transition-colors">All Products</Link></li> */}
-              <li><Link href="/offers" className="text-gray-500 hover:text-green-600 transition-colors">Special Offers</Link></li>
-              <li><Link href="/categories" className="text-gray-500 hover:text-green-600 transition-colors">Categories</Link></li>
+              <li><Link href="/offer" className="text-gray-500 hover:text-green-600 transition-colors">Special Offers</Link></li>
+              <li><Link href="/category" className="text-gray-500 hover:text-green-600 transition-colors">Categories</Link></li>
               <li><Link href="/user/my-orders" className="text-gray-500 hover:text-green-600 transition-colors">Track Order</Link></li>
             </ul>
           </div>
