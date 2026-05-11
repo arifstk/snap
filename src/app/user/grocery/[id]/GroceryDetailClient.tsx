@@ -1,7 +1,7 @@
 // app/user/grocery/[id]/GroceryDetailClient.tsx
 'use client';
 import { AppDispatch, RootState } from '@/redux/store';
-import { ArrowLeft, Minus, Plus, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, Clock, Minus, Plus, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'motion/react';
@@ -9,6 +9,7 @@ import { addToCart, decreaseQuantity, increaseQuantity } from '@/redux/cartSlice
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import GroceryItemCard from '@/components/GroceryItemCard';
+import { json } from 'stream/consumers';
 
 const GroceryDetailClient = ({ item }: any) => {
   // Dynamic symbol
@@ -18,6 +19,7 @@ const GroceryDetailClient = ({ item }: any) => {
   const cartItem = cartData.find(itm => itm._id === item._id);
   const [similarProducts, setSimilarProducts] = useState<any[]>([]);
   const [loadingSimilar, setLoadingSimilar] = useState(false);
+  const [recentlyViewed, setRecentlyViewed] = useState<any[]>([]);
 
   // similar product
   useEffect(() => {
@@ -46,9 +48,37 @@ const GroceryDetailClient = ({ item }: any) => {
     fetchSimilar();
   }, [item.category, item._id]);
 
+  // save viewed product to local storage
+  useEffect(() => {
+    if (!item?._id) return;
+    const stored = localStorage.getItem('recentlyViewed');
+    const existing: any[] = stored ? JSON.parse(stored) : [];
+
+    // Remove if already exists (to move to front)
+    const filtered = existing.filter((p) => String(p._id) !== String(item._id));
+
+    // Add current item to front, keep max 10
+    const updated = [item, ...filtered].slice(0, 10);
+
+    localStorage.setItem('recentlyViewed', JSON.stringify(updated));
+  }, [item._id]);
+
+  // Load recently viewed
+  useEffect(() => {
+    const stored = localStorage.getItem('recentlyViewed');
+    if (!stored) return;
+
+    const parsed: any[] = JSON.parse(stored);
+
+    // Exclude current product
+    const filtered = parsed.filter((p) => String(p._id) !== String(item._id));
+
+    setRecentlyViewed(filtered);
+  }, [item._id]);
+
 
   return (
-    <div className='w-[95%] sm:w-[90%] mx-auto mt-8 mb-24 relative p-3'>
+    <div className='w-[95%] sm:w-[90%] mx-auto mt-28 mb-24 relative p-3'>
       <Link
         href={"/"}
         className='absolute -top-2 left-0 flex items-center gap-2 text-green-700 hover:text-green-800 font-semibold transition-all'
@@ -112,18 +142,47 @@ const GroceryDetailClient = ({ item }: any) => {
       </div>
 
       {/* Similar Products */}
-      <h2 className="text-2xl font-semibold text-gray-700 mt-10 mb-5">
+      <h2 className="text-lg font-semibold text-gray-700 mt-15 p-1 bg-linear-to-r from-green-100 to-white">
         Similar Products
       </h2>
       {similarProducts.length === 0 ? (
-        <p className="text-gray-400 text-sm">No similar products found</p>
+        // <p className="text-gray-800 text-sm text-center">No similar products found</p>
+        <div className="flex flex-col items-center justify-center py-10 text-center">
+          <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+            <ShoppingCart className="text-gray-400 w-7 h-7" />
+          </div>
+          <p className="text-gray-500 font-medium text-sm">No similar products found</p>
+          <p className="text-gray-400 text-xs mt-1">Try exploring other categories</p>
+        </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 md:mt-10">
           {similarProducts.map((prod) => (
             <GroceryItemCard key={prod._id} item={prod} />
           ))}
         </div>
       )}
+
+      {/* Recently Viewed */}
+      <h3 className="text-lg font-semibold mt-13 text-gray-800 p-1 bg-linear-to-r from-green-100 to-white">
+        Recently Viewed Products
+      </h3>
+      {
+        recentlyViewed.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-10 text-center">
+            <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+              <Clock className="text-gray-400 w-7 h-7" />
+            </div>
+            <p className="text-gray-500 font-medium text-sm">No recently viewed products</p>
+            <p className="text-gray-400 text-xs mt-1">Products you visit will appear here</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 md:mt-10">
+            {recentlyViewed.map((prod) => (
+              <GroceryItemCard key={String(prod._id)} item={prod} />
+            ))}
+          </div>
+        )
+      }
 
     </div>
   )
