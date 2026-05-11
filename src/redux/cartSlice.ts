@@ -27,8 +27,22 @@ interface ICalculateTotalPayload {
   freeDeliveryThreshold: number; // from settings.freeDeliveryThreshold
 }
 
+const loadCartFromStorage = (): IGrocery[] => {
+  if (typeof window !== 'undefined') {
+    const savedCart = localStorage.getItem('snap_cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  }
+  return [];
+};
+
+const saveCartToStorage = (data: IGrocery[]) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('snap_cart', JSON.stringify(data));
+  }
+};
+
 const initialState: ICartSlice = {
-  cartData: [],
+  cartData: loadCartFromStorage(),
   subTotal: 0,
   deliveryFee: 0,
   finalTotal: 0,
@@ -40,6 +54,7 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action: PayloadAction<IGrocery>) => {
       state.cartData.push(action.payload);
+      saveCartToStorage(state.cartData);
     },
     increaseQuantity: (
       state,
@@ -47,6 +62,7 @@ const cartSlice = createSlice({
     ) => {
       const item = state.cartData.find((itm) => itm._id == action.payload);
       if (item) item.quantity += 1;
+      saveCartToStorage(state.cartData);
     },
     decreaseQuantity: (
       state,
@@ -60,11 +76,13 @@ const cartSlice = createSlice({
           (itm) => itm._id !== action.payload,
         );
       }
+      saveCartToStorage(state.cartData);
     },
     removeFromCart: (state, action: PayloadAction<mongoose.Types.ObjectId>) => {
       state.cartData = state.cartData.filter(
         (itm) => itm._id !== action.payload,
       );
+      saveCartToStorage(state.cartData);
     },
 
     // ✅ calculateTotal now receives fee & threshold from settings — no hardcoding
@@ -77,6 +95,7 @@ const cartSlice = createSlice({
       state.deliveryFee =
         state.subTotal >= freeDeliveryThreshold ? 0 : deliveryFee;
       state.finalTotal = state.subTotal + state.deliveryFee;
+      saveCartToStorage(state.cartData);
     },
   },
 });

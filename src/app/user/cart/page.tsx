@@ -2,17 +2,17 @@
 'use client';
 import { ArrowLeft, Minus, Plus, ShoppingBasket, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
-import { div } from 'motion/react-client';
 import Image from 'next/image';
 import { decreaseQuantity, increaseQuantity, removeFromCart, calculateTotal } from '@/redux/cartSlice';
 import { useRouter } from 'next/navigation';
 
 const CartPage = () => {
   const { cartData, subTotal, deliveryFee, finalTotal } = useSelector((state: RootState) => state.cart);
+  const [isMounted, setIsMounted] = useState(false);
 
   const {
     deliveryFee: settingsDeliveryFee,
@@ -24,6 +24,7 @@ const CartPage = () => {
   const router = useRouter();
 
   useEffect(() => {
+    setIsMounted(true);
     dispatch(calculateTotal({
       deliveryFee: settingsDeliveryFee,
       freeDeliveryThreshold,
