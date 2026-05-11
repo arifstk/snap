@@ -65,7 +65,6 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               {/* <li><Link href="/products" className="text-gray-500 hover:text-green-600 transition-colors">All Products</Link></li> */}
               <li><Link href="/offer" className="text-gray-500 hover:text-green-600 transition-colors">Special Offers</Link></li>
-              <li><Link href="/category" className="text-gray-500 hover:text-green-600 transition-colors">Categories</Link></li>
               <li><Link href="/user/my-orders" className="text-gray-500 hover:text-green-600 transition-colors">Track Order</Link></li>
             </ul>
           </div>
@@ -77,6 +76,7 @@ const Footer = () => {
               <li><Link href="/about" className="text-gray-500 hover:text-green-600 transition-colors">About Us</Link></li>
               <li><Link href="/contact" className="text-gray-500 hover:text-green-600 transition-colors">Contact</Link></li>
               <li><Link href="/privacy" className="text-gray-500 hover:text-green-600 transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/help-center" className="text-gray-500 hover:text-green-600 transition-colors">Help Center</Link></li>
               {settings?.maintenanceMode && (
                 <li>
                   <span className="inline-flex items-center gap-1 text-amber-600 text-sm font-medium">
