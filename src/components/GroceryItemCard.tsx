@@ -1,7 +1,7 @@
 // GroceryItemCart.tsx
 'use client';
 import mongoose from 'mongoose';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import { Minus, Plus, ShoppingCart } from 'lucide-react';
@@ -28,6 +28,12 @@ const GroceryItemCard = ({ item }: { item: IGrocery }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { cartData } = useSelector((state: RootState) => state.cart);
   const cartItem = cartData.find(itm => itm._id === item._id);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // ✅ Handle mounting
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <div>
@@ -40,14 +46,14 @@ const GroceryItemCard = ({ item }: { item: IGrocery }) => {
       >
         {/* image */}
         <Link href={`/user/grocery/${item._id}`}>
-        <div className='relative w-full aspect-4/3 bg-gray-50 overflow-hidden group'>
-          <Image src={item.image} fill alt={item.name} sizes='(max-width: 768px) 100vw, 25vw'
-            className='object-contain p-4 transition-transform duration-500 group-hover:scale-103' />
-          <div className='absolute inset-0 bg-linear-to-r from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300' />
-        </div>
-      </Link>
-      {/* detail */}
-      <div className='p-3 flex flex-col flex-1'>
+          <div className='relative w-full aspect-4/3 bg-gray-50 overflow-hidden group'>
+            <Image src={item.image} fill alt={item.name} sizes='(max-width: 768px) 100vw, 25vw'
+              className='object-contain p-4 transition-transform duration-500 group-hover:scale-103' />
+            <div className='absolute inset-0 bg-linear-to-r from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300' />
+          </div>
+        </Link>
+        {/* detail */}
+        {/* <div className='p-3 flex flex-col flex-1'>
         <p className='text-xs text-gray-500 font-medium mb-1'>{item.category}</p>
         <h2 className='text-sm md:text-lg font-semibold truncate'>{item.name}</h2>
         <div className='flex items-center justify-between mt-2'>
@@ -56,7 +62,6 @@ const GroceryItemCard = ({ item }: { item: IGrocery }) => {
           <span className='text-green-700 font-bold text-md'>
             {currencySymbol}{item.price}
           </span>
-          {/* <span className='text-green-700 font-bold text-md'>$ {item.price}</span> */}
         </div>
         {
           !cartItem ?
@@ -90,8 +95,55 @@ const GroceryItemCard = ({ item }: { item: IGrocery }) => {
               </button>
             </motion.div>
         }
-      </div>
-    </motion.div>
+      </div> */}
+
+        <div className='p-3 flex flex-col flex-1'>
+          <p className='text-xs text-gray-500 font-medium mb-1'>{item.category}</p>
+          <h2 className='text-sm md:text-lg font-semibold truncate'>{item.name}</h2>
+          <div className='flex items-center justify-between mt-2'>
+            <span className='text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-full'>Unit: {item.unit}</span>
+            <span className='text-green-700 font-bold text-md'>
+              {currencySymbol}{item.price}
+            </span>
+          </div>
+
+          {/* ✅ Check isMounted before checking cartItem to prevent hydration errors */}
+          {!isMounted || !cartItem ? (
+            <motion.button
+              whileTap={{ scale: 0.96 }}
+              className='mt-4 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white rounded-full py-2 text-sm font-medium transition-all cursor-pointer'
+              onClick={(e) => {
+                e.stopPropagation();
+                dispatch(addToCart({ ...item, quantity: 1 }))
+              }}
+            >
+              <ShoppingCart size={18} /> Add to Cart
+            </motion.button>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className='mt-4 flex items-center justify-center gap-3 bg-green-50 border border-green-200 rounded-full py-1.5 text-sm font-medium transition-all'
+            >
+              <button
+                className='w-7 h-7 flex items-center justify-center rounded-full bg-green-100 hover:bg-green-200 transition-all cursor-pointer'
+                onClick={() => dispatch(decreaseQuantity(item._id))}
+              >
+                <Minus size={16} className='text-green-700' />
+              </button>
+              <span className='text-sm font-semibold text-gray-800'>{cartItem.quantity}</span>
+              <button
+                className='w-7 h-7 flex items-center justify-center rounded-full bg-green-100 hover:bg-green-200 transition-all cursor-pointer'
+                onClick={() => dispatch(increaseQuantity(item._id))}
+              >
+                <Plus size={16} className='text-green-700' />
+              </button>
+            </motion.div>
+          )}
+        </div>
+
+      </motion.div>
     </div >
   )
 }
