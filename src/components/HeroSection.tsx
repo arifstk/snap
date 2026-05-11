@@ -30,7 +30,7 @@ const HeroSection = () => {
   const currentSlide = slides[current];
 
   return (
-    <div className='relative w-[98%] mx-auto h-[80vh] rounded-3xl overflow-hidden shadow-2xl mt-23'>
+    <div className='relative w-[98%] mx-auto h-[35vh] sm:h-[45vh] md:h-[80vh] rounded-3xl overflow-hidden shadow-2xl mt-23'>
       <AnimatePresence>
         <motion.div
           key={current}
@@ -61,7 +61,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className='flex flex-col items-center justify-center gap-3 max-w-3xl'
         >
-          <h1 className='text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight drop-shadow-lg md:tracking-wider'>
+          <h1 className='text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter drop-shadow-lg md:tracking-wider'>
             {currentSlide.title}
           </h1>
           <p className='text-lg sm:text-xl text-gray-200 max-w-2xl'>
