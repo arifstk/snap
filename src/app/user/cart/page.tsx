@@ -1,6 +1,6 @@
 // /app/user/cart/page.tsx
 'use client';
-import { ArrowLeft, Minus, Plus, ShoppingBasket, Trash2 } from 'lucide-react';
+import { ArrowLeft, HandCoins, Minus, Plus, ShoppingBasket, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react'
@@ -32,7 +32,7 @@ const CartPage = () => {
   }, [cartData, settingsDeliveryFee, freeDeliveryThreshold, dispatch]);
 
 
-return (
+  return (
     <div className='w-[95%] sm:w-[90%] mx-auto mt-28 mb-24 relative'>
       <Link
         href={"/"}
@@ -41,7 +41,7 @@ return (
         <ArrowLeft size={20} />
         <span>Back</span>
       </Link>
- 
+
       <motion.h2
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -50,7 +50,7 @@ return (
       >
         Your Shopping Cart 🛒
       </motion.h2>
- 
+
       {cartData.length === 0 ? (
         // ── Empty cart ───────────────
         <motion.div
@@ -73,7 +73,7 @@ return (
       ) : (
         // ── Cart items + summary ────────────────────────────────────────────
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
- 
+
           {/* Cart item list */}
           <div className='lg:col-span-2 space-y-5'>
             <AnimatePresence>
@@ -93,7 +93,7 @@ return (
                       className='object-contain p-2 transition-transform duration-300 hover:scale-105'
                     />
                   </div>
- 
+
                   <div className='mt-4 sm:mt-0 sm:ml-4 flex-1 text-center sm:text-left'>
                     <h3 className='text-base sm:text-lg font-semibold text-gray-800 line-clamp-1'>
                       {item.name}
@@ -103,7 +103,7 @@ return (
                       {currencySymbol}{(Number(item.price) * item.quantity).toFixed(2)}
                     </p>
                   </div>
- 
+
                   {/* Quantity controls */}
                   <div className='flex items-center justify-center sm:justify-end gap-3 mt-3 sm:mt-0 bg-gray-50 px-3 py-2 rounded-full'>
                     <button
@@ -120,7 +120,7 @@ return (
                       <Plus size={16} className='text-green-700' />
                     </button>
                   </div>
- 
+
                   <button onClick={() => dispatch(removeFromCart(item._id))}>
                     <Trash2
                       size={18}
@@ -131,7 +131,7 @@ return (
               ))}
             </AnimatePresence>
           </div>
- 
+
           {/* Order summary */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
@@ -140,7 +140,7 @@ return (
             className='bg-white rounded-2xl shadow-xl p-6 h-fit sticky top-24 border border-gray-100 flex flex-col'
           >
             <h2 className='text-lg sm:text-xl font-bold text-gray-800 mb-4'>Order Summary</h2>
- 
+
             <div className='space-y-3 text-gray-700 text-sm sm:text-base'>
               <div className='flex justify-between'>
                 <span>Subtotal</span>
@@ -148,7 +148,7 @@ return (
                   {currencySymbol}{subTotal.toFixed(2)}
                 </span>
               </div>
- 
+
               <div className='flex justify-between'>
                 <span>Delivery Fee</span>
                 <span className='text-green-700 font-semibold'>
@@ -157,7 +157,7 @@ return (
                     : `${currencySymbol}${deliveryFee.toFixed(2)}`}
                 </span>
               </div>
- 
+
               {/* Free delivery hint */}
               {subTotal < freeDeliveryThreshold && (
                 <p className='text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2'>
@@ -168,9 +168,9 @@ return (
                   more for free delivery!
                 </p>
               )}
- 
+
               <hr className='my-3' />
- 
+
               <div className='flex justify-between font-bold text-base'>
                 <span>Total</span>
                 <span className='text-green-700 font-semibold'>
@@ -178,7 +178,15 @@ return (
                 </span>
               </div>
             </div>
- 
+
+            {/* show offer button */}
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              className='w-full mt-6 text-green-700 bg-green-50 py-3 rounded-full hover:bg-green-100 border border-green-300 transition-all font-semibold text-sm sm:text-base cursor-pointer flex items-center justify-center gap-2'
+              onClick={() => router.push("/offer")}
+            > <HandCoins className='text-green-700' /> See Offers
+            </motion.button>
+
             <motion.button
               whileTap={{ scale: 0.95 }}
               className='w-full mt-6 bg-green-600 text-white py-3 rounded-full hover:bg-green-700 transition-all font-semibold text-sm sm:text-base cursor-pointer'
@@ -187,12 +195,11 @@ return (
               Proceed to Checkout
             </motion.button>
           </motion.div>
- 
         </div>
       )}
     </div>
   );
 };
- 
+
 export default CartPage;
 
