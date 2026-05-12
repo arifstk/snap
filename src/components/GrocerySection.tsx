@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import mongoose from 'mongoose';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface IGrocery {
   _id: mongoose.Types.ObjectId | string;
@@ -21,19 +22,23 @@ interface GrocerySectionProps {
   groceries: IGrocery[];
 }
 
+const ITEMS_PER_PAGE = 8;
+
 const GrocerySection = ({ groceries }: GrocerySectionProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const query = useSelector((state: RootState) => state.user.searchQuery);
   const groceryRef = useRef<HTMLDivElement>(null);
-
-  // const filteredGroceries =
-  //   selectedCategory === 'All'
-  //     ? groceries
-  //     : groceries.filter((item) => item.category === selectedCategory);
-
+  const [currentPage, setCurrentPage] = useState(1);
   const filteredGroceries = groceries
     .filter((item) => selectedCategory === 'All' || item.category === selectedCategory)
-    .filter((item) => item.name.toLowerCase().includes(query.toLowerCase())); // 👈 search filter
+    .filter((item) => item.name.toLowerCase().includes(query.toLowerCase())); // search filter
+
+  const totalPages = Math.ceil(filteredGroceries.length / ITEMS_PER_PAGE);
+
+  // Reset to page 1 whenever filter/search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, query]);
 
   useEffect(() => {
     if (query) {
@@ -41,66 +46,94 @@ const GrocerySection = ({ groceries }: GrocerySectionProps) => {
     }
   }, [query]);
 
+  // Slice items for current page
+  const paginatedGroceries = filteredGroceries.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    groceryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <>
-      {/* Category Slider — receives state + setter */}
       <CategorySlider
         selectedCategory={selectedCategory}
         onSelectCategory={setSelectedCategory}
       />
 
-      {/* Grocery Grid */}
-      {/* <div className='w-[90%] md:w-[80%] mx-auto mt-10 mb-6'>
-        <h2 className='text-2xl md:text-3xl font-bold text-green-700 mb-6 text-center'>
-          {selectedCategory === 'All' ? 'Popular Grocery Items' : selectedCategory}
-        </h2>
-
-        {filteredGroceries.length === 0 ? (
-          <div className='text-center text-gray-400 py-20'>
-            No items found in &quot;{selectedCategory}&quot;.
-          </div>
-        ) : (
-          <AnimatePresence mode='wait'>
-            <motion.div
-              key={selectedCategory}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.35 }}
-              className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6'
-            >
-              {filteredGroceries.map((item) => (
-                <GroceryItemCard key={item._id.toString()} item={item as any} />
-              ))}
-            </motion.div>
-          </AnimatePresence>
-        )}
-      </div> */}
-
-      {/* Grocery Grid */}
       <div ref={groceryRef} className='w-[90%] md:w-[80%] mx-auto mt-10 mb-6 scroll-mt-30'>
         <h2 className='text-2xl md:text-3xl font-bold text-green-700 mb-6 text-center'>
           {selectedCategory === 'All' ? 'Popular Grocery Items' : selectedCategory}
         </h2>
+
         {filteredGroceries.length === 0 ? (
           <div className='text-center text-gray-400 py-20'>
             No items found in &quot;{selectedCategory}&quot;.
           </div>
         ) : (
-          <AnimatePresence mode='wait'>
-            <motion.div
-              key={selectedCategory}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.35 }}
-              className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6'
-            >
-              {filteredGroceries.map((item) => (
-                <GroceryItemCard key={item._id.toString()} item={item as any} />
-              ))}
-            </motion.div>
-          </AnimatePresence>
+          <>
+            <AnimatePresence mode='wait'>
+              <motion.div
+                key={`${selectedCategory}-${currentPage}`} // ✅ re-animate on page change too
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.35 }}
+                className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6'
+              >
+                {paginatedGroceries.map((item) => (
+                  <GroceryItemCard key={item._id.toString()} item={item as any} />
+                ))}
+              </motion.div>
+            </AnimatePresence>
+
+            {/* ✅ Pagination controls */}
+            {totalPages > 1 && (
+              <div className='flex items-center justify-center gap-3 mt-10'>
+                {/* Prev button */}
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className='flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium
+                    text-green-700 border border-green-200 bg-white hover:bg-green-50
+                    disabled:opacity-40 disabled:cursor-not-allowed transition-all'
+                >
+                  <ChevronLeft size={16} />
+                  Prev
+                </button>
+
+                {/* Page numbers */}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`w-9 h-9 rounded-lg text-sm font-semibold border transition-all
+                      ${currentPage === page
+                        ? 'bg-green-600 text-white border-green-600 shadow-md'
+                        : 'bg-white text-green-700 border-green-200 hover:bg-green-50'
+                      }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+
+                {/* Next button */}
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className='flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium
+                    text-green-700 border border-green-200 bg-white hover:bg-green-50
+                    disabled:opacity-40 disabled:cursor-not-allowed transition-all'
+                >
+                  Next
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </>
