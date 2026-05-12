@@ -2,7 +2,7 @@
 // src/app/user/checkout/page.tsx
 import MapViewWrapper from '@/components/MapViewWrapper';
 import { RootState } from '@/redux/store';
-import { calculateTotal } from '@/redux/cartSlice';
+import { calculateTotal, clearCart  } from '@/redux/cartSlice';
 import axios from 'axios';
 import { ArrowLeft, Building, CreditCard, Home, Mail, MapPin, Navigation, Phone, Search, Truck, User } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -113,6 +113,7 @@ const Checkout = () => {
     if (!position) return;
     try {
       await axios.post("/api/user/order", { ...orderPayload, paymentMethod: "cod" });
+      dispatch(clearCart());
       router.push("/user/order-success");
     } catch (error) {
       console.error("Error placing order:", error);
@@ -123,6 +124,7 @@ const Checkout = () => {
     if (!position) return;
     try {
       const result = await axios.post("/api/user/payment", { ...orderPayload, paymentMethod: "online" });
+       dispatch(clearCart());
       window.location.href = result.data.url;
     } catch (error) {
       console.log(error);

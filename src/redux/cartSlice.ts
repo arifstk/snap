@@ -28,16 +28,16 @@ interface ICalculateTotalPayload {
 }
 
 const loadCartFromStorage = (): IGrocery[] => {
-  if (typeof window !== 'undefined') {
-    const savedCart = localStorage.getItem('snap_cart');
+  if (typeof window !== "undefined") {
+    const savedCart = localStorage.getItem("snap_cart");
     return savedCart ? JSON.parse(savedCart) : [];
   }
   return [];
 };
 
 const saveCartToStorage = (data: IGrocery[]) => {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('snap_cart', JSON.stringify(data));
+  if (typeof window !== "undefined") {
+    localStorage.setItem("snap_cart", JSON.stringify(data));
   }
 };
 
@@ -85,6 +85,14 @@ const cartSlice = createSlice({
       saveCartToStorage(state.cartData);
     },
 
+    clearCart: (state) => {
+      state.cartData = [];
+      state.subTotal = 0;
+      state.deliveryFee = 0;
+      state.finalTotal = 0;
+      saveCartToStorage([]);
+    },
+
     // ✅ calculateTotal now receives fee & threshold from settings — no hardcoding
     calculateTotal: (state, action: PayloadAction<ICalculateTotalPayload>) => {
       const { deliveryFee, freeDeliveryThreshold } = action.payload;
@@ -106,8 +114,7 @@ export const {
   decreaseQuantity,
   removeFromCart,
   calculateTotal,
+  clearCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
-
-

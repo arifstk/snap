@@ -30,7 +30,14 @@ const CartPage = () => {
       freeDeliveryThreshold,
     }));
   }, [cartData, settingsDeliveryFee, freeDeliveryThreshold, dispatch]);
-
+  
+if (!isMounted) {
+    return (
+      <div className='w-[95%] sm:w-[90%] mx-auto mt-28 mb-24 flex items-center justify-center min-h-[40vh]'>
+        <div className='w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin' />
+      </div>
+    );
+  }
 
   return (
     <div className='w-[95%] sm:w-[90%] mx-auto mt-28 mb-24 relative'>
