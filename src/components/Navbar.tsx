@@ -13,6 +13,7 @@ import { createPortal } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setSearchQuery } from "@/redux/userSlice";
+import SearchBar from "./SearchBar";
 
 interface IUser {
   _id?: mongoose.Types.ObjectId;
@@ -126,30 +127,9 @@ const Navbar = () => {
       </Link>
 
       {/* search bar*/}
-      {
-        user?.role === "user" &&
-        <form className="hidden md:flex items-center bg-white rounded-full px-4 py-2 w-1/2 max-w-lg shadow-md">
-          <SearchIcon className="text-gray-500 w-5 h-5 mr-2" />
-          <input type="text"
-            value={query}
-            placeholder="Search groceries..."
-            className="w-full focus:outline-none text-gray-700 placeholder-gray-400"
-            onChange={(e) => {
-              dispatch(setSearchQuery(e.target.value))
-              setQuery(e.target.value)
-            }}
-          />
-          {query && (
-            <button type="button"
-              onClick={() => {
-                setQuery("")
-                dispatch(setSearchQuery(""))
-              }} className="text-gray-400 hover:text-gray-600 cursor-pointer">
-              <X size={16} />
-            </button>
-          )}
-        </form>
-      }
+      {user?.role === "user" && (
+        <SearchBar className="hidden md:block w-1/2 max-w-lg" />
+      )}
 
 
       <div className="flex items-center gap-3 md:gap-6">
@@ -165,44 +145,20 @@ const Navbar = () => {
         }
 
         {/* mobile search overlay */}
-        {
-          user?.role === "user" && searchBarOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              className="fixed top-17 left-0 w-full px-4 md:hidden z-50"
-            >
-              <form className="flex items-center bg-white rounded-full px-4 py-2 w-full shadow-md">
-                <SearchIcon className="text-gray-500 w-5 h-5 mr-2" />
-                <input
-                  type="text"
-                  value={query}
-                  placeholder="Search groceries..."
-                  autoFocus
-                  className="w-full focus:outline-none text-gray-700 placeholder-gray-400"
-                  onChange={(e) => {
-                    dispatch(setSearchQuery(e.target.value));
-                    setQuery(e.target.value);
-                  }}
-                />
-                {query && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setQuery("");
-                      dispatch(setSearchQuery(""));
-                    }}
-                    className="text-gray-400 hover:text-gray-600 cursor-pointer"
-                  >
-                    <X size={16} />
-                  </button>
-                )}
-              </form>
-            </motion.div>
-          )
-        }
+       {user?.role === "user" && searchBarOpen && (
+  <motion.div
+    initial={{ opacity: 0, y: -10 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -10 }}
+    transition={{ duration: 0.3 }}
+    className="fixed top-17 left-0 w-full px-4 md:hidden z-50"
+  >
+    <SearchBar
+      autoFocus
+      onClose={() => setSearchBarOpen(false)}
+    />
+  </motion.div>
+)}
 
         {/* Cart */}
         {
