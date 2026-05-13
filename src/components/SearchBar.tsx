@@ -22,7 +22,7 @@ const SearchBar = ({ className = "", autoFocus = false, onClose }: Props) => {
   const [allProductNames, setAllProductNames] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const skipSuggestionsRef = useRef(false); // ✅ suppress dropdown after selection
+  const skipSuggestionsRef = useRef(false);
 
   useEffect(() => {
     const fetchNames = async () => {
@@ -38,7 +38,6 @@ const SearchBar = ({ className = "", autoFocus = false, onClose }: Props) => {
   }, []);
 
   useEffect(() => {
-    // ✅ If selection just happened, skip reopening the dropdown
     if (skipSuggestionsRef.current) {
       skipSuggestionsRef.current = false;
       return;
@@ -55,7 +54,7 @@ const SearchBar = ({ className = "", autoFocus = false, onClose }: Props) => {
       .slice(0, 6);
 
     setSuggestions(filtered);
-    setShowDropdown(filtered.length > 0);
+    setShowDropdown(true); // ✅ always show dropdown when query is non-empty
   }, [query, allProductNames]);
 
   useEffect(() => {
@@ -80,12 +79,12 @@ const SearchBar = ({ className = "", autoFocus = false, onClose }: Props) => {
   };
 
   const handleSelect = (name: string) => {
-    skipSuggestionsRef.current = true; // ✅ tell the effect to skip next run
+    skipSuggestionsRef.current = true;
     setQuery(name);
-    setSuggestions([]);               // ✅ clear immediately
-    setShowDropdown(false);           // ✅ close immediately
+    setSuggestions([]);
+    setShowDropdown(false);
     dispatch(setSearchQuery(name));
-    inputRef.current?.blur();         // ✅ remove focus so onFocus doesn't reopen
+    inputRef.current?.blur();
     if (pathname !== "/") router.push("/");
     onClose?.();
   };
@@ -122,8 +121,7 @@ const SearchBar = ({ className = "", autoFocus = false, onClose }: Props) => {
           className="w-full focus:outline-none text-gray-700 placeholder-gray-400"
           onChange={(e) => handleSearch(e.target.value)}
           onFocus={() => {
-            // ✅ Only reopen if user is actively typing, not after a selection
-            if (!skipSuggestionsRef.current && suggestions.length > 0) {
+            if (!skipSuggestionsRef.current && query.trim().length > 0) {
               setShowDropdown(true);
             }
           }}
@@ -141,18 +139,27 @@ const SearchBar = ({ className = "", autoFocus = false, onClose }: Props) => {
           ref={dropdownRef}
           className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 z-99999 overflow-hidden"
         >
-          {suggestions.map((name, index) => (
-            <button
-              key={index}
-              type="button"
-              onMouseDown={(e) => e.preventDefault()} // ✅ prevent input blur before click fires
-              onClick={() => handleSelect(name)}
-              className="flex items-center gap-3 w-full px-4 py-3 hover:bg-gray-50 text-left border-b border-gray-100 last:border-none transition-colors"
-            >
-              <Search className="w-4 h-4 text-gray-400 shrink-0" />
-              <span className="text-gray-800">{name}</span>
-            </button>
-          ))}
+          {suggestions.length > 0 ? (
+            suggestions.map((name, index) => (
+              <button
+                key={index}
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => handleSelect(name)}
+                className="flex items-center gap-3 w-full px-4 py-3 hover:bg-gray-50 text-left border-b border-gray-100 last:border-none transition-colors"
+              >
+                <Search className="w-4 h-4 text-gray-400 shrink-0" />
+                <span className="text-gray-800">{name}</span>
+              </button>
+            ))
+          ) : (
+            // ✅ No results message
+            <div className="px-4 py-3 text-gray-500 text-sm">
+              Nothing matched with{" "}
+              <span className="font-semibold underline text-gray-700">{query}</span>{" "}
+              — please try again.
+            </div>
+          )}
         </div>
       )}
     </div>
