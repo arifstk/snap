@@ -58,7 +58,7 @@ const Navbar = () => {
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: -100, opacity: 0 }}
         transition={{ type: "spring", stiffness: 100, damping: 10 }}
-        className="fixed top-0 left-0 h-full w-[79%] sm:w-[50%] z-999 bg-linear-to-b from-green-800/50 via-teal-700/80 to-green-900/90 backdrop-blur-lg border-r border-green-400/20 shadow-[0_0_50px_-10px_rgba(0,255,100,0.3)] flex flex-col p-6 text-white md:hidden"
+        className="fixed top-0 left-0 h-full w-full sm:w-[50%] z-999 bg-linear-to-b from-green-800/50 via-teal-700/80 to-green-900/93 backdrop-blur-lg border-r flex flex-col p-6 text-white md:hidden"
       >
         <div className="flex justify-between items-center mb-2">
           <h1 className="font-extrabold text-2xl tracking-wide text-white/90">Admin Panel</h1>
@@ -66,14 +66,14 @@ const Navbar = () => {
             onClick={() => setMenuOpen(false)}
           ><X className="w-8 h-8" /></button>
         </div>
-        <div>  {/*  profile */}
+        <div>  {/*  profile (ADMIN) */}
           <div className="flex items-center gap-3 py-3 pl-4 mt-4 rounded-xl bg-white/20 hover:bg-white/30 transition-all shadow-inner">
             <div className="w-12 h-12 rounded-full bg-gray-500 flex items-center justify-center overflow-hidden relative">
               {
                 user?.image ? <Image src={user.image} alt='user' fill
                   className="object-cover rounded-full w-10 h-10"
                 /> :
-                  (<span className="bg-gray-300 font-bold text-2xl">
+                  (<span className="font-bold text-2xl">
                     {user?.name
                       .split(" ")
                       .map(n => n[0])
@@ -85,7 +85,7 @@ const Navbar = () => {
             </div>
             <div>
               <div className="text-lg font-semibold tracking-wide">{user?.name}</div>
-              <div className="text-xs text-gray-700 capitalize tracking-wide">{user?.role}</div>
+              <div className="text-xs text-gray-200 capitalize tracking-wide">{user?.role}</div>
             </div>
           </div>
         </div>
@@ -97,13 +97,21 @@ const Navbar = () => {
             className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
             <Tag className="w-5 h-5" /> Add Category
           </Link>
-          <Link href={"/admin/add-grocery"} className="flex items-center gap-3 p-3 pl-4  rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
+          <Link href={"/admin/add-grocery"}
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-3 p-3 pl-4  rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
             <PlusCircle className="w-5 h-5" /> Add Grocery</Link>
-          <Link href={"/admin/view-grocery"} className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
+          <Link href={"/admin/view-grocery"}
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
             <Boxes className="w-5 h-5" /> View Grocery</Link>
-          <Link href={"/admin/manage-orders"} className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
+          <Link href={"/admin/manage-orders"}
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
             <ClipboardCheck className="w-5 h-5" /> Manage Orders</Link>
-          <Link href={"/admin/settings"} className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
+          <Link href={"/admin/settings"}
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-3 p-3 pl-4 rounded-lg bg-white/20 hover:bg-white/30 transition-all shadow-inner">
             <Settings className="w-5 h-5" />Setting</Link>
         </div>
 
@@ -145,20 +153,20 @@ const Navbar = () => {
         }
 
         {/* mobile search overlay */}
-       {user?.role === "user" && searchBarOpen && (
-  <motion.div
-    initial={{ opacity: 0, y: -10 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -10 }}
-    transition={{ duration: 0.3 }}
-    className="fixed top-17 left-0 w-full px-4 md:hidden z-50"
-  >
-    <SearchBar
-      autoFocus
-      onClose={() => setSearchBarOpen(false)}
-    />
-  </motion.div>
-)}
+        {user?.role === "user" && searchBarOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-17 left-0 w-full px-4 md:hidden z-50"
+          >
+            <SearchBar
+              autoFocus
+              onClose={() => setSearchBarOpen(false)}
+            />
+          </motion.div>
+        )}
 
         {/* Cart */}
         {
@@ -316,4 +324,3 @@ const Navbar = () => {
 
 export default Navbar;
 
-// onClick={() => setOpen(false)}
