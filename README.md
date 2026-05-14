@@ -1,3 +1,23 @@
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002910" src="https://github.com/user-attachments/assets/a6becbcf-a4c5-4065-9da7-3cb51338c5a1" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002859" src="https://github.com/user-attachments/assets/2e0bdc4e-1f5d-4682-be76-a96be7916463" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002839" src="https://github.com/user-attachments/assets/e5a38f4d-d7d0-4441-8a62-f0956608c35e" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002815" src="https://github.com/user-attachments/assets/3e10bb96-7149-4911-a8f4-aa7173fbc83f" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002802" src="https://github.com/user-attachments/assets/75425afb-9354-42e0-8375-5d0d52709b8f" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002745" src="https://github.com/user-attachments/assets/50b7aa97-c24a-46c6-9e6c-60bc2f73a961" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002728" src="https://github.com/user-attachments/assets/ad1fd002-2a58-4321-8b5b-aee7155c71f8" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002706" src="https://github.com/user-attachments/assets/53bb8641-2b43-47dc-82a8-1ef459d1084b" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002706 - Copy" src="https://github.com/user-attachments/assets/95e64c7c-cfb9-489f-b78d-9019c3235113" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002659" src="https://github.com/user-attachments/assets/c774e1e5-0790-436b-b2de-1ed6b3c91c7d" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002659 - Copy" src="https://github.com/user-attachments/assets/06dc0768-3c91-47db-b296-36d271b1b82f" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002650" src="https://github.com/user-attachments/assets/deadacd4-adbe-4535-8628-719843f0807e" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002650 - Copy" src="https://github.com/user-attachments/assets/51252d8e-b894-4529-af5d-36f9131d2df3" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002633" src="https://github.com/user-attachments/assets/fc9c76df-3608-493b-be52-69cd05354a31" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002633 - Copy" src="https://github.com/user-attachments/assets/f6b3e6c2-1c35-47bc-b0ab-34afc631d741" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002551 - Copy" src="https://github.com/user-attachments/assets/c22ad20e-cbcd-4d60-b0fd-0197a64cb41b" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002531" src="https://github.com/user-attachments/assets/f2a72aa1-5359-4752-90cf-7dd0f76582e7" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002517" src="https://github.com/user-attachments/assets/f2955691-b080-4b43-a4eb-539f3a594a4c" />
+<img width="1919" height="1076" alt="Screenshot 2026-05-14 002455" src="https://github.com/user-attachments/assets/e2023ad7-7bb6-46e1-aa37-2c9a717a4d4c" />
+<img width="1919" height="1079" alt="Screenshot 2026-05-14 002350" src="https://github.com/user-attachments/assets/c0a5367c-dc5b-4c78-94b5-47ed19ff257d" />
 ## 🛒 Grocery Store App
 
 A full-stack grocery e-commerce web application built with **Next.js**, **Redux Toolkit**, **Tailwind CSS**, **stripe Payment**, **socket Server**  — featuring real-time product search, autocomplete suggestions,  real-time chat, OTP for delivery confirmation, stripe payment, and a clean responsive UI.
