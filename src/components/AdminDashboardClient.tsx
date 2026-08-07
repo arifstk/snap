@@ -26,7 +26,7 @@ type Props = {
 const AdminDashboardClient = ({ earning, stats, chartData }: Props) => {
   const [filter, setFilter] = useState<"today" | "sevenDays" | "total">("total");
 
-  const currencySymbol = useSelector((state: RootState) => state.settings.data.currencySymbol);
+  const currencySymbol = useSelector((state: RootState) => state.settings.data.currencySymbol!);
 
   const currentEarning = filter === "today" ? earning.today
     : filter === "sevenDays" ? earning.sevenDays

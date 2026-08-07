@@ -9,19 +9,6 @@ import Image from 'next/image';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-// const categories = [
-//   "Fruits & Vegetables",
-//   "Dairy & Eggs",
-//   "Rice, Atta & Grains",
-//   "Snacks & Biscuits",
-//   "Spices & Masalas",
-//   "Beverages & Drinks",
-//   "Personal Care",
-//   "Household Essentials",
-//   "Instant & packaged Food",
-//   "Baby & Pet Care",
-// ]
-
 interface Category {
   _id: string;
   name: string;

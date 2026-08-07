@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }, // Next.js 15: params is a Promise
+  context: { params: Promise<{ id: string }> },
 ) {
   try {
     await connectDb();

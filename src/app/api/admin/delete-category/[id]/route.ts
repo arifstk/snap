@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }  // ✅ params is now a Promise
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDb();
@@ -17,7 +17,7 @@ export async function DELETE(
       return NextResponse.json({ message: "Not authorized" }, { status: 403 });
     }
 
-    const { id } = await params;  // ✅ await params before using
+    const { id } = await params;
 
     await Category.findByIdAndDelete(id);
     return NextResponse.json({ message: "Category deleted" }, { status: 200 });

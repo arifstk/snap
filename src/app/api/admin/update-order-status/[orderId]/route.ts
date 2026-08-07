@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: Promise<{ orderId: string }> }, // ✅ Promise added
+  { params }: { params: Promise<{ orderId: string }> },
 ) {
   try {
     await connectDb();
@@ -90,7 +90,7 @@ export async function POST(
       await deliveryAssignment.populate("order");
     }
 
-    await order.save(); // ✅ order saved
+    await order.save();
     await order.populate("user");
 
     // update status instantly

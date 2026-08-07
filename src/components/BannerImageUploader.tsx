@@ -1,6 +1,6 @@
 'use client';
 // src/components/BannerImageUploader.tsx
-// Drop-in image uploader for the banner slide editor in AdminSettingsPage
+
 import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import { Upload, X, Loader2, Link as LinkIcon, ImageIcon } from 'lucide-react';
@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 
 interface BannerImageUploaderProps {
   currentUrl: string;
-  onUpload: (url: string) => void; // called with the final Cloudinary URL
+  onUpload: (url: string) => void;
 }
 
 const BannerImageUploader = ({ currentUrl, onUpload }: BannerImageUploaderProps) => {
@@ -44,7 +44,7 @@ const BannerImageUploader = ({ currentUrl, onUpload }: BannerImageUploaderProps)
 
       if (!res.ok) throw new Error(data.message || 'Upload failed');
 
-      onUpload(data.url); // ✅ pass Cloudinary URL back to parent
+      onUpload(data.url);
       toast.success('Image uploaded successfully!');
     } catch (err: any) {
       toast.error(err.message || 'Upload failed');

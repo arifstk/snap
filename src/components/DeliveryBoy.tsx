@@ -24,13 +24,11 @@ const DeliveryBoy = async () => {
   );
   const todaysEarning = todayOrders.length * 40;
 
-  // Build last 7 days earning data for the bar chart
-  // Returns array of { day, earnings, deliveries } for Mon–Sun
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const now = new Date();
 
   const weeklyData = days.map((day, i) => {
-    // Find the date for this weekday in the current week (Mon=0 ... Sun=6)
+
     const diff = i - (now.getDay() === 0 ? 6 : now.getDay() - 1);
     const targetDate = new Date(now);
     targetDate.setDate(now.getDate() + diff);

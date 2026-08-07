@@ -114,7 +114,10 @@ const Footer = () => {
             © {currentYear} {settings?.websiteName || 'Snap'}. All rights reserved.
           </p>
           <div className="group text-xs text-gray-500 hover:text-green-600 flex items-center gap-1 transition-colors -tracking-tighter">
-            Developed by: Arif
+            Developed by:
+            <Link href="https://arif-portfolio-eosin.vercel.app/" target="_blank" rel="noopener noreferrer">
+              Shaikh Arif
+            </Link>
           </div>
         </div>
       </div>
